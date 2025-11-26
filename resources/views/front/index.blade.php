@@ -1,1464 +1,2779 @@
 @include('front.header')
-<style>
-.ytp-large-play-button {
-  position: absolute;
-  left: 64% !important;
-  top: 58% !important;
-  width: 40px !important;
-  height: 40px !important;
-}
-.center-section-scroll{
-    height:1200px;
-    overflow-y: scroll;
-}
-.center-section-scroll::-webkit-scrollbar {
-  display: none;
-}
-@media (max-width:575px) {
-   
-     .mobile-view{
-        display:none;
-    }
-    .mobile-view-slider{
-        margin-bottom:20px;
-    }
-    
-}
-@media (min-width:575px) {
-   
-     .mobile-view-slider{
-        display:none;
-    }
-    
-}
-</style> 
 
-<section class="page-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-lg-3 col-md-12 border-right">
-                        <nav class="nevigation">
-                            <div class="mobile-view">
-                                
-                            <ul class="nav mostly-customized-scrollbar mobile-view">
-                                
-                                @if (isset($headercategorieswithoutsubcategories) && count($headercategorieswithoutsubcategories)>0)
-                                 @foreach ($headercategorieswithoutsubcategories as $headercategorieswithoutsubcategory)
-                                <li class="nav-item active">
-                                    <a class="nav-link @if($headercategorieswithoutsubcategory->slug == $slug) active @endif" href="{{ route('homecategory',$headercategorieswithoutsubcategory->slug) }}"> @if($headercategorieswithoutsubcategory->image) <img src="{{ URL::asset('storage/'.$headercategorieswithoutsubcategory->image) }}"  alt="" class="secondry-icon-img" /> @endif {{$headercategorieswithoutsubcategory->name}}</a>
-                                </li>
-                                @endforeach
-                                @endif
-                              {{--  <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/location.svg') }}" alt="" class="secondry-icon-img" /> राज्य-शहर</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/election.svg') }}" alt="" class="secondry-icon-img" /> चुनाव 2023</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/cricket.svg') }}" alt="" class="secondry-icon-img" /> क्रिकेट</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/war.svg') }}" alt="" class="secondry-icon-img" />इजराइल- हमास जंग</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/Tej-Yug-News-logo.png') }}" alt="" class="secondry-icon-img" />तेजयुग समाचार खास</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/original.svg') }}" alt="" class="secondry-icon-img" />DB ओरिजिनल</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/entertainment.svg') }}" alt="" class="secondry-icon-img" />बॉलीवुड</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/lifestyle.svg') }}" alt="" class="secondry-icon-img" />लाइफस्टाइल</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/edu.svg') }}" alt="" class="secondry-icon-img" />जॉब - एजुकेशन</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/women.svg') }}" alt="" class="secondry-icon-img" />वुमन</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/india.svg') }}" alt="" class="secondry-icon-img" />देश</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/videsh.svg') }}" alt="" class="secondry-icon-img" />विदेश</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/money.svg') }}" alt="" class="secondry-icon-img" />बिजनेस</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/rashifal.svg') }}" alt="" class="secondry-icon-img" />राशिफल</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/techandauto.svg') }}" alt="" class="secondry-icon-img" />टेक - ऑटो</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/jeevanmantra.svg') }}" alt="" class="secondry-icon-img" />जीवन मंत्र</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/sports.svg') }}" alt="" class="secondry-icon-img" />स्पोर्ट्स</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/no-fake-news.svg') }}" alt="" class="secondry-icon-img" />फेक न्यूज एक्सपोज़</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/opinion.svg') }}" alt="" class="secondry-icon-img" />ओपिनियन</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/magazine.svg') }}" alt="" class="secondry-icon-img" />मैगजीन</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/life-science.svg') }}" alt="" class="secondry-icon-img" />लाइफ - साइंस</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><img src="{{ URL::asset('front/images/icons/utility.svg') }}" alt="" class="secondry-icon-img" />यूटिलिटी</a>
-                                </li> --}}
-                            </ul>
-                            </div>
-                            <div class="mobile-view-slider">
-                                   <ul class="nav mostly-customized-scrollbar mobile-view">
-                                        <li class="nav-item">
-                                        <a class="nav-link" href="{{ url('/videos') }}">होम</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ url('/searchs') }}" class="nav-link"> खबरें हटके</a>
-                                    </li>
-                                   <li class="nav-item">
-                                        <a href="#" class="nav-link" target="_blank"> ताज़ा खबर</a>
-                                    </li> 
-                                    <li class="nav-item">
-                                        <a href="{{ route('e-paper') }}" class="nav-link" target="_blank" >देश</a>
-                                    </li>
-                                                                        <li class="nav-item">
-                                        <a href="{{ route('e-paper') }}" class="nav-link" target="_blank" >शहर और राज्य</a>
-                                    </li>
-                                                                        <li class="nav-item">
-                                        <a href="{{ route('e-paper') }}" class="nav-link" target="_blank" >+More...</a>
-                                    </li>
-                                       </ul>
-                            </div>
-                        </nav>
-                        <div class="card-body mobile-view">
-                           
-                          
-                          <div class="py-4">
-                                <p class="mb-2 d-block text-center text-muted" style="font-size:16px;font-weight:600;">Follow the Tejyug News Channel on</p>
-                                <div class="d-flex justify-content-center">
-                                    <a href="{{ $footersetting->facebook ?? 'https://www.facebook.com/profile.php?id=61563003873920&mibextid=JRoKGi' }}" class="social-icons mx-2 d-block text-center"><i class="fab fa-facebook-f" style="color:#4267B2"></i></a>
-                                    <a href="https://www.whatsapp.com/channel/0029VafsQEAA2pL8IGvF0F06" class="social-icons mx-2 d-block text-center"><i class="fab fa-whatsapp" style="color:#075E54"></i></a>
-                                    <a href="https://www.instagram.com/tejyugnews?igsh=MWJxMWdlNXExNzVjcw==" class="social-icons mx-2 d-block text-center"><i class="fab fa-instagram" style="color:#d6249f  "></i></a>
-                                    <a href="https://youtube.com/@tejyugnews?si=mDkMBwKbyvURIw25" class="social-icons mx-2 d-block text-center"><i class="fab fa-youtube" style="color:#FF0000"></i></a>
-                                </div>
-                            </div>
-                             <p class="mb-2 d-block text-center text-muted" style="font-size:16px;font-weight:600;">Download our App</p>
-                            <a href="#" class="mb-2 d-block text-center"><img src="{{ URL::asset('front/images/playstore.svg') }}" alt=""></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-8 col-sm-12 border-right center-section-scroll" >
-                        <div class="">
-                          @php
-                            $colors = ['rgb(255, 0, 64)', 'rgb(4, 255, 0)', 'rgb(102, 0, 255)','rgb(255, 51, 0)'];
-                            @endphp
-                            @foreach($postnews as $key=>$postdata)
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="row ">
-                                            <div class="col-md-8 mt-3 " style="padding-right:0px;">
-                                                <div class="card-body " style="padding-right:0px;">
-                                                    <div class="d-flex justify-content-between pb-2">
-                                                        <div>
-                                                            <a href="{{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}" type="button" class="btn btn-danger mr-3"><b>{{$postdata->category->name ?? ""}}</b></a>
-                                                           <p style="color:{{ $colors[$key % count($colors)] }}; padding-top:10px; text-align:justify;margin-bottom:5px;">{!! $postdata->title !!}</p> 
-                                                        </div>
-                                                        
-                                                        
-                                                        <div>
-                                                         
-                                                            
-                                                        </div>
-                                                    </div>
-                                                    <div class="container p-0" style="text-align: justify;">
-                                                            {!! Str::words(strip_tags($postdata->content), 20, '...') !!}
-                                                            @if (strlen(strip_tags($postdata->content)) > 20)
-                                                                <a href="{{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}" class="read-more">Read more</a>
-                                                            @endif 
-                                                        </div>
-                                                   
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9 mt-3">
-                                                        @if($postdata->video)
-                                                        <img class="embed-responsive-item youtube-video" data-videoid="{{$postdata->video}}" src="https://img.youtube.com/vi/{{$postdata->video}}/0.jpg" />
-                                                        @elseif($postdata->image)
-                                                        <img src="{{ URL::asset('storage/'.$postdata->image) }}" alt="{{ $postdata->title }}" class="img-fluid rounded" width="100%" />
-                                                       @else
-                                                       <img class="embed-responsive-item" src="{{ URL::asset('front/images/Tej-Yug-News-logo.png') }}" />
-                                                      
-                                                        @endif
-                                                    </div>
-                                                                                                <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-top:10px; text-align:center">
-                                                    <li class="li">
-                                                        <a href="http://www.facebook.com/sharer.php?u={{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}"  class="mr-3 text-muted" style="font-size:1rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="http://twitter.com/share?text={!! $postdata->title !!} !&url={{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}"  class="mr-3 text-muted" style="font-size:1rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                     <li class="li">
-                                                        <a href="http://twitter.com/share?text={!! $postdata->title !!} !&url={{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}"  class="mr-3 text-muted" style="font-size:1rem;"><b><i class="fab fa-whatsapp"></i></b></a>
-                                                    </li>
-                                                     <li class="li">
-                                                        <a href="http://twitter.com/share?text={!! $postdata->title !!} !&url={{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}"  class="mr-3 text-muted" style="font-size:1rem;"><b><i class="fab fa-instagram"></i></b></a>
-                                                    </li>
-                                                    <!--<li class="li">-->
-                                                    <!--    <a href="javascript:void(0)" onclick="copytoclipboard('{{$slug ? url('/').'/'.$slug.'/'.$postdata->slug.'/detail' : url('/').'/'.$postdata->slug.'/detail'}}')"  class="mr-3 text-muted" style="font-size:1rem;"><b><i class="fas fa-paperclip"></i></b></a>-->
-                                                    <!--</li>-->
-                                                </ul>
-                                            </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                @if (isset($postdata->tags) && count($postdata->tags)>0)
-                                                @foreach ($postdata->tags as $tag)
-                                                <a href="{{url(''.'/search?tag='.$tag->slug)}}" class="text-muted"><b>{{$tag->name ?? ""}}</b></a>
-                                                @endforeach
-                                                @endif
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                function copytoclipboard(text){
-                              console.time('time1');
-                            	var temp = $("<input>");
-                              $("body").append(temp);
-                             temp.val(text).select();
-                              document.execCommand("copy");
-                              alert("Copied Successfully!")
-                              temp.remove();
-                                console.timeEnd('time1');
-                            }
-                            </script>
-                           @if($key%3 == 0)
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="d-flex justify-content-between py-3">
-                                            <div class="">
-                                                <h5 class="mt-2"><b>आज के टॉप वीडियो</b></h5>
-                                            </div>
-                                         
-                                            
-                                            <div class="">
-                                                <a href="{{url('videos')}}" type="button" class="btn btn-outline-warning"><b>सभी देखें</b></a>
-                                            </div>
-                                        </div>
-                                        <div id="carouselExampleControls" class="carousel slide pb-4" data-ride="carousel">
-                                            <div class="carousel-inner">
-                                                @foreach($videodatas as $key1=>$resultvideo)
-                                                @if($key1 == $key)
-                                                <div class="carousel-item active">
-                                                    <div class="d-flex justify-content-between">
-                                                        @foreach($resultvideo as $resultvideo1)
-                                                        <div class="mx-2">
-                                                            <img class="embed-responsive-item youtube-video" data-videoid="{{$resultvideo1['video']}}" src="https://img.youtube.com/vi/{{$resultvideo1['video']}}/0.jpg" class="d-block w-100" />
-                                                            
-                                                        </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                                @else
-                                                <div class="carousel-item">
-                                                    <div class="d-flex justify-content-between">
-                                                         @foreach($resultvideo as $resultvideo1)
-                                                        <div class="mx-2">
-                                                            <img class="embed-responsive-item youtube-video" data-videoid="{{$resultvideo1['video']}}" src="https://img.youtube.com/vi/{{$resultvideo1['video']}}/0.jpg" class="d-block w-100" />
-                                                        </div>
-                                                        @endforeach
-                                                       
-                                                    </div>
-                                                </div>
-                                                @endif
-                                                @endforeach
-                                                
-                                            </div>
-                                            <button class="carousel-control-prev" type="button" data-target="#carouselExampleControls" data-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button" data-target="#carouselExampleControls" data-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Next</span>
-                                            </button>
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-                            @if($key%5 == 0)
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="d-flex justify-content-between py-3">
-                                            <div class="">
-                                                <h5 class="mt-2"><b>बॉलीवुड REEL</b></h5>
-                                            </div>
-                                            <div class="">
-                                                <a href="{{url('videos')}}" type="button" class="btn btn-outline-warning"><b>सभी देखें</b></a>
-                                            </div>
-                                        </div>
-                                       
-                                       <div id="carouselExampleControlsTwo" class="carousel slide pb-4" data-ride="carousel">
-                                            <div class="carousel-inner">
-                                                @foreach($videodatas as $key1=>$resultvideo)
-                                                @if($key1 == $key)
-                                                <div class="carousel-item active">
-                                                    <div class="d-flex justify-content-between">
-                                                        @foreach($resultvideo as $resultvideo1)
-                                                        <div class="mx-2">
-                                                           <img class="embed-responsive-item youtube-video" data-videoid="{{$resultvideo1['video']}}" src="https://img.youtube.com/vi/{{$resultvideo1['video']}}/0.jpg" class="d-block w-100" />
-                                                            
-                                                        </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                                @else
-                                                <div class="carousel-item">
-                                                    <div class="d-flex justify-content-between">
-                                                         @foreach($resultvideo as $resultvideo1)
-                                                        <div class="mx-2">
-                                                            <img class="embed-responsive-item youtube-video" data-videoid="{{$resultvideo1['video']}}" src="https://img.youtube.com/vi/{{$resultvideo1['video']}}/0.jpg" class="d-block w-100" />
-                                                        </div>
-                                                        @endforeach
-                                                       
-                                                    </div>
-                                                </div>
-                                                @endif
-                                                @endforeach
-                                                
-                                            </div>
-                                            <button class="carousel-control-prev" type="button" data-target="#carouselExampleControlsTwo" data-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button" data-target="#carouselExampleControlsTwo" data-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Next</span>
-                                            </button>
-                                        </div> 
-                                    </div>
-                                </div>
-                            </div>
-                           @endif
-                            @endforeach
-                        </div>
-                    </div>
-                   {{-- <div class="col-lg-6 col-md-8 col-sm-12 border-right">
-                        <div class="">
-                            <!-- 1 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-md-12">
-                                        <div class="py-4">
-                                            <div class="d-flex">
-                                                <div>
-                                                    <a href="#" type="button" class="btn btn-danger mr-3"><b>LIVE</b></a>
-                                                </div>
-                                                <div>
-                                                    <span class="card-title pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड:</b></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="">
-                                            <div class="photo-article">
-                                                @if (isset($catalogueposts[2]))
-                                                <div class="mr-main">
-                                                    <a href="{{ route('postdetail',[$catalogueposts[2]->categories[0]->category->slug,$catalogueposts[2]->slug]) }}" class="">
-                                                        @if (isset($catalogueposts[2]->image) && Storage::exists($catalogueposts[2]->image))
-                                                        <img src="{{ URL::asset('storage/'.$catalogueposts[2]->image) }}" alt="{{ $catalogueposts[2]->title }}" class="img-fluid rounded" width="100%" />
-                                                        @else
-                                                        <img src="{{ URL::asset('front/images/icons/') }}" alt="{{ $catalogueposts[2]->title }}" class="img-fluid rounded" width="100%" />
-                                                        @endif
-                                                        <div class="overlay-content rounded">
-                                                            <h3>{{ $catalogueposts[2]->title }}</h3>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                @endif
-                                            </div>
-                                            <div class="d-flex justify-content-between py-4">
-                                                <div class="">
-                                                    <a href="" class="text-muted"><b>देश</b></a>
-                                                </div>
-                                                <div class="d-flex justify-content-around">
-                                                    <a href="#"  class="mr-3 text-muted"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    <a href="#"  class="mr-3 text-muted"><b><i class="fab fa-twitter"></i></b></a>
-                                                    <a href="#"  class="mr-3 text-muted"><b><i class="fas fa-paperclip"></i></b></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 2 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between pb-4">
-                                                        <div>
-                                                            <a href="#" type="button" class="btn btn-danger mr-3"><b>LIVE</b></a>
-                                                        </div>
-                                                        <div>
-                                                            <span class="card-title text-primary pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                   
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 3 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between pb-4">
-                                                        <div>
-                                                            <!-- <a href="#" type="button" class="btn btn-danger mr-3"><b>LIVE</b></a> -->
-                                                        </div>
-                                                        <div>
-                                                            <span class="card-title text-warning pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                   
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 4 -->
-                            <!-- 5 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="d-flex justify-content-between py-3">
-                                            <div class="">
-                                                <h5 class="mt-2"><b>आज के टॉप वीडियो</b></h5>
-                                            </div>
-                                            <div class="">
-                                                <a href="#" type="button" class="btn btn-outline-warning"><b>सभी देखें</b></a>
-                                            </div>
-                                        </div>
-                                        <div id="carouselExampleControls" class="carousel slide pb-4" data-ride="carousel">
-                                            <div class="carousel-inner">
-                                                <div class="carousel-item active">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ads.gif') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/1001666043679384095.jpg') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="carousel-item">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.mp4" type="video/mp4">
-                                                            </video>
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.ogg" type="video/ogg">
-                                                            </video>
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.mp4" type="video/mp4">
-                                                            </video>
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.ogg" type="video/ogg">
-                                                            </video>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="carousel-item">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ads.gif') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/1001666043679384095.jpg') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="carousel-control-prev" type="button" data-target="#carouselExampleControls" data-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button" data-target="#carouselExampleControls" data-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Next</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 6 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-success pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--  -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="d-flex justify-content-between py-3">
-                                            <div class="">
-                                                <h5 class="mt-2"><b>बॉलीवुड REEL</b></h5>
-                                            </div>
-                                            <div class="">
-                                                <a href="#" type="button" class="btn btn-outline-warning"><b>सभी देखें</b></a>
-                                            </div>
-                                        </div>
-                                        <div id="carouselExampleControlsTwo" class="carousel slide pb-4" data-ride="carousel">
-                                            <div class="carousel-inner">
-                                                <div class="carousel-item active">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ads.gif') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/1001666043679384095.jpg') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="carousel-item">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.mp4" type="video/mp4">
-                                                            </video>
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.ogg" type="video/ogg">
-                                                            </video>
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.mp4" type="video/mp4">
-                                                            </video>
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <video width="150" height="269" controls>
-                                                                <source src="movie.ogg" type="video/ogg">
-                                                            </video>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="carousel-item">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ads.gif') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/1001666043679384095.jpg') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                        <div class="mx-2">
-                                                            <img src="{{ URL::asset('front/images/ad5.png') }}" class="d-block w-100" alt="...">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="carousel-control-prev" type="button" data-target="#carouselExampleControlsTwo" data-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button" data-target="#carouselExampleControlsTwo" data-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Next</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 7 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 8 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                                <img src="http://127.0.0.1:8000/front/images/icons/money.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>बिजनेस</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 9 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                            <img src="http://127.0.0.1:8000/front/images/icons/lifestyle.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>लाइफस्टाइल</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 10 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                            <img src="http://127.0.0.1:8000/front/images/icons/edu.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>जॉब - एजुकेशन</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 11 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                            <img src="http://127.0.0.1:8000/front/images/icons/india.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>देश</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 12 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                            <img src="http://127.0.0.1:8000/front/images/icons/videsh.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>विदेश</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 13 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                            <img src="http://127.0.0.1:8000/front/images/icons/techandauto.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>टेक - ऑटो</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 14 -->
-                            <div class="mb-3">
-                                <div class="row border-bottom">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                            <img src="http://127.0.0.1:8000/front/images/icons/sports.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>स्पोर्ट्स</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 15 -->
-                            <div class="">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="py-3">
-                                            <div class="d-flex">
-                                                <img src="http://127.0.0.1:8000/front/images/icons/life-science.svg" alt="" class="img-fluid secondry-icon-img">
-                                                <h5 class="mt-2"><b>लाइफ - साइंस</b></h5>
-                                            </div>
-                                        </div>
-                                        <div class="row ">
-                                            <div class="col-md-8">
-                                                <dssiv class="card-body">
-                                                    <div class="pb-4">
-                                                        <div>
-                                                            <span class="card-title text-danger pt-2"><b>लोकसभा घुसपैठ केस में 8 सुरक्षाकर्मी सस्पेंड: <span class="text-dark">आरोपियों की पटियाला हाउस कोर्ट में पेशी, संसद की सुरक्षा बढ़ी; जूता उतरवाकर चेकिंग</span></b></span>
-                                                        </div>
-                                                    </div>
-                                                </dssiv>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <a href="" class="text-muted"><b>देश</b></a>
-                                            </div>
-                                            <div class="d-flex justify-content-around">
-                                                <ul class="list-unstyled d-flex" style="margin-right: 40px;">
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-facebook-f"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fab fa-twitter"></i></b></a>
-                                                    </li>
-                                                    <li class="li">
-                                                        <a href="#"  class="mr-3 text-muted" style="font-size:1.4rem;"><b><i class="fas fa-paperclip"></i></b></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="wrapper">
-                            <div class="photo-article py-4">
-                                <div class="inner">
-                                    <img src="{{ URL::asset('front/images/bombay-high-court_1702451223.jpg') }}" alt="" class="img-fluid">
-                                </div>
-                            </div>
-                            <div class="card-body border">
-                                <div class="d-flex justify-content-between">
-                                    <div class="">
-                                        <p class="">आज का राशिफल</p>
-                                    </div>
-                                    <div class="">
-                                        <a href="#" type="button" class="text-muted" data-toggle="modal" data-target="#exampleModal">मेष <i class="fas fa-angle-down"></i>
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">चंद्र राशि के अनुसार अपनी राशि चुनिए</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="d-flex justify-content-around mb-2">
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/1.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>मेष</b></p>
-                                                                        <p class="rashi-word">(अ, ल, इ)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/2.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>वृष</b></p>
-                                                                        <p class="rashi-word">(ब, व, उ, ए)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/3.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>मिथुन</b></p>
-                                                                        <p class="rashi-word">(क, छ, घ, ह)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}"class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/4.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>सिंह</b></p>
-                                                                        <p class="rashi-word">(म, ट)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/6.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>कन्या</b></p>
-                                                                        <p class="rashi-word">(प, ठ, ण, ट)</p>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                            <div class="d-flex justify-content-around mb-2">
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/7.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>तुला</b></p>
-                                                                        <p class="rashi-word">(र, त)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/8.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>वृश्चिक</b></p>
-                                                                        <p class="rashi-word">(न, य)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/9.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>धनु</b></p>
-                                                                        <p class="rashi-word">(ये, ध, फ, भ)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/10.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>मकर</b></p>
-                                                                        <p class="rashi-word">(भो, ज, ख, ग)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/11.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>कुंभ</b></p>
-                                                                        <p class="rashi-word">(गु, स, श, ष, द)</p>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="{{ url('/rashifal') }}" class="mb-2 text-dark text-decoration-none">
-                                                                    <div>
-                                                                        <img src="{{ URL::asset('front/images/rashi/12.png') }}" alt="" class="img-fluid rashi-icon-img">
-                                                                    </div>
-                                                                    <div class="text-center">
-                                                                        <p class="rashi-head"><b>मीन</b>
-                                                                        </p><p class="rashi-word">(दि, चा, झ, थ)</p>
-                                                                    </div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>  
-                                <div class="">
-                                    <div class="d-flex mb-2">
-                                        <img src="{{ URL::asset('front/images/rashi/1.png') }}" alt="" class="img-fluid secondry-icon-img">
-                                        <h6 class=""><b>मेष | Aries</b></h6>
-                                    </div>
-                                    <div class="">
-                                        <p style="font-size: 14px;">
-                                            पॉजिटिव- बीच में कोई समय से आप जिन योजनाओं को कार्य रूप देने का प्रयास कर रहे थे, आज उनके अनुकूल परिणाम मिल सकते हैं। सिर्फ भरपूर मेहनत करने की जरूरत है। युवा वर्ग अपनी पढ़ाई व करियर के प्रति गंभीरता ...
-                                        </p>
-                                        <a href="{{ url('/rashifal') }}" class="btn text-warning d-block text-right"><b>और पढ़ें</b></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <!--<div class="d-flex mb-2">-->
-                                <!--    <ul class="list-unstyled">-->
-                                <!--        <li class="list-items d-inline"><a href="{{ url('/advertisement') }}" class="items-links text-muted text-decoration-none">Advtisment with Us</a></li>-->
-                                <!--        <li class="list-items d-inline"><a href="" class="items-links text-muted text-decoration-none">| Terms & Conditions </a></li>-->
-                                <!--        <li class="list-items d-inline"><a href="" class="items-links text-muted text-decoration-none">| Grievance Redressal Policy</a></li>-->
-                                <!--        <li class="list-items d-inline"><a href="{{ route('cookie-policy') }}" class="items-links text-muted text-decoration-none">| Cookie Policy</a></li>-->
-                                <!--        <li class="list-items d-inline"><a href="{{ route('privacy-policy') }}" class="items-links text-muted text-decoration-none">| Privacy Policy</a></li>-->
-                                <!--        <li class="list-items d-inline"><a href="{{ route('contact-us') }}" class="items-links text-muted text-decoration-none">| Contact Us</a></li>-->
-                                <!--        <li class="list-items d-inline"><a href="{{ route('our-team') }}" class="items-links text-muted text-decoration-none">| Our Team</a></li>-->
-                                <!--    </ul>   -->
-                                <!--</div>-->
-                                <div class="">
-                                    <ul class="list-unstyled">
-                                        <li class="list-items">Company Menu</li>
-                                        <li class="list-items"><a href="" class="items-links text-decoration-none">About Us</a></li>
-                                        <li class="list-items"><a href="{{ route('contact-us') }}" class="items-links text-decoration-none">Contact Us</a></li>
-                                        <li class="list-items"><a href="" class="items-links text-decoration-none">Our Team</a></li>
-                                        <li class="list-items"><a href="{{ url('/advertisement') }}" class="items-links text-decoration-none">Advertise with Us</a></li>
-                                        <li class="list-items"><a href="{{ route('cookie-policy') }}" class="items-links text-decoration-none">Cookie Policy</a></li>
-                                        <li class="list-items"><a href="{{ route('privacy-policy') }}" class="items-links text-decoration-none">Privacy Policy</a></li>
-                                        <li class="list-items"><a href="" class="items-links text-decoration-none">Terms & Conditions</a></li>
-                                    </ul> 
-                                </div>
-                                <div class="">
-                                    <p class="text-muted" style="font-size: 12px;">{{ $footersetting->content ?? 'Copyright © 2023 Tej Yug News. - All Right Reserved' }} </p>
-                                  <!--  <p class="text-muted" style="font-size: 12px;">This website follows the <a href="#" class="text-decoration-none">DNPA Code of Ethics</a></p> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   
+<!-- News Feed Area Start Here -->
+<section class="bg-accent border-bottom add-top-margin">
+    <div class="container">
+        <div class="row no-gutters d-flex align-items-center">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                <div class="topic-box topic-box-margin">Top Stories</div>
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8 col-6">
+                <div class="feeding-text-dark">
+                    <ol id="sample" class="ticker">
+                        <li>
+                            <a href="#">लखनऊमुख्यमंत्री योगी ने उद्योगपतियों को दिया रात्रिभोज सीएम आवास रात्रिभोज में
+                                शामिल हुए निवेशक उद्योगपतियों को सीएम आवास पर किया आमंत्रित GBC</a>
+                        </li>
+                        <li>
+                            <a href="#">एसबीआई, केंद्र सरकार और चुनाव आयोग को इलेक्टोरल बांड पर सुप्रीम कोर्ट ने 15
+                                मार्च तक डाटा पब्लिक करने को कहा.</a>
+                        </li>
+                        <li>
+                            <a href="#">ममता बनर्जी का इस्तीफा... कोर्ट से बाहर कर दूंगा', किस पर फूटा CJI चंद्रचूड़ का
+                                गुस्सा?</a>
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="videoModalLabel">Video</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="embed-responsive embed-responsive-16by9">
-          <iframe class="embed-responsive-item" id="videoFrame" allowfullscreen></iframe>
-        </div>
-      </div>
+<!-- News Feed Area End Here -->
+<!-- News Info List Area Start Here -->
+<section class="bg-body">
+    <div class="container">
+        <ul class="news-info-list text-center--md">
+            <li>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>Greater Noida, Uttar Pradesh
+            </li>
+            <li>
+                <i class="fa fa-calendar" aria-hidden="true"></i><span id="current_date"></span>
+            </li>
+            <li>
+                <i class="fa fa-clock-o" aria-hidden="true"></i>Last Update 11.30 am
+            </li>
+            <li>
+                <i class="fa fa-cloud" aria-hidden="true"></i>29&#8451; Greater Noida, Uttar Pradesh
+            </li>
+        </ul>
     </div>
-  </div>
-</div>
+</section>
+<!-- News Info List Area End Here -->
+<!-- News Slider Area Start Here -->
+<section class="bg-accent section-space-less2">
+    <div class="container">
+        <div class="row tab-space1">
+            <div class="col-lg-6 col-md-12">
+                <div class="img-overlay-70 img-scale-animate mb-2">
+                    <img src="https://tejyug.com/public/storage/posts/qPCqLgYa9B8K4vjPkOIsrtL6Od0p3Uus3Q0q1BkN.jpg"
+                        alt="news" class="img-fluid width-100">
+                    <div class="mask-content-lg">
+                        <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>by</span>
+                                    <a href="single-news-1.html">Tejyug</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>November 16, 2025
+                                </li>
+                            </ul>
+                        </div>
+                        <h1 class="title-medium-light">
+                            <a href="single-news-1.html">लखनऊजीबीसी 4.0 यूपी यानी अनलिमिटेड पोटेंशियलः सीएम योगीअपनी
+                                प्रतिभा को पहचान कर आज सुरक्षा, सुशासन और विकास से जुड़ चुका है</a>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="row tab-space1">
+                    <div class="col-12">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-sm">
+                                <div class="topic-box-sm color-azure-radiance mb-10">Top News</div>
+                                <h2 class="title-medium-light">
+                                    <a href="single-news-2.html">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को
+                                        खाना खिलाकर पूछा हाल।</a>
+                                </h2>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news2.jpg" alt="news" class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-sm">
+                                <div class="topic-box-sm color-apple mb-10">Sports</div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">सिडनी में खेले जा रहे बॉर्डर-गावस्कर ट्रॉफी </a>
+                                </h3>
+                            </div>
+                            <img src="https://tejyug.com/public/storage/posts/oVPH75JjKY14ikvS4jSyYbMTFb8noqh8Mr4sWl18.jpg"
+                                alt="news" class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-sm">
+                                <div class="topic-box-sm color-razzmatazz mb-10">Crime</div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-1.html">DSP लक्ष्मी सिंह चौहान पर धोखाधड़ी का केस दर्ज.</a>
+                                </h3>
+                            </div>
+                            <img src="https://tejyug.com/public/storage/posts/8lz9LiIFqSgtpaBjkF68cqUz3T53uf2v7ZAGtJJU.jpg"
+                                alt="news" class="img-fluid width-100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- News Slider Area End Here -->
+<!-- Top Story Area Start Here -->
+<section class="bg-body section-space-default">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="mb-20-r ne-isotope">
+                    <div class="topic-border color-cinnabar mb-30">
+                        <div class="topic-box-lg color-cinnabar">Top Stories</div>
+                        <div class="isotope-classes-tab isotop-btn">
+                            <a href="#" data-filter=".politics" class="current"> राजनीति</a>
+                            <a href="#" data-filter=".fashion"> ब्रेकिंग न्यूज़ </a>
+                            <a href="#" data-filter=".travel"> टेक्नोलॉजी</a>
+                            <a href="#" data-filter=".gadget"> खबरें हटके</a>
+                        </div>
+                        <div class="more-info-link">
+                            <a href="post-style-1.html">More
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="featuredContainer">
+                        <div class="row politics">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <a href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news5.jpg" alt="news"
+                                            class="img-fluid width-100">
+                                    </a>
+                                    <div class="mask-content-lg">
+                                        <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                                        <div class="post-date-light">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Adams</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>March 22, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h2 class="title-medium-light size-lg">
+                                            <a href="single-news-1.html">Government launches are inquiry into tainted
+                                                ...</a>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/front/images/ppn-logo.jpg" alt="news"
+                                            class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>27 October, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">क्या बिहार में टूटेगा महागठबंधन</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-2.html">
+                                        <img src="https://tejyug.com/public/storage/posts/5zZORHBA15jxJRJjRK8pMs2Uq2DmwWse45zJnaGR.jpg"
+                                            alt="news" class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>9 June, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-3.html">जमीनी वाला जीतेगा, आसमानी वाला धड़ाम सेे नीचे
+                                                गिरेगा!</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/front/images/ppn-logo.jpg" alt="news"
+                                            class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>27 October, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">उत्तरप्रदेश कैबिनेट बैठक/5 मार्च/महत्वपूर्ण
+                                                निर्णय-</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/front/images/ppn-logo.jpg" alt="news"
+                                            class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>27 October, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">एसएस शिवशंकर ने कहा है कि भगवान राम के अस्तित्व
+                                                का कोई ऐतिहासिक प्रमाण नहीं है.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fashion">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <a href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/storage/posts/hAPofOSSc5qQzwN8mHnHPxjGt87GgaHLtpkPODSs.jpg"
+                                            alt="news" class="img-fluid width-100">
+                                    </a>
+                                    <!-- <div class="mask-content-lg">
+                                                    <div class="topic-box-sm color-azure-radiance mb-20">Fashion</div>
+                                                    <div class="post-date-light">
+                                                        <ul>
+                                                            <li>
+                                                                <span>by</span>
+                                                                <a href="single-news-1.html">Adams</a>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                                </span>March 22, 2017</li>
+                                                        </ul>
+                                                    </div>
+                                                    <h2 class="title-medium-light size-lg">
+                                                        <a href="single-news-1.html">Government launches are inquiry into tainted ...</a>
+                                                    </h2>
+                                                </div> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/front/images/ppn-logo.jpg" alt="news"
+                                            class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>27 October, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">एसएस शिवशंकर ने कहा है कि भगवान राम के अस्तित्व
+                                                का कोई ऐतिहासिक प्रमाण नहीं है.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/front/images/ppn-logo.jpg" alt="news"
+                                            class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>27 October, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">एसएस शिवशंकर ने कहा है कि भगवान राम के अस्तित्व
+                                                का कोई ऐतिहासिक प्रमाण नहीं है.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="https://tejyug.com/public/front/images/ppn-logo.jpg" alt="news"
+                                            class="img-fluid" style="width: 132px; height: 95px;">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>27 October, 2025
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">एसएस शिवशंकर ने कहा है कि भगवान राम के अस्तित्व
+                                                का कोई ऐतिहासिक प्रमाण नहीं है.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row travel">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <a href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news48.jpg" alt="news"
+                                            class="img-fluid width-100">
+                                    </a>
+                                    <div class="mask-content-lg">
+                                        <div class="topic-box-sm color-web-orange mb-20">Gadget</div>
+                                        <div class="post-date-light">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Adams</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>March 22, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h2 class="title-medium-light size-lg">
+                                            <a href="single-news-1.html">Government launches are inquiry into tainted
+                                                ...</a>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news6.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>February 10, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">Blog post look better they are with a
+                                                featured.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-2.html">
+                                        <img src="{{ asset('website') }}/img/news/news7.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>January 10, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-3.html">UAE athlete dies after inden London training
+                                                ground.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news8.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>December 15, 2016
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-1.html">Blog post look better they are with a
+                                                featured.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news9.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>November 23, 2016
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">Blog post look better they are with a
+                                                featured.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gadget">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <a href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news49.jpg" alt="news"
+                                            class="img-fluid width-100">
+                                    </a>
+                                    <div class="mask-content-lg">
+                                        <div class="topic-box-sm color-web-orange mb-20">Gadget</div>
+                                        <div class="post-date-light">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Adams</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>March 22, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h2 class="title-medium-light size-lg">
+                                            <a href="single-news-1.html">Government launches are inquiry into tainted
+                                                ...</a>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news6.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>February 10, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">Blog post look better they are with a
+                                                featured.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-2.html">
+                                        <img src="{{ asset('website') }}/img/news/news7.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>January 10, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-3.html">UAE athlete dies after inden London training
+                                                ground.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news8.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>December 15, 2016
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-1.html">Blog post look better they are with a
+                                                featured.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="media mb-30">
+                                    <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news9.jpg" alt="news"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>November 23, 2016
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="single-news-2.html">Blog post look better they are with a
+                                                featured.</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row tab-space1 mb-25">
+                    <div class="col-12">
+                        <div class="topic-border color-apple mb-30 width-100">
+                            <div class="topic-box-lg color-apple">Life Style</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-xs">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>February 10, 2017
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">Rosie Huntington Whitel Habits Career Art </a>
+                                </h3>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news10.jpg" alt="news"
+                                class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-xs">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>26 नवंबर, 2025
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">सुबह 5 बजे उठने की आदत ने बदल दी इनकी पूरी जिंदगी </a>
+                                </h3>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news11.jpg" alt="news"
+                                class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-xs">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>25 नवंबर, 2025
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">घर में ही बनाएं रेस्टोरेंट जैसा क्रिस्पी हेल्दी डोसा
+                                    </a>
+                                </h3>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news12.jpg" alt="news"
+                                class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-xs">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>24 नवंबर, 2025
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">30 की उम्र में भी 20 जैसे दिखने के 7 देसी नुस्खे </a>
+                                </h3>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news13.jpg" alt="news"
+                                class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-xs">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>23 नवंबर, 2025
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">सर्दियों में बालों का झड़ना रोकने का सबसे आसान तरीका
+                                    </a>
+                                </h3>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news14.jpg" alt="news"
+                                class="img-fluid width-100">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                        <div class="img-overlay-70 img-scale-animate mb-2">
+                            <div class="mask-content-xs">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>22 नवंबर, 2025
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-light">
+                                    <a href="single-news-3.html">बिना जिम गए 30 दिन में 5 किलो वजन कैसे घटाएं? </a>
+                                </h3>
+                            </div>
+                            <img src="{{ asset('website') }}/img/news/news15.jpg" alt="news"
+                                class="img-fluid width-100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-30">
+                        <div class="topic-box-lg color-cod-gray">Stay Connected</div>
+                    </div>
+                    <ul class="stay-connected overflow-hidden">
+                        <li class="facebook">
+                            <i class="fa fa-facebook" aria-hidden="true"></i>
+                            <div class="connection-quantity">50.2 k</div>
+                            <p>Fans</p>
+                        </li>
+                        <li class="twitter">
+                            <i class="fa fa-twitter" aria-hidden="true"></i>
+                            <div class="connection-quantity">10.3 k</div>
+                            <p>Followers</p>
+                        </li>
+                        <li class="linkedin">
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            <div class="connection-quantity">25.4 k</div>
+                            <p>Fans</p>
+                        </li>
+                        <li class="rss">
+                            <i class="fa fa-rss" aria-hidden="true"></i>
+                            <div class="connection-quantity">20.8 k</div>
+                            <p>Subscriber</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-box">
+                    <div class="ne-banner-layout1 text-center">
+                        <a href="#">
+                            <img src="https://tejyug.com/public/front/images/bombay-high-court_1702451223.jpg" alt="ad"
+                                class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar-box">
+                    <div class="topic-border color-scampi mb-5">
+                        <div class="topic-box-lg color-scampi">Recent News</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <div class="mt-25">
+                                <a href="single-news-1.html" class="img-opacity-hover">
+                                    <img src="{{ asset('website') }}/img/news/news42.jpg" alt="ad"
+                                        class="img-fluid mb-10 width-100">
+                                </a>
+                                <h3 class="title-medium-dark size-md mb-none">
+                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art Rosie.</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <div class="mt-25">
+                                <a href="single-news-2.html" class="img-opacity-hover">
+                                    <img src="{{ asset('website') }}/img/news/news43.jpg" alt="ad"
+                                        class="img-fluid mb-10 width-100">
+                                </a>
+                                <h3 class="title-medium-dark size-md mb-none">
+                                    <a href="single-news-2.html">Brings air of distinction to Delafield tist.</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <div class="mt-25">
+                                <a href="single-news-3.html" class="img-opacity-hover">
+                                    <img src="{{ asset('website') }}/img/news/news44.jpg" alt="ad"
+                                        class="img-fluid mb-10 width-100">
+                                </a>
+                                <h3 class="title-medium-dark size-md mb-none">
+                                    <a href="single-news-3.html">Haunts of the Hea Lans capes of Lynn Zirman Career.</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <div class="mt-25">
+                                <a href="single-news-1.html" class="img-opacity-hover">
+                                    <img src="{{ asset('website') }}/img/news/news45.jpg" alt="ad"
+                                        class="img-fluid mb-10 width-100">
+                                </a>
+                                <h3 class="title-medium-dark size-md mb-none">
+                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie
+                                        Habits.</a>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="ne-banner-layout1 mt-20-r text-center">
+                    <a href="#">
+                        <img src="{{ asset('website') }}/img/banner/banner2.jpg" alt="ad" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Top Story Area End Here -->
+<!-- Video Area Start Here -->
+<section class="bg-accent section-space-less4">
+    <div class="container">
+        <div class="row tab-space2">
+            <div class="col-lg-4 col-md-12 mb-4">
+                <div class="img-overlay-70">
+                    <div class="mask-content-sm">
+                        <div class="topic-box-sm color-pomegranate mb-20">Fitness</div>
+                        <h3 class="title-medium-light">
+                            <a href="single-news-3.html">Gym Fitness area coverded they Governed this in 2017</a>
+                        </h3>
+                    </div>
+                    <div class="text-center">
+                        <a class="play-btn popup-youtube" href="http://www.youtube.com/watch?v=1iIZeIy7TqM">
+                            <img src="{{ asset('website') }}/img/banner/play.png" alt="play" class="img-fluid">
+                        </a>
+                    </div>
+                    <img src="{{ asset('website') }}/img/news/news16.jpg" alt="news" class="img-fluid width-100">
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 mb-4">
+                <div class="img-overlay-70">
+                    <div class="mask-content-sm">
+                        <div class="topic-box-sm color-persian-green mb-20">Business</div>
+                        <h3 class="title-medium-light">
+                            <a href="single-news-3.html">Patricia Urquiola transparent furney Italia with iridescent</a>
+                        </h3>
+                    </div>
+                    <div class="text-center">
+                        <a class="play-btn popup-youtube" href="http://www.youtube.com/watch?v=1iIZeIy7TqM">
+                            <img src="{{ asset('website') }}/img/banner/play.png" alt="play" class="img-fluid">
+                        </a>
+                    </div>
+                    <img src="{{ asset('website') }}/img/news/news17.jpg" alt="news" class="img-fluid width-100">
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 mb-4">
+                <div class="img-overlay-70">
+                    <div class="mask-content-sm">
+                        <div class="topic-box-sm color-web-orange mb-20">Food</div>
+                        <h3 class="title-medium-light">
+                            <a href="single-news-3.html">Denton Corker Marshall the myste biennale pavilion</a>
+                        </h3>
+                    </div>
+                    <div class="text-center">
+                        <a class="play-btn popup-youtube" href="http://www.youtube.com/watch?v=1iIZeIy7TqM">
+                            <img src="{{ asset('website') }}/img/banner/play.png" alt="play" class="img-fluid">
+                        </a>
+                    </div>
+                    <img src="{{ asset('website') }}/img/news/news18.jpg" alt="news" class="img-fluid width-100">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Video Area End Here -->
+<!-- Latest News Area Start Here -->
+<section class="bg-body section-space-less30">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <div class="topic-border color-cutty-sark mb-30 width-100">
+                    <div class="topic-box-lg color-cutty-sark">Tech World</div>
+                </div>
+                <div class="img-overlay-70 img-scale-animate mb-30">
+                    <div class="mask-content-sm">
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>by</span>
+                                    <a href="single-news-1.html">Adams</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>May 30, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-light">
+                            <a href="single-news-3.html">Oppo Find 7 is the world need first phone that can take</a>
+                        </h3>
+                    </div>
+                    <img src="{{ asset('website') }}/img/news/news19.jpg" alt="news" class="img-fluid width-100">
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-3.html">
+                        <img src="{{ asset('website') }}/img/news/news20.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-3.html">Dogs Can Be Monito road with Hi Tech Program</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-2.html">
+                        <img src="{{ asset('website') }}/img/news/news21.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-2.html">Microsoft Subsumes Open nside Mothership</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-1.html">
+                        <img src="{{ asset('website') }}/img/news/news22.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-1.html">Dogs Can Be Monito road with Hi Tech Program.</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="topic-border color-pomegranate mb-30 width-100">
+                    <div class="topic-box-lg color-pomegranate">Health &amp; Fitness</div>
+                </div>
+                <div class="img-overlay-70 img-scale-animate mb-30">
+                    <div class="mask-content-sm">
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>by</span>
+                                    <a href="single-news-1.html">Adams</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>March 22, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-light">
+                            <a href="single-news-3.html">Oppo Find 7 is the world need first phone that can take</a>
+                        </h3>
+                    </div>
+                    <img src="{{ asset('website') }}/img/news/news23.jpg" alt="news" class="img-fluid width-100">
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-1.html">
+                        <img src="{{ asset('website') }}/img/news/news24.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-1.html">Dogs Can Be Monito road with Hi Tech Program</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-2.html">
+                        <img src="{{ asset('website') }}/img/news/news25.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-2.html">Microsoft Subsumes Open nside Mothership</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-3.html">
+                        <img src="{{ asset('website') }}/img/news/news26.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-3.html">Dogs Can Be Monito road with Hi Tech Program.</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="topic-border color-web-orange mb-30 width-100">
+                    <div class="topic-box-lg color-web-orange">Tech World</div>
+                </div>
+                <div class="img-overlay-70 img-scale-animate mb-30">
+                    <div class="mask-content-sm">
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>by</span>
+                                    <a href="single-news-1.html">Adams</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>April 16, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-light">
+                            <a href="single-news-3.html">SpringFest One Fashion Show at the University of Michigan</a>
+                        </h3>
+                    </div>
+                    <img src="{{ asset('website') }}/img/news/news27.jpg" alt="news" class="img-fluid width-100">
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-1.html">
+                        <img src="{{ asset('website') }}/img/news/news28.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-1.html">Dogs Can Be Monito road with Hi Tech Program</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-2.html">
+                        <img src="{{ asset('website') }}/img/news/news29.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-2.html">Microsoft Subsumes Open nside Mothership</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="media mb-30">
+                    <a class="img-opacity-hover" href="single-news-3.html">
+                        <img src="{{ asset('website') }}/img/news/news30.jpg" alt="news" class="img-fluid">
+                    </a>
+                    <div class="media-body">
+                        <div class="post-date-dark">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>February 10, 2017
+                                </li>
+                            </ul>
+                        </div>
+                        <h3 class="title-medium-dark size-md mb-none">
+                            <a href="single-news-3.html">Dogs Can Be Monito road with Hi Tech Program.</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="ne-banner-layout1 mb-50 mt-20-r text-center">
+                    <a href="#">
+                        <img src="{{ asset('website') }}/img/banner/banner2.jpg" alt="ad" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="ne-isotope">
+            <div class="row">
+                <div class="col-12">
+                    <div class="topic-border color-azure-radiance mb-30">
+                        <div class="topic-box-lg color-azure-radiance">Sports</div>
+                        <div class="isotope-classes-tab isotop-btn">
+                            <a href="#" data-filter=".tenies" class="current">Tenies</a>
+                            <a href="#" data-filter=".cricket">Cricket</a>
+                            <a href="#" data-filter=".football">Football</a>
+                            <a href="#" data-filter=".cycling">Cycling</a>
+                        </div>
+                        <div class="more-info-link">
+                            <a href="post-style-1.html">More
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="featuredContainer">
+                <div class="row tenies">
+                    <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
+                        <div class="img-overlay-70 img-scale-animate mb-30">
+                            <img src="{{ asset('website') }}/img/news/news31.jpg" alt="news"
+                                class="img-fluid width-100">
+                            <div class="topic-box-top-lg">
+                                <div class="topic-box-sm color-cod-gray mb-20">Tenis</div>
+                            </div>
+                            <div class="mask-content-lg">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>by</span>
+                                            <a href="single-news-1.html">Adams</a>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>May 30, 2017
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h2 class="title-medium-light size-lg">
+                                    <a href="single-news-1.html">10 Best Water Parks In Theya World you Have to...</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-5 col-md-6 col-sm-12">
+                        <div class="row keep-items-4-md">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>January 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>February 10, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>March 06, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Music Evolution, the Most Advanced Audio Mixer</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>May 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-1.html">Hexagon is the new circle but we need to know in
+                                            2017</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-2.html">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>August 22, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>December 30, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cricket">
+                    <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
+                        <div class="img-overlay-70 img-scale-animate mb-30">
+                            <img src="{{ asset('website') }}/img/news/news51.jpg" alt="news"
+                                class="img-fluid width-100">
+                            <div class="topic-box-top-lg">
+                                <div class="topic-box-sm color-cod-gray mb-20">Cricket</div>
+                            </div>
+                            <div class="mask-content-lg">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>by</span>
+                                            <a href="single-news-1.html">Adams</a>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>May 30, 2017
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h2 class="title-medium-light size-lg">
+                                    <a href="single-news-1.html">10 Best Water Parks In Theya World you Have to...</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-5 col-md-6 col-sm-12">
+                        <div class="row keep-items-4-md">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>January 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>February 10, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>March 06, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Music Evolution, the Most Advanced Audio Mixer</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>May 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-1.html">Hexagon is the new circle but we need to know in
+                                            2017</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-2.html">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>August 22, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>December 30, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row football">
+                    <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
+                        <div class="img-overlay-70 img-scale-animate mb-30">
+                            <img src="{{ asset('website') }}/img/news/news50.jpg" alt="news"
+                                class="img-fluid width-100">
+                            <div class="topic-box-top-lg">
+                                <div class="topic-box-sm color-cod-gray mb-20">Football</div>
+                            </div>
+                            <div class="mask-content-lg">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>by</span>
+                                            <a href="single-news-1.html">Adams</a>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>May 30, 2017
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h2 class="title-medium-light size-lg">
+                                    <a href="single-news-1.html">10 Best Water Parks In Theya World you Have to...</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-5 col-md-6 col-sm-12">
+                        <div class="row keep-items-4-md">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>January 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>February 10, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>March 06, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Music Evolution, the Most Advanced Audio Mixer</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>May 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-1.html">Hexagon is the new circle but we need to know in
+                                            2017</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-2.html">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>August 22, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>December 30, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cycling">
+                    <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
+                        <div class="img-overlay-70 img-scale-animate mb-30">
+                            <img src="{{ asset('website') }}/img/news/news52.jpg" alt="news"
+                                class="img-fluid width-100">
+                            <div class="topic-box-top-lg">
+                                <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                            </div>
+                            <div class="mask-content-lg">
+                                <div class="post-date-light">
+                                    <ul>
+                                        <li>
+                                            <span>by</span>
+                                            <a href="single-news-1.html">Adams</a>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>May 30, 2017
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h2 class="title-medium-light size-lg">
+                                    <a href="single-news-1.html">10 Best Water Parks In Theya World you Have to...</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-5 col-md-6 col-sm-12">
+                        <div class="row keep-items-4-md">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>January 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>February 10, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Brooke Shields Casts a New Dress Model</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>March 06, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Music Evolution, the Most Advanced Audio Mixer</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-1.html">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>May 17, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-1.html">Hexagon is the new circle but we need to know in
+                                            2017</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-2.html">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>August 22, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-2.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
+                                <div class="mb-25 position-relative">
+                                    <a class="img-opacity-hover" href="single-news-3.html">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
+                                            class="img-fluid width-100 mb-15">
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
+                                    </div>
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>December 30, 2017
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark size-md">
+                                        <a href="single-news-3.html">Keep a long-haul flight from ruining mood
+                                            health...</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Latest News Area End Here -->
+<!-- More News Area Start Here -->
+<section class="bg-accent section-space-less30">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="ne-isotope">
+                    <div class="topic-border color-scampi mb-30">
+                        <div class="topic-box-lg color-scampi">More News</div>
+                        <div class="isotope-classes-tab isotop-btn">
+                            <a href="#" data-filter=".politics" class="current">Politics</a>
+                            <a href="#" data-filter=".fashion">Fashion</a>
+                            <a href="#" data-filter=".health">Health &amp; Fitness</a>
+                            <a href="#" data-filter=".travel">Travel</a>
+                            <a href="#" data-filter=".gadget">Gadget</a>
+                        </div>
+                        <div class="more-info-link">
+                            <a href="post-style-1.html">More
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="featuredContainer">
+                        <div class="row politics">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">Erik Jones has day he won’t soon forget as
+                                                Denny backup at Bristol</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-2.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-web-orange mb-20">Food</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-2.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-3.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-3.html">A taste of what we like this week at CookA like
+                                                this current week</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-apple mb-20">Life Style</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fashion">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-2.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-web-orange mb-20">Food</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-2.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-3.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-3.html">A taste of what we like this week at CookA like
+                                                this current week</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">Erik Jones has day he won’t soon forget as
+                                                Denny backup at Bristol</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-apple mb-20">Life Style</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row health">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-3.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-3.html">A taste of what we like this week at CookA like
+                                                this current week</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-apple mb-20">Life Style</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">Erik Jones has day he won’t soon forget as
+                                                Denny backup at Bristol</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-2.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-web-orange mb-20">Food</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-2.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row travel">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-3.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-3.html">A taste of what we like this week at CookA like
+                                                this current week</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">Erik Jones has day he won’t soon forget as
+                                                Denny backup at Bristol</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-2.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-web-orange mb-20">Food</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-2.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-apple mb-20">Life Style</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gadget">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-apple mb-20">Life Style</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-1.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-1.html">Erik Jones has day he won’t soon forget as
+                                                Denny backup at Bristol</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-2.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-web-orange mb-20">Food</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-2.html">TG G6 will have 13-mgpx cameras on the back
+                                                Separated theytics.</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                                <div class="media media-none--lg mb-30">
+                                    <div class="position-relative width-40">
+                                        <a href="single-news-3.html" class="img-opacity-hover">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
+                                                class="img-fluid">
+                                        </a>
+                                        <div class="topic-box-top-xs">
+                                            <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
+                                        </div>
+                                    </div>
+                                    <div class="media-body p-mb-none-child media-margin30">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a href="single-news-1.html">Makr Willy</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    </span>May 30, 2017
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-semibold-dark size-lg mb-15">
+                                            <a href="single-news-3.html">A taste of what we like this week at CookA like
+                                                this current week</a>
+                                        </h3>
+                                        <p>Separated they live in Bookmarksgrove right at the coast of the Semantics,
+                                            a large ocean. A small river named Duden flows by their place and
+                                            ...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
+                <div class="sidebar-box">
+                    <div class="ne-banner-layout1 text-center">
+                        <a href="#">
+                            <img src="{{ asset('website') }}/img/banner/banner6.jpg" alt="ad" class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-30">
+                        <div class="topic-box-lg color-cod-gray">Newsletter</div>
+                    </div>
+                    <div class="newsletter-area bg-primary">
+                        <h2 class="title-medium-light size-xl">Subscribe to our mailing list to get the new updates!
+                        </h2>
+                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter"
+                            class="img-fluid mb-40">
+                        <p>Subscribe our newsletter to stay updated every moment</p>
+                        <div class="input-group stylish-input-group">
+                            <input type="text" placeholder="Enter your mail" class="form-control">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- More News Area End Here -->
+<!-- Category Area Start Here -->
+<section class="bg-body section-space-less2">
+    <div class="container">
+        <div class="row tab-space1">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
+                    <img src="{{ asset('website') }}/img/category/ctg1.jpg" alt="news" class="img-fluid width-100">
+                    <div class="content p-30-r">
+                        <div class="ctg-title-xs">Music</div>
+                        <h3 class="title-regular-light size-lg">
+                            <a href="post-style-1.html">Microsoft and Autodesk help industrial designers…</a>
+                        </h3>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>March 22, 2017
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
+                    <img src="{{ asset('website') }}/img/category/ctg2.jpg" alt="news" class="img-fluid width-100">
+                    <div class="content p-30-r">
+                        <div class="ctg-title-xs">Education</div>
+                        <h3 class="title-regular-light size-lg">
+                            <a href="post-style-2.html">Apple’s new AirPods are feature rich but fugly</a>
+                        </h3>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>April 20, 2017
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
+                    <img src="{{ asset('website') }}/img/category/ctg3.jpg" alt="news" class="img-fluid width-100">
+                    <div class="content p-30-r">
+                        <div class="ctg-title-xs">Travel</div>
+                        <h3 class="title-regular-light size-lg">
+                            <a href="post-style-3.html">All People Gather Strategic Supplies of Vegetables</a>
+                        </h3>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>May 03, 2017
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
+                    <img src="{{ asset('website') }}/img/category/ctg4.jpg" alt="news" class="img-fluid width-100">
+                    <div class="content p-30-r">
+                        <div class="ctg-title-xs">Sprts</div>
+                        <h3 class="title-regular-light size-lg">
+                            <a href="post-style-4.html">The Whole World is Expecting the Best iPhone Ever Created</a>
+                        </h3>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>July 09, 2017
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
+                    <img src="{{ asset('website') }}/img/category/ctg5.jpg" alt="news" class="img-fluid width-100">
+                    <div class="content p-30-r">
+                        <div class="ctg-title-xs">Food</div>
+                        <h3 class="title-regular-light size-lg">
+                            <a href="post-style-1.html">Gym Fitness area coverded Governed this in 2017</a>
+                        </h3>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>October 28, 2017
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
+                    <img src="{{ asset('website') }}/img/category/ctg6.jpg" alt="news" class="img-fluid width-100">
+                    <div class="content p-30-r">
+                        <div class="ctg-title-xs">Education</div>
+                        <h3 class="title-regular-light size-lg">
+                            <a href="post-style-2.html">What To Avoid When Planning Your Honeymoon</a>
+                        </h3>
+                        <div class="post-date-light">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>December 19, 2017
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Category Area End Here -->
+<!-- Footer Area Start Here -->
 @include('front.footer')
-<script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
-	$( document ).ajaxStart(function() {
-		$("#loader").modal('show');
-	});
-	$( document ). ajaxComplete(function() {
-		$("#loader").modal('hide');
-	});
-	$(document).ready(function(){
-		$(document).on('click','.add-poll-btn',function(event){
-			$('#option-err').html('');
-			$.ajax({
-				url:"{{ URL::to('submit-poll') }}",
-				type:'POST',
-				dataType:'json',
-				data:$('#poll-form').serialize(),
-				success:function(result){
-					if(result.msgCode === '200') {
-						toastr.success(result.msgText);
-						window.location = "{{ URL::to('/') }}";
-					} else if (result.msgCode === '401') {
-						if(result.errors.option) {
-							$('#option-err').html(result.errors.option[0]);
-						}
-					} else {
-						toastr.error('error encountered '+result.msgText);
-					}
-					$("#loader").modal('hide');
-				},
-				error:function(error){
-					toastr.error('error encountered '+error.statusText);
-					$("#loader").modal('hide');
-				}
-			});
-		});
-	});
-</script>
-
-<script>
-function openVideo(videoId) {
-    $('#videoFrame').attr('src', 'https://www.youtube.com/embed/' + videoId+'?rel=0');
-    $('#videoModal').modal('show');
-}
-$('.youtube-video').on('click', function() {
-    openVideo($(this).data("videoid"));
-});
- $(document).ready(function() {
-        // $.ajax({
-        //     url: "{{ route('fetchVideos') }}", // Replace with your route URL
-        //     type: "GET",
-        //     dataType: "json",
-        //     success: function(response) {
-        //         if (response.success) {
-        //             var carouselInner = $('<div>', { class: 'carousel-inner' });
-        //             $.each(response.videodatas, function(key1, resultvideo) {
-        //                 var carouselItem = $('<div>', { class: 'carousel-item' });
-        //                 if (key1 == response.key) {
-        //                     carouselItem.addClass('active');
-        //                 }
-        //                 var dFlexContainer = $('<div>', { class: 'd-flex justify-content-between' });
-        //                 $.each(resultvideo, function(_, video) {
-        //                     var mx2Div = $('<div>', { class: 'mx-2' });
-        //                     var iframe = $('<iframe>', {
-        //                         class: 'embed-responsive-item',
-        //                         src: 'https://www.youtube.com/embed/' + video.video + '?rel=0',
-        //                         allowfullscreen: true
-        //                     });
-        //                     mx2Div.append(iframe);
-        //                     dFlexContainer.append(mx2Div);
-        //                 });
-        //                 carouselItem.append(dFlexContainer);
-        //                 carouselInner.append(carouselItem);
-        //             });
-        //             $('#carouselContainer').html(carouselInner);
-        //             $('#carouselContainer2').html(carouselInner);
-        //         } else {
-        //             console.log(response.message); // Handle error
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error(xhr.responseText); // Log error
-        //     }
-        // });
-    });
-    $(document).ready(function(){       
-   $('#myModal').modal('show');
-    }); 
-</script>
-
