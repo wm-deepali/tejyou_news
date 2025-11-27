@@ -75,6 +75,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('manage-category.index') }}">Manage Category</a>
                                     <a class="dropdown-item" href="{{ route('manage-subcategory.index') }}">Manage Sub Category</a>
+                                    <a class="dropdown-item" href="{{ route('manage-sub-subcategory.index') }}">Manage Sub Subcategory</a>
                                     <a class="dropdown-item" href="{{ route('manage-tag.index') }}">Manage Tags</a>
                                 </div>
                             </li>

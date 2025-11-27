@@ -23,8 +23,8 @@ class SubcategoryController extends Controller
     public function index()
     {
         $this->authorize('is-admin');
-        $subcategories=Subcategory::all();
-        return  view('admin.manage-subcategory')->with('subcategories',$subcategories);
+        $subcategories = Subcategory::all();
+        return view('admin.manage-subcategory')->with('subcategories', $subcategories);
     }
 
     /**
@@ -34,17 +34,16 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        try{
-            $categories=Category::where('hassubcategory','yes')->get();
+        try {
+            $categories = Category::where('hassubcategory', 'yes')->get();
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.add-subcategory')->with('categories',$categories)->render(),
+                "html" => view('admin.ajax.add-subcategory')->with('categories', $categories)->render(),
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -61,7 +60,7 @@ class SubcategoryController extends Controller
         $requestData['slug'] = Str::slug($request->slug, '-');
         $request->replace($requestData);
         $validator = Validator::make($requestData, [
-            'category'=>'required',
+            'category' => 'required',
             'name' => 'required|max:255',
             'slug' => 'required|max:255|unique:subcategories',
             'metatitle' => 'required|max:255',
@@ -71,18 +70,21 @@ class SubcategoryController extends Controller
         if ($validator->passes()) {
             try {
                 Subcategory::create([
-                    'category_id'=>$request->category,
-                    'name'=>$request->name,
-                    'slug'=>$request->slug,
-                    'metatitle'=>$request->metatitle,
-                    'metadescription'=>$request->metadescription,
-                    'metakeyword'=>$request->metakeyword
+                    'category_id' => $request->category,
+                    'name' => $request->name,
+                    'slug' => $request->slug,
+                    'metatitle' => $request->metatitle,
+                    'metadescription' => $request->metadescription,
+                    'metakeyword' => $request->metakeyword,
+                    'hassubsubcategory' => $request->has('hassubsubcategory') ? 'yes' : 'no',
+                    'showonheader' => $request->has('showonheader') ? 'yes' : 'no',
                 ]);
+
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Category Created',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -90,8 +92,8 @@ class SubcategoryController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -115,25 +117,23 @@ class SubcategoryController extends Controller
      */
     public function edit($id)
     {
-        try{
+        try {
             $this->authorize('is-admin');
-            $subcategory=Subcategory::findOrFail($id);
-            $categories=Category::where('hassubcategory','yes')->get();
+            $subcategory = Subcategory::findOrFail($id);
+            $categories = Category::where('hassubcategory', 'yes')->get();
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.edit-subcategory')->with('subcategory',$subcategory)->with('categories',$categories)->render(),
+                "html" => view('admin.ajax.edit-subcategory')->with('subcategory', $subcategory)->with('categories', $categories)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -153,7 +153,7 @@ class SubcategoryController extends Controller
         $validator = Validator::make($requestData, [
             'category' => 'required',
             'name' => 'required|max:255',
-            "slug"=>["required",Rule::unique('subcategories')->ignore($id)],
+            "slug" => ["required", Rule::unique('subcategories')->ignore($id)],
             'metatitle' => 'required|max:255',
             'metadescription' => 'required|max:255',
             'metakeyword' => 'required|max:255',
@@ -161,24 +161,27 @@ class SubcategoryController extends Controller
         if ($validator->passes()) {
             try {
                 Subcategory::findOrFail($id);
-                Subcategory::where('id',$id)->update([
-                    'category_id'=>$request->category,
-                    'name'=>$request->name,
-                    'slug'=>$request->slug,
-                    'metatitle'=>$request->metatitle,
-                    'metadescription'=>$request->metadescription,
-                    'metakeyword'=>$request->metakeyword
+                Subcategory::where('id', $id)->update([
+                    'category_id' => $request->category,
+                    'name' => $request->name,
+                    'slug' => $request->slug,
+                    'metatitle' => $request->metatitle,
+                    'metadescription' => $request->metadescription,
+                    'metakeyword' => $request->metakeyword,
+                    'hassubsubcategory' => $request->has('hassubsubcategory') ? 'yes' : 'no',
+                    'showonheader' => $request->has('showonheader') ? 'yes' : 'no',
                 ]);
+
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Subcategory Updated',
                 ]);
-            } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => 'Data Not found by id#' . $id,
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -186,8 +189,8 @@ class SubcategoryController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -202,17 +205,17 @@ class SubcategoryController extends Controller
     {
         try {
             Subcategory::findOrFail($id);
-            Subcategory::where('id',$id)->delete();
+            Subcategory::where('id', $id)->delete();
             return response()->json([
                 'msgCode' => '200',
                 'msgText' => 'Subcategory Deleted',
             ]);
-        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),
@@ -220,33 +223,51 @@ class SubcategoryController extends Controller
         }
     }
 
-    public function changestatus($id,$status)
+    public function changestatus($id, $status)
     {
         try {
-            if ($status=='active') {
-                $updatedstatus='block';
+            if ($status == 'active') {
+                $updatedstatus = 'block';
             } else {
-                $updatedstatus='active';
+                $updatedstatus = 'active';
             }
             Subcategory::findOrFail($id);
-            Subcategory::where('id',$id)->update([
-                'status'=>$updatedstatus,
+            Subcategory::where('id', $id)->update([
+                'status' => $updatedstatus,
             ]);
             return response()->json([
                 'msgCode' => '200',
                 'msgText' => 'Status Changed',
                 'status' => $updatedstatus,
             ]);
-        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),
             ]);
         }
     }
+
+    public function getSubcategories($category_id)
+    {
+        try {
+            $subcategories = Subcategory::where('category_id', $category_id)
+                ->where('status', 'active')
+                ->get(['id', 'name']);
+
+            return response()->json($subcategories);
+
+        } catch (\Exception $ex) {
+            return response()->json([
+                'msgCode' => '400',
+                'msgText' => $ex->getMessage()
+            ], 400);
+        }
+    }
+
 }

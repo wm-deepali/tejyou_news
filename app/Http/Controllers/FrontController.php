@@ -39,350 +39,349 @@ use Illuminate\Support\Facades\Mail;
 
 class FrontController extends Controller
 {
-    public function index($slug="")
+    public function index($slug = "")
     {
-        try{
-        // Common
-        $headersetting=Headersetting::select('datetimeformat','image')->first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::select(['id','slug','name'])->where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::select(['id','slug','name'])->where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
-        // // Common
-        // $homepagewidget=Homepagewidget::firstOrFail();
-        
-        // $centercategoryids=$homepagewidget->centercategories->pluck('category_id')->toArray();
-        
-        // $center_1_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[0])->limit(4)->pluck('post_id')->toArray();
-        // $center1posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_1_post_ids)->where('status','published')->take(4)->get();
-        // $center1category=Category::findOrFail($centercategoryids[0]);
-        
-        // $center_2_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[1])->limit(4)->pluck('post_id')->toArray();
-        // $center2posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_2_post_ids)->where('status','published')->take(4)->get();
-        // $center2category=Category::findOrFail($centercategoryids[1]);
-        
-        // $center_3_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[2])->limit(4)->pluck('post_id')->toArray();
-        // $center3posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_3_post_ids)->where('status','published')->take(4)->get();
-        // $center3category=Category::findOrFail($centercategoryids[2]);
-        
-        // $videocategoryids=$homepagewidget->videocategories->pluck('category_id')->toArray();
-        // $videocategories=Category::whereIn('id',$videocategoryids)->get();
-        // if($homepagewidget->cataloguecategory=='*'){
-        //     if ($homepagewidget->catalogueposttype=='all') {
-        //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id','desc')->take(5)->get();
-        //     } elseif($homepagewidget->catalogueposttype=='trending') {
-        //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->catalogueposttype=='latest') {
-        //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->catalogueposttype=='oldest') {
-        //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        //     }
-        // } else {
-        //     if ($homepagewidget->catalogueposttype=='all') {
-        //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->cataloguecategory);
-        //         })->where('status','published')->orderBy('id','desc')->take(5)->get();
-        //     } elseif($homepagewidget->catalogueposttype=='trending') {
-        //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->cataloguecategory);
-        //         })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->catalogueposttype=='latest') {
-        //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->cataloguecategory);
-        //         })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->catalogueposttype=='oldest') {
-        //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->cataloguecategory);
-        //         })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        //     }
-        // }
-        // if ($homepagewidget->categorytab1posttype=='all') {
-        //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab1);
-        //     })->where('status','published')->orderBy('id', 'desc')->take(7)->get();
-        // } elseif($homepagewidget->categorytab1posttype=='trending') {
-        //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab1);
-        //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-        // } elseif($homepagewidget->categorytab1posttype=='latest') {
-        //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab1);
-        //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-        // } elseif($homepagewidget->categorytab1posttype=='oldest') {
-        //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab1);
-        //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-        // }
-        // $uppertab1category=Category::findOrFail($homepagewidget->categorytab1);
-        // if ($homepagewidget->categorytab2posttype=='all') {
-        //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab2);
-        //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
-        // } elseif($homepagewidget->categorytab2posttype=='trending') {
-        //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab2);
-        //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-        // } elseif($homepagewidget->categorytab2posttype=='latest') {
-        //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab2);
-        //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-        // } elseif($homepagewidget->categorytab2posttype=='oldest') {
-        //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab2);
-        //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-        // }
-        // $uppertab2category=Category::findOrFail($homepagewidget->categorytab2);
-        // if ($homepagewidget->categorytab3posttype=='all') {
-        //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab3);
-        //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
-        // } elseif($homepagewidget->categorytab3posttype=='trending') {
-        //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab3);
-        //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-        // } elseif($homepagewidget->categorytab3posttype=='latest') {
-        //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab3);
-        //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-        // } elseif($homepagewidget->categorytab3posttype=='oldest') {
-        //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab3);
-        //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-        // }
-        // $uppertab3category=Category::findOrFail($homepagewidget->categorytab3);
-        // if ($homepagewidget->categorytab4posttype=='all') {
-        //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab4);
-        //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
-        // } elseif($homepagewidget->categorytab4posttype=='trending') {
-        //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab4);
-        //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-        // } elseif($homepagewidget->categorytab4posttype=='latest') {
-        //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab4);
-        //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-        // } elseif($homepagewidget->categorytab4posttype=='oldest') {
-        //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->categorytab4);
-        //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-        // }
-        // $uppertab4category=Category::findOrFail($homepagewidget->categorytab4);
-        // if($homepagewidget->slidercategory=='*'){
-        //     if ($homepagewidget->sliderposttype=='all') {
-        //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('id','desc')->take(5)->get();
-        //     } elseif($homepagewidget->sliderposttype=='trending') {
-        //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->sliderposttype=='latest') {
-        //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->sliderposttype=='oldest') {
-        //         $sliderposts=Post::where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        //     }
-        // } else {
-        //     if ($homepagewidget->sliderposttype=='all') {
-        //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->slidercategory);
-        //         })->where('status','published')->orderBy('id','desc')->take(5)->get();
-        //     } elseif($homepagewidget->sliderposttype=='trending') {
-        //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->slidercategory);
-        //         })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->sliderposttype=='latest') {
-        //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->slidercategory);
-        //         })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        //     } elseif($homepagewidget->sliderposttype=='oldest') {
-        //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->slidercategory);
-        //         })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        //     }
-        // }
-        // if($homepagewidget->trendingcategory=='*'){
-        //     if ($homepagewidget->trendingposttype=='all') {
-        //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id','desc')->take(9)->get();
-        //     } elseif($homepagewidget->trendingposttype=='trending') {
-        //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('views', 'desc')->take(9)->get();
-        //     } elseif($homepagewidget->trendingposttype=='latest') {
-        //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id', 'desc')->take(9)->get();
-        //     } elseif($homepagewidget->trendingposttype=='oldest') {
-        //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id', 'asc')->take(9)->get();
-        //     }
-        // } else {
-        //     if ($homepagewidget->trendingposttype=='all') {
-        //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->trendingcategory);
-        //         })->where('status','published')->orderBy('id','desc')->take(9)->get();
-        //     } elseif($homepagewidget->trendingposttype=='trending') {
-        //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->trendingcategory);
-        //         })->where('status','published')->orderBy('views', 'desc')->take(9)->get();
-        //     } elseif($homepagewidget->trendingposttype=='latest') {
-        //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->trendingcategory);
-        //         })->where('status','published')->orderBy('id', 'desc')->take(9)->get();
-        //     } elseif($homepagewidget->trendingposttype=='oldest') {
-        //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //             $query->where('category_id',$homepagewidget->trendingcategory);
-        //         })->where('status','published')->orderBy('id', 'asc')->take(9)->get();
-        //     }
-        // }
-        // if ($homepagewidget->otherwidgetposttype=='all') {
-        //     $other_widget_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->otherwidgetcategory)->limit(16)->pluck('post_id')->toArray();
-        //     $otherwidgetposts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$other_widget_post_ids)->where('status','published')->take(16)->get();
-        // } elseif($homepagewidget->otherwidgetposttype=='trending') {
-        //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
-        //     })->where('status','published')->orderBy('views', 'desc')->take(16)->get();
-        // } elseif($homepagewidget->otherwidgetposttype=='latest') {
-        //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
-        //     })->where('status','published')->orderBy('id', 'desc')->take(16)->get();
-        // } elseif($homepagewidget->otherwidgetposttype=='oldest') {
-        //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
-        //     })->where('status','published')->orderBy('id', 'asc')->take(16)->get();
-        // }
-        // $otherwidgetcategory=Category::findOrFail($homepagewidget->otherwidgetcategory);
-        
-        // if ($homepagewidget->youmaylikeposttype=='all') {
-        //     $you_may_like_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->youmaylikecategory)->limit(4)->pluck('post_id')->toArray();
-        //     $youmaylikeposts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
-        // } elseif($homepagewidget->youmaylikeposttype=='trending') {
-        //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->youmaylikecategory);
-        //     })->where('status','published')->orderBy('views', 'desc')->take(4)->get();
-        // } elseif($homepagewidget->youmaylikeposttype=='latest') {
-        //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->youmaylikecategory);
-        //     })->where('status','published')->orderBy('id', 'desc')->take(4)->get();
-        // } elseif($homepagewidget->youmaylikeposttype=='oldest') {
-        //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->youmaylikecategory);
-        //     })->where('status','published')->orderBy('id', 'asc')->take(4)->get();
-        // }
-        // $youmaylikecategory=Category::findOrFail($homepagewidget->youmaylikecategory);
-        
-        // if ($homepagewidget->sidebartab1posttype=='all') {
-        //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab1category);
-        //     })->where('status','published')->orderBy('id','desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab1posttype=='trending') {
-        //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab1category);
-        //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        // }
-        // elseif($homepagewidget->sidebartab1posttype=='latest') {
-        //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab1category);
-        //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab1posttype=='oldest') {
-        //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab1category);
-        //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        // }
-        // $sidebartab1category=Category::findOrFail($homepagewidget->sidebartab1category);
-        // if ($homepagewidget->sidebartab2posttype=='all') {
-        //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab2category);
-        //     })->where('status','published')->orderBy('id','desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab2posttype=='trending') {
-        //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab2category);
-        //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab2posttype=='latest') {
-        //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab2category);
-        //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab2posttype=='oldest') {
-        //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab2category);
-        //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        // }
-        // $sidebartab2category=Category::findOrFail($homepagewidget->sidebartab2category);
-        // if ($homepagewidget->sidebartab3posttype=='all') {
-        //     $sidebar_tab3_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->sidebartab3category)->limit(5)->pluck('post_id')->toArray();
-        //     $sidebartab3posts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$sidebar_tab3_post_ids)->where('status','published')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab3posttype=='trending') {
-        //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab3category);
-        //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab3posttype=='latest') {
-        //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab3category);
-        //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-        // } elseif($homepagewidget->sidebartab3posttype=='oldest') {
-        //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-        //         $query->where('category_id',$homepagewidget->sidebartab3category);
-        //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-        // }
-        // $sidebartab3category=Category::findOrFail($homepagewidget->sidebartab3category);
-        // $question=Questionoftheday::where('status','active')->first();
-        // $today=now()->toDateString();
-        // $uppersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','uppersidebar300x250')->where('status','active')->get();
-        // $middlesidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlesidebar300x250')->where('status','active')->get();
-        // $lowersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowersidebar300x250')->where('status','active')->get();
-        // $uppersidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','uppersidebar300x600')->where('status','active')->get();
-        // $middlesidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlesidebar300x600')->where('status','active')->get();
-        // $lowersidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowersidebar300x600')->where('status','active')->get();
-        // $upperbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','upperbanner728x90')->where('status','active')->get();
-        // $middlebanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlebanner728x90')->where('status','active')->get();
-        // $lowerbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowerbanner728x90')->where('status','active')->get();
-        // $lowestbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowestbanner728x90')->where('status','active')->get();
-        // $adsetting=Adsetting::first();
-        $postnews = [];
-        if($slug !=""){
-            $category1=Category::where('slug',$slug)->first();
-            if($category1){
-                $idcate = $category1->id;
-            // $postnews=Post::select(['id','slug','title','image','content','video'])->where('status','published')->whereHas('categories', function (Builder $query) use($idcate) {
-            //     $query->where('category_id',$idcate);
-            // })->orderBy('views', 'desc')->take(5)->get();
-            $postnews = Post::with('categories:id,category_id')
-            ->select(['id', 'slug', 'title', 'image', 'video','content'])
-            ->where('status', 'published')
-            ->whereHas('categories', function (Builder $query) use ($idcate) {
-                $query->where('category_id', $idcate);
-            })
-            ->orderByDesc('views')
-           // ->take(5)
-            ->get();
+        try {
+            // Common
+            $headersetting = Headersetting::select('datetimeformat', 'image')->first();
+            $footersetting = Footersetting::first();
+            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $tags = Tag::select(['id', 'slug', 'name'])->where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+            $footercategories = Category::select(['id', 'slug', 'name'])->where('status', 'active')->where('showonfooter', 'yes')->get();
+            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
+            // // Common
+            // $homepagewidget=Homepagewidget::firstOrFail();
+
+            // $centercategoryids=$homepagewidget->centercategories->pluck('category_id')->toArray();
+
+            // $center_1_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[0])->limit(4)->pluck('post_id')->toArray();
+            // $center1posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_1_post_ids)->where('status','published')->take(4)->get();
+            // $center1category=Category::findOrFail($centercategoryids[0]);
+
+            // $center_2_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[1])->limit(4)->pluck('post_id')->toArray();
+            // $center2posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_2_post_ids)->where('status','published')->take(4)->get();
+            // $center2category=Category::findOrFail($centercategoryids[1]);
+
+            // $center_3_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[2])->limit(4)->pluck('post_id')->toArray();
+            // $center3posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_3_post_ids)->where('status','published')->take(4)->get();
+            // $center3category=Category::findOrFail($centercategoryids[2]);
+
+            // $videocategoryids=$homepagewidget->videocategories->pluck('category_id')->toArray();
+            // $videocategories=Category::whereIn('id',$videocategoryids)->get();
+            // if($homepagewidget->cataloguecategory=='*'){
+            //     if ($homepagewidget->catalogueposttype=='all') {
+            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id','desc')->take(5)->get();
+            //     } elseif($homepagewidget->catalogueposttype=='trending') {
+            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->catalogueposttype=='latest') {
+            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->catalogueposttype=='oldest') {
+            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            //     }
+            // } else {
+            //     if ($homepagewidget->catalogueposttype=='all') {
+            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->cataloguecategory);
+            //         })->where('status','published')->orderBy('id','desc')->take(5)->get();
+            //     } elseif($homepagewidget->catalogueposttype=='trending') {
+            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->cataloguecategory);
+            //         })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->catalogueposttype=='latest') {
+            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->cataloguecategory);
+            //         })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->catalogueposttype=='oldest') {
+            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->cataloguecategory);
+            //         })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            //     }
+            // }
+            // if ($homepagewidget->categorytab1posttype=='all') {
+            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab1);
+            //     })->where('status','published')->orderBy('id', 'desc')->take(7)->get();
+            // } elseif($homepagewidget->categorytab1posttype=='trending') {
+            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab1);
+            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
+            // } elseif($homepagewidget->categorytab1posttype=='latest') {
+            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab1);
+            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
+            // } elseif($homepagewidget->categorytab1posttype=='oldest') {
+            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab1);
+            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
+            // }
+            // $uppertab1category=Category::findOrFail($homepagewidget->categorytab1);
+            // if ($homepagewidget->categorytab2posttype=='all') {
+            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab2);
+            //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
+            // } elseif($homepagewidget->categorytab2posttype=='trending') {
+            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab2);
+            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
+            // } elseif($homepagewidget->categorytab2posttype=='latest') {
+            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab2);
+            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
+            // } elseif($homepagewidget->categorytab2posttype=='oldest') {
+            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab2);
+            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
+            // }
+            // $uppertab2category=Category::findOrFail($homepagewidget->categorytab2);
+            // if ($homepagewidget->categorytab3posttype=='all') {
+            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab3);
+            //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
+            // } elseif($homepagewidget->categorytab3posttype=='trending') {
+            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab3);
+            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
+            // } elseif($homepagewidget->categorytab3posttype=='latest') {
+            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab3);
+            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
+            // } elseif($homepagewidget->categorytab3posttype=='oldest') {
+            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab3);
+            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
+            // }
+            // $uppertab3category=Category::findOrFail($homepagewidget->categorytab3);
+            // if ($homepagewidget->categorytab4posttype=='all') {
+            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab4);
+            //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
+            // } elseif($homepagewidget->categorytab4posttype=='trending') {
+            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab4);
+            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
+            // } elseif($homepagewidget->categorytab4posttype=='latest') {
+            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab4);
+            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
+            // } elseif($homepagewidget->categorytab4posttype=='oldest') {
+            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->categorytab4);
+            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
+            // }
+            // $uppertab4category=Category::findOrFail($homepagewidget->categorytab4);
+            // if($homepagewidget->slidercategory=='*'){
+            //     if ($homepagewidget->sliderposttype=='all') {
+            //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('id','desc')->take(5)->get();
+            //     } elseif($homepagewidget->sliderposttype=='trending') {
+            //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->sliderposttype=='latest') {
+            //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->sliderposttype=='oldest') {
+            //         $sliderposts=Post::where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            //     }
+            // } else {
+            //     if ($homepagewidget->sliderposttype=='all') {
+            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->slidercategory);
+            //         })->where('status','published')->orderBy('id','desc')->take(5)->get();
+            //     } elseif($homepagewidget->sliderposttype=='trending') {
+            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->slidercategory);
+            //         })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->sliderposttype=='latest') {
+            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->slidercategory);
+            //         })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            //     } elseif($homepagewidget->sliderposttype=='oldest') {
+            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->slidercategory);
+            //         })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            //     }
+            // }
+            // if($homepagewidget->trendingcategory=='*'){
+            //     if ($homepagewidget->trendingposttype=='all') {
+            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id','desc')->take(9)->get();
+            //     } elseif($homepagewidget->trendingposttype=='trending') {
+            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('views', 'desc')->take(9)->get();
+            //     } elseif($homepagewidget->trendingposttype=='latest') {
+            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id', 'desc')->take(9)->get();
+            //     } elseif($homepagewidget->trendingposttype=='oldest') {
+            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id', 'asc')->take(9)->get();
+            //     }
+            // } else {
+            //     if ($homepagewidget->trendingposttype=='all') {
+            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->trendingcategory);
+            //         })->where('status','published')->orderBy('id','desc')->take(9)->get();
+            //     } elseif($homepagewidget->trendingposttype=='trending') {
+            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->trendingcategory);
+            //         })->where('status','published')->orderBy('views', 'desc')->take(9)->get();
+            //     } elseif($homepagewidget->trendingposttype=='latest') {
+            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->trendingcategory);
+            //         })->where('status','published')->orderBy('id', 'desc')->take(9)->get();
+            //     } elseif($homepagewidget->trendingposttype=='oldest') {
+            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //             $query->where('category_id',$homepagewidget->trendingcategory);
+            //         })->where('status','published')->orderBy('id', 'asc')->take(9)->get();
+            //     }
+            // }
+            // if ($homepagewidget->otherwidgetposttype=='all') {
+            //     $other_widget_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->otherwidgetcategory)->limit(16)->pluck('post_id')->toArray();
+            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$other_widget_post_ids)->where('status','published')->take(16)->get();
+            // } elseif($homepagewidget->otherwidgetposttype=='trending') {
+            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
+            //     })->where('status','published')->orderBy('views', 'desc')->take(16)->get();
+            // } elseif($homepagewidget->otherwidgetposttype=='latest') {
+            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
+            //     })->where('status','published')->orderBy('id', 'desc')->take(16)->get();
+            // } elseif($homepagewidget->otherwidgetposttype=='oldest') {
+            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
+            //     })->where('status','published')->orderBy('id', 'asc')->take(16)->get();
+            // }
+            // $otherwidgetcategory=Category::findOrFail($homepagewidget->otherwidgetcategory);
+
+            // if ($homepagewidget->youmaylikeposttype=='all') {
+            //     $you_may_like_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->youmaylikecategory)->limit(4)->pluck('post_id')->toArray();
+            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
+            // } elseif($homepagewidget->youmaylikeposttype=='trending') {
+            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->youmaylikecategory);
+            //     })->where('status','published')->orderBy('views', 'desc')->take(4)->get();
+            // } elseif($homepagewidget->youmaylikeposttype=='latest') {
+            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->youmaylikecategory);
+            //     })->where('status','published')->orderBy('id', 'desc')->take(4)->get();
+            // } elseif($homepagewidget->youmaylikeposttype=='oldest') {
+            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->youmaylikecategory);
+            //     })->where('status','published')->orderBy('id', 'asc')->take(4)->get();
+            // }
+            // $youmaylikecategory=Category::findOrFail($homepagewidget->youmaylikecategory);
+
+            // if ($homepagewidget->sidebartab1posttype=='all') {
+            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab1category);
+            //     })->where('status','published')->orderBy('id','desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab1posttype=='trending') {
+            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab1category);
+            //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            // }
+            // elseif($homepagewidget->sidebartab1posttype=='latest') {
+            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab1category);
+            //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab1posttype=='oldest') {
+            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab1category);
+            //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            // }
+            // $sidebartab1category=Category::findOrFail($homepagewidget->sidebartab1category);
+            // if ($homepagewidget->sidebartab2posttype=='all') {
+            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab2category);
+            //     })->where('status','published')->orderBy('id','desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab2posttype=='trending') {
+            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab2category);
+            //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab2posttype=='latest') {
+            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab2category);
+            //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab2posttype=='oldest') {
+            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab2category);
+            //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            // }
+            // $sidebartab2category=Category::findOrFail($homepagewidget->sidebartab2category);
+            // if ($homepagewidget->sidebartab3posttype=='all') {
+            //     $sidebar_tab3_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->sidebartab3category)->limit(5)->pluck('post_id')->toArray();
+            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$sidebar_tab3_post_ids)->where('status','published')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab3posttype=='trending') {
+            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab3category);
+            //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab3posttype=='latest') {
+            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab3category);
+            //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
+            // } elseif($homepagewidget->sidebartab3posttype=='oldest') {
+            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
+            //         $query->where('category_id',$homepagewidget->sidebartab3category);
+            //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
+            // }
+            // $sidebartab3category=Category::findOrFail($homepagewidget->sidebartab3category);
+            // $question=Questionoftheday::where('status','active')->first();
+            // $today=now()->toDateString();
+            // $uppersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','uppersidebar300x250')->where('status','active')->get();
+            // $middlesidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlesidebar300x250')->where('status','active')->get();
+            // $lowersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowersidebar300x250')->where('status','active')->get();
+            // $uppersidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','uppersidebar300x600')->where('status','active')->get();
+            // $middlesidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlesidebar300x600')->where('status','active')->get();
+            // $lowersidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowersidebar300x600')->where('status','active')->get();
+            // $upperbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','upperbanner728x90')->where('status','active')->get();
+            // $middlebanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlebanner728x90')->where('status','active')->get();
+            // $lowerbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowerbanner728x90')->where('status','active')->get();
+            // $lowestbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowestbanner728x90')->where('status','active')->get();
+            // $adsetting=Adsetting::first();
+            $postnews = [];
+            if ($slug != "") {
+                $category1 = Category::where('slug', $slug)->first();
+                if ($category1) {
+                    $idcate = $category1->id;
+                    // $postnews=Post::select(['id','slug','title','image','content','video'])->where('status','published')->whereHas('categories', function (Builder $query) use($idcate) {
+                    //     $query->where('category_id',$idcate);
+                    // })->orderBy('views', 'desc')->take(5)->get();
+                    $postnews = Post::with('categories:id,category_id')
+                        ->select(['id', 'slug', 'title', 'image', 'video', 'content'])
+                        ->where('status', 'published')
+                        ->whereHas('categories', function (Builder $query) use ($idcate) {
+                            $query->where('category_id', $idcate);
+                        })
+                        ->orderByDesc('views')
+                        // ->take(5)
+                        ->get();
+                }
+
+            } else {
+                $idcate = 21;
+                // $postnews=Post::select(['id','slug','title','image','content','video'])->where('status','published')->orderBy('views', 'desc')->whereHas('categories', function (Builder $query) use($idcate) {
+                //     $query->where('category_id',$idcate);
+                // })->orderBy('views', 'desc')->take(5)->get();
+                $postnews = Post::with('categories:id,category_id')
+                    ->select(['id', 'slug', 'title', 'image', 'video', 'content'])
+                    ->where('status', 'published')
+                    ->whereHas('categories', function (Builder $query) use ($idcate) {
+                        $query->where('category_id', $idcate);
+                    })
+                    ->orderByDesc('views')
+                    //->take(5)
+                    ->get();
             }
-            
-        }else{
-            $idcate = 21;
-            // $postnews=Post::select(['id','slug','title','image','content','video'])->where('status','published')->orderBy('views', 'desc')->whereHas('categories', function (Builder $query) use($idcate) {
-            //     $query->where('category_id',$idcate);
-            // })->orderBy('views', 'desc')->take(5)->get();
-            $postnews = Post::with('categories:id,category_id')
-            ->select(['id', 'slug', 'title', 'image', 'video','content'])
-            ->where('status', 'published')
-            ->whereHas('categories', function (Builder $query) use ($idcate) {
-                $query->where('category_id', $idcate);
-            })
-            ->orderByDesc('views')
-            //->take(5)
-            ->get();
-        }
-        
-        $videodatas = Post::select('id','video')->where('status','published')->where('video','!=',"")->orderBy('views', 'desc')->get()->toArray();
-        // $videodatas = [];
-        return view('front.index')
-            // ->with('headersetting',$headersetting)
-            // ->with('footersetting',$footersetting)
-            // ->with('homepagewidget',$homepagewidget)
-            // ->with('tags',$tags)
-            ->with('videodatas',$this->divideArrayIntoGroups($videodatas,4))
-            ->with('slug',$slug)
-           // ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-           ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-            ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-            ->with('footercategories',$footercategories)
-          //  ->with('catalogueposts',$catalogueposts)
-            ->with('postnews',$postnews);
+            $videodatas = Post::select('id', 'video')->where('status', 'published')->where('video', '!=', "")->orderBy('views', 'desc')->get()->toArray();
+            // $videodatas = [];
+            return view('front.index')
+                // ->with('headersetting',$headersetting)
+                // ->with('footersetting',$footersetting)
+                // ->with('homepagewidget',$homepagewidget)
+                // ->with('tags',$tags)
+                ->with('videodatas', $this->divideArrayIntoGroups($videodatas, 4))
+                ->with('slug', $slug)
+                // ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
+                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+                ->with('footercategories', $footercategories)
+                //  ->with('catalogueposts',$catalogueposts)
+                ->with('postnews', $postnews);
             // ->with('uppertab1category',$uppertab1category)
             // ->with('uppertab1posts',$uppertab1posts)
             // ->with('uppertab2category',$uppertab2category)
@@ -423,249 +422,251 @@ class FrontController extends Controller
             // ->with('lowerbanner728x90',$lowerbanner728x90)
             // ->with('lowestbanner728x90',$lowestbanner728x90)
             // ->with('adsetting',$adsetting);
-        }catch(\Exception $ex){
-            echo $ex->getMessage()."-".$ex->getLine();
+        } catch (\Exception $ex) {
+            echo $ex->getMessage() . "-" . $ex->getLine();
         }
     }
-            public function divideArrayIntoGroups($array, $groupSize) {
-                    return array_chunk($array, $groupSize);
-                }
-                
-                public function fetchVideos(){
-                    $key = 0;
-                     $videodatas = Post::select('id','video')->where('status','published')->where('video','!=',"")->orderBy('views', 'desc')->get()->toArray();
-                
-                            return response()->json(['success' => true, 'videodatas' => $this->divideArrayIntoGroups($videodatas,4), 'key' => $key]);
+    public function divideArrayIntoGroups($array, $groupSize)
+    {
+        return array_chunk($array, $groupSize);
+    }
 
-                }
-    public function postbycategory($categoryurl,$subcategoryurl=null)
+    public function fetchVideos()
+    {
+        $key = 0;
+        $videodatas = Post::select('id', 'video')->where('status', 'published')->where('video', '!=', "")->orderBy('views', 'desc')->get()->toArray();
+
+        return response()->json(['success' => true, 'videodatas' => $this->divideArrayIntoGroups($videodatas, 4), 'key' => $key]);
+
+    }
+    public function postbycategory($categoryurl, $subcategoryurl = null)
     {
         try {
             // Common
-            $headersetting=Headersetting::first();
-            $footersetting=Footersetting::first();
-            $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-            $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-            $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-            $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-            $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+            $headersetting = Headersetting::first();
+            $footersetting = Footersetting::first();
+            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+            $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
             // Common
-            $category=Category::where('slug',$categoryurl)->firstOrFail();
-            $subcategory=Null;
-            if($subcategoryurl){
-                $subcategory=Subcategory::where('slug',$subcategoryurl)->firstorFail();
-                $post_ids = Postsubcategory::where('subcategory_id',$subcategory->id)->pluck('post_id')->toArray();
-                $posts = Post::latest('id')->whereIn('id',$post_ids)->where('status','published')->paginate(20);
+            $category = Category::where('slug', $categoryurl)->firstOrFail();
+            $subcategory = Null;
+            if ($subcategoryurl) {
+                $subcategory = Subcategory::where('slug', $subcategoryurl)->firstorFail();
+                $post_ids = Postsubcategory::where('subcategory_id', $subcategory->id)->pluck('post_id')->toArray();
+                $posts = Post::latest('id')->whereIn('id', $post_ids)->where('status', 'published')->paginate(20);
             } else {
-                $post_ids = Postcategory::latest('id')->where('category_id',$category->id)->pluck('post_id')->toArray();
-                $posts = Post::latest('id')->whereIn('id',$post_ids)->where('status','published')->paginate(20);
+                $post_ids = Postcategory::latest('id')->where('category_id', $category->id)->pluck('post_id')->toArray();
+                $posts = Post::latest('id')->whereIn('id', $post_ids)->where('status', 'published')->paginate(20);
             }
-            $big_post_ids = Postcategory::latest('id')->where('category_id',$category->id)->limit(5)->pluck('post_id')->toArray();
-            $bigposts = Post::select(['id','slug','image','title'])->whereIn('id',$big_post_ids)->where('status','published')->with(['categories'])->orderBy('views', 'desc')->take(5)->get();
-            $today=now()->toDateString();
-            $sidebar300x250=Ad::whereHas('categories',function (Builder $query) use($category){
-                $query->where('category_id',$category->id);
-            })->whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','categorypage')->where('position','sidebar300x250')->where('status','active')->get();
-             
-            $sidebar300x600=Ad::whereHas('categories',function (Builder $query) use($category){
-                $query->where('category_id',$category->id);
-            })->whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','categorypage')->where('position','sidebar300x600')->where('status','active')->get();
-            $adsetting=Adsetting::first();
+            $big_post_ids = Postcategory::latest('id')->where('category_id', $category->id)->limit(5)->pluck('post_id')->toArray();
+            $bigposts = Post::select(['id', 'slug', 'image', 'title'])->whereIn('id', $big_post_ids)->where('status', 'published')->with(['categories'])->orderBy('views', 'desc')->take(5)->get();
+            $today = now()->toDateString();
+            $sidebar300x250 = Ad::whereHas('categories', function (Builder $query) use ($category) {
+                $query->where('category_id', $category->id);
+            })->whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'categorypage')->where('position', 'sidebar300x250')->where('status', 'active')->get();
+
+            $sidebar300x600 = Ad::whereHas('categories', function (Builder $query) use ($category) {
+                $query->where('category_id', $category->id);
+            })->whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'categorypage')->where('position', 'sidebar300x600')->where('status', 'active')->get();
+            $adsetting = Adsetting::first();
             return view('front.category')
-            ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-            ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-            ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-            ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-            ->with('tags',$tags)
-            ->with('footercategories',$footercategories)
-            ->with('category',$category)
-            ->with('subcategory',$subcategory)
-            ->with('posts',$posts)
-            ->with('bigposts',$bigposts)
-            ->with('breakingnews',$breakingnews)
-            ->with('sidebar300x250',$sidebar300x250)
-            ->with('sidebar300x600',$sidebar300x600)
-            ->with('adsetting',$adsetting);
+                ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+                ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+                ->with('tags', $tags)
+                ->with('footercategories', $footercategories)
+                ->with('category', $category)
+                ->with('subcategory', $subcategory)
+                ->with('posts', $posts)
+                ->with('bigposts', $bigposts)
+                ->with('breakingnews', $breakingnews)
+                ->with('sidebar300x250', $sidebar300x250)
+                ->with('sidebar300x600', $sidebar300x600)
+                ->with('adsetting', $adsetting);
         } catch (\Exception $ex) {
 
         }
     }
-    
-    
+
+
     public function postbysubcategory($subcategoryurl)
     {
         try {
             // Common
-            $headersetting=Headersetting::first();
-            $footersetting=Footersetting::first();
-            $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-            $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-            $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-            $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-            $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+            $headersetting = Headersetting::first();
+            $footersetting = Footersetting::first();
+            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+            $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
             // Common
-            $subcategory=Subcategory::where('slug',$subcategoryurl)->firstOrFail();
-            $category=Category::where('id', 5)->firstOrFail();
-            $post_ids = Postsubcategory::where('subcategory_id',$subcategory->id)->pluck('post_id')->toArray();
-            $posts = Post::latest('id')->whereIn('id',$post_ids)->where('status','published')->paginate(20);
-       
-            $big_post_ids = Postcategory::latest('id')->where('category_id',$category->id)->limit(5)->pluck('post_id')->toArray();
-            $bigposts = Post::select(['id','slug','image','title'])->whereIn('id',$big_post_ids)->where('status','published')->with(['categories'])->orderBy('views', 'desc')->take(5)->get();
-            $today=now()->toDateString();
-             $sidebar300x250=Ad::whereHas('categories',function (Builder $query) use($category){
-                 $query->where('category_id',$category->id);
-             })->whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','categorypage')->where('position','sidebar300x250')->where('status','active')->get();
-           
-             $sidebar300x600=Ad::whereHas('categories',function (Builder $query) use($category){
-                 $query->where('category_id',$category->id);
-             })->whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','categorypage')->where('position','sidebar300x600')->where('status','active')->get();
-            $adsetting=Adsetting::first();
+            $subcategory = Subcategory::where('slug', $subcategoryurl)->firstOrFail();
+            $category = Category::where('id', 5)->firstOrFail();
+            $post_ids = Postsubcategory::where('subcategory_id', $subcategory->id)->pluck('post_id')->toArray();
+            $posts = Post::latest('id')->whereIn('id', $post_ids)->where('status', 'published')->paginate(20);
+
+            $big_post_ids = Postcategory::latest('id')->where('category_id', $category->id)->limit(5)->pluck('post_id')->toArray();
+            $bigposts = Post::select(['id', 'slug', 'image', 'title'])->whereIn('id', $big_post_ids)->where('status', 'published')->with(['categories'])->orderBy('views', 'desc')->take(5)->get();
+            $today = now()->toDateString();
+            $sidebar300x250 = Ad::whereHas('categories', function (Builder $query) use ($category) {
+                $query->where('category_id', $category->id);
+            })->whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'categorypage')->where('position', 'sidebar300x250')->where('status', 'active')->get();
+
+            $sidebar300x600 = Ad::whereHas('categories', function (Builder $query) use ($category) {
+                $query->where('category_id', $category->id);
+            })->whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'categorypage')->where('position', 'sidebar300x600')->where('status', 'active')->get();
+            $adsetting = Adsetting::first();
             return view('front.subcategory')
-            ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-            ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-            ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-            ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-            ->with('tags',$tags)
-            ->with('footercategories',$footercategories)
-           ->with('category',$category)
-            ->with('subcategory',$subcategory)
-            ->with('posts',$posts)
-            ->with('bigposts',$bigposts)
-            ->with('breakingnews',$breakingnews)
-            ->with('sidebar300x250',$sidebar300x250)
-           ->with('sidebar300x600',$sidebar300x600)
-            ->with('adsetting',$adsetting);
+                ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+                ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+                ->with('tags', $tags)
+                ->with('footercategories', $footercategories)
+                ->with('category', $category)
+                ->with('subcategory', $subcategory)
+                ->with('posts', $posts)
+                ->with('bigposts', $bigposts)
+                ->with('breakingnews', $breakingnews)
+                ->with('sidebar300x250', $sidebar300x250)
+                ->with('sidebar300x600', $sidebar300x600)
+                ->with('adsetting', $adsetting);
         } catch (\Exception $ex) {
 
         }
     }
 
-    public function postdetail($categoryurl='',$posturl)
+    public function postdetail($categoryurl = '', $posturl)
     {
         try {
             // Common
-            $headersetting=Headersetting::first();
-            $footersetting=Footersetting::first();
-            $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-            $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-            $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-            $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-            $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+            $headersetting = Headersetting::first();
+            $footersetting = Footersetting::first();
+            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+            $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
             // Common
-            $category=Category::where('slug',$categoryurl)->firstOrFail();
-            $post = Post::where('slug',$posturl)->with(['tags','comments'])->firstOrFail();
-            $big_post_ids = Postcategory::where('category_id',$category->id)->pluck('post_id')->toArray();
-            $bigposts = Post::select(['slug','image','title'])->whereIn('id',$big_post_ids)->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            $homepagewidget=Homepagewidget::first();
-            if ($homepagewidget->youmaylikeposttype=='all') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
-            } elseif($homepagewidget->youmaylikeposttype=='trending') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::whereIn('id',$you_may_like_post_ids)->where('status','published')->orderBy('views', 'desc')->take(4)->get();
-            } elseif($homepagewidget->youmaylikeposttype=='latest') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::latest('id')->whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
-            } elseif($homepagewidget->youmaylikeposttype=='oldest') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::whereIn('id',$you_may_like_post_ids)->where('status','published')->orderBy('id', 'asc')->take(4)->get();
+            $category = Category::where('slug', $categoryurl)->firstOrFail();
+            $post = Post::where('slug', $posturl)->with(['tags', 'comments'])->firstOrFail();
+            $big_post_ids = Postcategory::where('category_id', $category->id)->pluck('post_id')->toArray();
+            $bigposts = Post::select(['slug', 'image', 'title'])->whereIn('id', $big_post_ids)->where('status', 'published')->orderBy('views', 'desc')->take(5)->get();
+            $homepagewidget = Homepagewidget::first();
+            if ($homepagewidget->youmaylikeposttype == 'all') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::whereIn('id', $you_may_like_post_ids)->where('status', 'published')->take(4)->get();
+            } elseif ($homepagewidget->youmaylikeposttype == 'trending') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::whereIn('id', $you_may_like_post_ids)->where('status', 'published')->orderBy('views', 'desc')->take(4)->get();
+            } elseif ($homepagewidget->youmaylikeposttype == 'latest') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::latest('id')->whereIn('id', $you_may_like_post_ids)->where('status', 'published')->take(4)->get();
+            } elseif ($homepagewidget->youmaylikeposttype == 'oldest') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::whereIn('id', $you_may_like_post_ids)->where('status', 'published')->orderBy('id', 'asc')->take(4)->get();
             }
-            $views=$post->views+1;
-            Post::where('id',$post->id)->update([
-                'views'=>$views,
+            $views = $post->views + 1;
+            Post::where('id', $post->id)->update([
+                'views' => $views,
             ]);
-            $today=now()->toDateString();
-            $uppersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','postpage')->where('position','uppersidebar300x250')->where('status','active')->get();
-            $lowersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','postpage')->where('position','lowersidebar300x250')->where('status','active')->get();
-            $sidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','postpage')->where('position','sidebar300x600')->where('status','active')->get();
-            $adsetting=Adsetting::first();
+            $today = now()->toDateString();
+            $uppersidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'postpage')->where('position', 'uppersidebar300x250')->where('status', 'active')->get();
+            $lowersidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'postpage')->where('position', 'lowersidebar300x250')->where('status', 'active')->get();
+            $sidebar300x600 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'postpage')->where('position', 'sidebar300x600')->where('status', 'active')->get();
+            $adsetting = Adsetting::first();
             return view('front.news-details')
-            ->with('headersetting',$headersetting)
-            ->with('footersetting',$footersetting)
-            ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-            ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-            ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-            ->with('tags',$tags)
-            ->with('footercategories',$footercategories)
-            ->with('category',$category)
-            ->with('post',$post)
-            ->with('bigposts',$bigposts)
-            ->with('youmaylikeposts',$youmaylikeposts)
-            ->with('views',$views)
-            ->with('breakingnews',$breakingnews)
-            ->with('uppersidebar300x250',$uppersidebar300x250)
-            ->with('lowersidebar300x250',$lowersidebar300x250)
-            ->with('sidebar300x600',$sidebar300x600)
-            ->with('adsetting',$adsetting);
+                ->with('headersetting', $headersetting)
+                ->with('footersetting', $footersetting)
+                ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+                ->with('tags', $tags)
+                ->with('footercategories', $footercategories)
+                ->with('category', $category)
+                ->with('post', $post)
+                ->with('bigposts', $bigposts)
+                ->with('youmaylikeposts', $youmaylikeposts)
+                ->with('views', $views)
+                ->with('breakingnews', $breakingnews)
+                ->with('uppersidebar300x250', $uppersidebar300x250)
+                ->with('lowersidebar300x250', $lowersidebar300x250)
+                ->with('sidebar300x600', $sidebar300x600)
+                ->with('adsetting', $adsetting);
         } catch (\Exception $ex) {
 
         }
     }
- public function postdetails($posturl)
+    public function postdetails($posturl)
     {
         try {
             // Common
-            $headersetting=Headersetting::first();
-            $footersetting=Footersetting::first();
-            $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-            $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-            $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-            $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-            $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+            $headersetting = Headersetting::first();
+            $footersetting = Footersetting::first();
+            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+            $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
             // Common
-            $category=Category::first();
-            $post = Post::where('slug',$posturl)->with(['tags','comments'])->firstOrFail();
+            $category = Category::first();
+            $post = Post::where('slug', $posturl)->with(['tags', 'comments'])->firstOrFail();
             $big_post_ids = Postcategory::pluck('post_id')->toArray();
-            $bigposts = Post::select(['slug','image','title'])->whereIn('id',$big_post_ids)->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            $homepagewidget=Homepagewidget::first();
-            if ($homepagewidget->youmaylikeposttype=='all') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
-            } elseif($homepagewidget->youmaylikeposttype=='trending') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::whereIn('id',$you_may_like_post_ids)->where('status','published')->orderBy('views', 'desc')->take(4)->get();
-            } elseif($homepagewidget->youmaylikeposttype=='latest') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::latest('id')->whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
-            } elseif($homepagewidget->youmaylikeposttype=='oldest') {
-                $you_may_like_post_ids = Postcategory::where('category_id',$homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
-                $youmaylikeposts = Post::whereIn('id',$you_may_like_post_ids)->where('status','published')->orderBy('id', 'asc')->take(4)->get();
+            $bigposts = Post::select(['slug', 'image', 'title'])->whereIn('id', $big_post_ids)->where('status', 'published')->orderBy('views', 'desc')->take(5)->get();
+            $homepagewidget = Homepagewidget::first();
+            if ($homepagewidget->youmaylikeposttype == 'all') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::whereIn('id', $you_may_like_post_ids)->where('status', 'published')->take(4)->get();
+            } elseif ($homepagewidget->youmaylikeposttype == 'trending') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::whereIn('id', $you_may_like_post_ids)->where('status', 'published')->orderBy('views', 'desc')->take(4)->get();
+            } elseif ($homepagewidget->youmaylikeposttype == 'latest') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::latest('id')->whereIn('id', $you_may_like_post_ids)->where('status', 'published')->take(4)->get();
+            } elseif ($homepagewidget->youmaylikeposttype == 'oldest') {
+                $you_may_like_post_ids = Postcategory::where('category_id', $homepagewidget->youmaylikecategory)->pluck('post_id')->toArray();
+                $youmaylikeposts = Post::whereIn('id', $you_may_like_post_ids)->where('status', 'published')->orderBy('id', 'asc')->take(4)->get();
             }
-            $views=$post->views+1;
-            Post::where('id',$post->id)->update([
-                'views'=>$views,
+            $views = $post->views + 1;
+            Post::where('id', $post->id)->update([
+                'views' => $views,
             ]);
-            $today=now()->toDateString();
-            $uppersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','postpage')->where('position','uppersidebar300x250')->where('status','active')->get();
-            $lowersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','postpage')->where('position','lowersidebar300x250')->where('status','active')->get();
-            $sidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','postpage')->where('position','sidebar300x600')->where('status','active')->get();
-            $adsetting=Adsetting::first();
+            $today = now()->toDateString();
+            $uppersidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'postpage')->where('position', 'uppersidebar300x250')->where('status', 'active')->get();
+            $lowersidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'postpage')->where('position', 'lowersidebar300x250')->where('status', 'active')->get();
+            $sidebar300x600 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'postpage')->where('position', 'sidebar300x600')->where('status', 'active')->get();
+            $adsetting = Adsetting::first();
             return view('front.news-details')
-            ->with('headersetting',$headersetting)
-            ->with('footersetting',$footersetting)
-            ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-            ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-            ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-            ->with('tags',$tags)
-            ->with('footercategories',$footercategories)
-            ->with('category',$category)
-            ->with('post',$post)
-            ->with('bigposts',$bigposts)
-            ->with('youmaylikeposts',$youmaylikeposts)
-            ->with('views',$views)
-            ->with('breakingnews',$breakingnews)
-            ->with('uppersidebar300x250',$uppersidebar300x250)
-            ->with('lowersidebar300x250',$lowersidebar300x250)
-            ->with('sidebar300x600',$sidebar300x600)
-            ->with('adsetting',$adsetting);
+                ->with('headersetting', $headersetting)
+                ->with('footersetting', $footersetting)
+                ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+                ->with('tags', $tags)
+                ->with('footercategories', $footercategories)
+                ->with('category', $category)
+                ->with('post', $post)
+                ->with('bigposts', $bigposts)
+                ->with('youmaylikeposts', $youmaylikeposts)
+                ->with('views', $views)
+                ->with('breakingnews', $breakingnews)
+                ->with('uppersidebar300x250', $uppersidebar300x250)
+                ->with('lowersidebar300x250', $lowersidebar300x250)
+                ->with('sidebar300x600', $sidebar300x600)
+                ->with('adsetting', $adsetting);
         } catch (\Exception $ex) {
 
         }
@@ -673,44 +674,42 @@ class FrontController extends Controller
     public function becomeareporter()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $states=State::where('country_id','101')->get();
+        $states = State::where('country_id', '101')->get();
         return view('front.become-a-reporter')
-        ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('tags',$tags)->with('footercategories',$footercategories)
-        ->with('states',$states)->with('breakingnews',$breakingnews);
+            ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('tags', $tags)->with('footercategories', $footercategories)
+            ->with('states', $states)->with('breakingnews', $breakingnews);
     }
 
     public function fetchcitybystateid(Request $request)
     {
-        if($request->filled('state_id')){
-            try{
-                $city=City::where('state_id',$request->state_id)->orderBy('name','ASC')->get();
+        if ($request->filled('state_id')) {
+            try {
+                $city = City::where('state_id', $request->state_id)->orderBy('name', 'ASC')->get();
                 return response()->json([
                     'msgCode' => '200',
-                    'html' => view('front.ajax.cityoptions')->with('cities',$city)->render(),
+                    'html' => view('front.ajax.cityoptions')->with('cities', $city)->render(),
                 ]);
-            }
-            catch(\Exception $ex){
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
                 ]);
             }
-        }
-        else{
+        } else {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'No State Selected',
@@ -732,7 +731,7 @@ class FrontController extends Controller
             'cv' => 'nullable|mimes:pdf,xls,doc,docx',
         ]);
         try {
-            $data=array(
+            $data = array(
                 'name' => $request->name,
                 'email' => $request->email,
                 'contact' => $request->contact,
@@ -745,13 +744,13 @@ class FrontController extends Controller
                 'added_by' => 'frontend',
                 'role' => 'reporter',
             );
-            if($request->hasFile('cv')){
+            if ($request->hasFile('cv')) {
                 $data['cv'] = $request->cv->store('users');
             }
             User::create($data);
-            return redirect(route('become-a-reporter'))->with('success','Registration Submitted');
+            return redirect(route('become-a-reporter'))->with('success', 'Registration Submitted');
         } catch (\Exception $ex) {
-            return redirect(route('become-a-reporter'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('become-a-reporter'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 
@@ -766,18 +765,18 @@ class FrontController extends Controller
         if ($validator->passes()) {
             try {
                 Comment::create([
-                    'post_id'=>$request->post_id,
-                    'name'=>$request->name,
-                    'email'=>$request->email,
-                    'contact'=>$request->contact,
-                    'content'=>$request->comment,
-                    'type'=>'comment'
+                    'post_id' => $request->post_id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'contact' => $request->contact,
+                    'content' => $request->comment,
+                    'type' => 'comment'
                 ]);
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Comment Added',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -785,13 +784,13 @@ class FrontController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
 
-    public function addcommentreply(Request $request,$id)
+    public function addcommentreply(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
@@ -803,19 +802,19 @@ class FrontController extends Controller
             try {
                 Comment::findOrFail($id);
                 Comment::create([
-                    'post_id'=>$request->post_id,
-                    'name'=>$request->name,
-                    'email'=>$request->email,
-                    'contact'=>$request->contact,
-                    'content'=>$request->comment,
-                    'parent_id'=>$id,
-                    'type'=>'reply'
+                    'post_id' => $request->post_id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'contact' => $request->contact,
+                    'content' => $request->comment,
+                    'parent_id' => $id,
+                    'type' => 'reply'
                 ]);
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Comment Added',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -823,60 +822,60 @@ class FrontController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
-        public function searchsdata(Request $request)
-            {
-                $query = $request->input('query');
-        
-                // Perform the search using your model (e.g., Post)
-                $results = Tag::where('name', 'like', "%$query%")->get(['name','slug']); 
-        
-                return response()->json($results);
-            }
+    public function searchsdata(Request $request)
+    {
+        $query = $request->input('query');
+
+        // Perform the search using your model (e.g., Post)
+        $results = Tag::where('name', 'like', "%$query%")->get(['name', 'slug']);
+
+        return response()->json($results);
+    }
     public function search(Request $request)
     {
-        
+
         try {
             // Common
-            $headersetting=Headersetting::first();
-            $footersetting=Footersetting::first();
-            $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-            $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-            $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-            $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-            $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-            $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+            $headersetting = Headersetting::first();
+            $footersetting = Footersetting::first();
+            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+            $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+            $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
             // Common
-            $tag=Null;
-            $keyword=Null;
+            $tag = Null;
+            $keyword = Null;
             $posts = Null;
-            if($request->has('keyword')){
-                $keyword=$request->keyword;
-                $posts = Post::where('status','published')->where('title', 'like', '%'.$keyword.'%')->orderBy('id', 'desc')->paginate(20);
+            if ($request->has('keyword')) {
+                $keyword = $request->keyword;
+                $posts = Post::where('status', 'published')->where('title', 'like', '%' . $keyword . '%')->orderBy('id', 'desc')->paginate(20);
 
-            } elseif($request->has('tag')){
-                $keyword=$request->tag;
-                $tag=Tag::where('slug',$request->tag)->firstOrFail();
-                $posts = Post::latest('id')->whereHas('tags', function (Builder $query) use($tag) {
-                    $query->where('tag_id',$tag->id);
-                })->where('status','published')->paginate(20);
+            } elseif ($request->has('tag')) {
+                $keyword = $request->tag;
+                $tag = Tag::where('slug', $request->tag)->firstOrFail();
+                $posts = Post::latest('id')->whereHas('tags', function (Builder $query) use ($tag) {
+                    $query->where('tag_id', $tag->id);
+                })->where('status', 'published')->paginate(20);
             }
-            $bigposts = Post::where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            
+            $bigposts = Post::where('status', 'published')->orderBy('views', 'desc')->take(5)->get();
+
             return view('front.search')
-            ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-            ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-            ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-            ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-            ->with('tags',$tags)->with('footercategories',$footercategories)->with('tag',$tag)
-            ->with('keyword',$keyword)->with('posts',$posts)->with('bigposts',$bigposts)->with('breakingnews',$breakingnews);
+                ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+                ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+                ->with('tags', $tags)->with('footercategories', $footercategories)->with('tag', $tag)
+                ->with('keyword', $keyword)->with('posts', $posts)->with('bigposts', $bigposts)->with('breakingnews', $breakingnews);
         } catch (\Exception $ex) {
-            echo $ex->getMessage()."-".$ex->getLine();
+            echo $ex->getMessage() . "-" . $ex->getLine();
             die();
         }
     }
@@ -884,117 +883,117 @@ class FrontController extends Controller
     public function aboutus()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $aboutus=Aboutus::first();
-        $reporters=User::where('role','reporter')->where('status','approved')->get();
+        $aboutus = Aboutus::first();
+        $reporters = User::where('role', 'reporter')->where('status', 'approved')->get();
         return view('front.about-us')
-        ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('tags',$tags)->with('footercategories',$footercategories)
-        ->with('aboutus',$aboutus)->with('reporters',$reporters)->with('breakingnews',$breakingnews);
+            ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('tags', $tags)->with('footercategories', $footercategories)
+            ->with('aboutus', $aboutus)->with('reporters', $reporters)->with('breakingnews', $breakingnews);
     }
 
     public function contactus()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $aboutus=Aboutus::first();
+        $aboutus = Aboutus::first();
         return view('front.contact-us')
-        ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('tags',$tags)->with('footercategories',$footercategories)->with('aboutus',$aboutus)->with('breakingnews',$breakingnews);
+            ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('tags', $tags)->with('footercategories', $footercategories)->with('aboutus', $aboutus)->with('breakingnews', $breakingnews);
     }
 
     public function cookiepolicy()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $cookiepolicy=Cookiepolicy::first();
+        $cookiepolicy = Cookiepolicy::first();
         return view('front.cookie-policy')
-        ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('tags',$tags)->with('footercategories',$footercategories)->with('cookiepolicy',$cookiepolicy)->with('breakingnews',$breakingnews);
+            ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('tags', $tags)->with('footercategories', $footercategories)->with('cookiepolicy', $cookiepolicy)->with('breakingnews', $breakingnews);
     }
 
     public function privacypolicy()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $privacypolicy=Privacypolicy::first();
+        $privacypolicy = Privacypolicy::first();
         return view('front.privacy-policy')
-        ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('tags',$tags)->with('footercategories',$footercategories)->with('privacypolicy',$privacypolicy)->with('breakingnews',$breakingnews);
+            ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('tags', $tags)->with('footercategories', $footercategories)->with('privacypolicy', $privacypolicy)->with('breakingnews', $breakingnews);
     }
 
     public function termsofuse()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $termsofuse=Termsofuse::first();
+        $termsofuse = Termsofuse::first();
         return view('front.terms-of-use')
-        ->with('headersetting',$headersetting)
-        ->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('tags',$tags)
-        ->with('footercategories',$footercategories)
-        ->with('termsofuse',$termsofuse)
-        ->with('breakingnews',$breakingnews);
+            ->with('headersetting', $headersetting)
+            ->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('tags', $tags)
+            ->with('footercategories', $footercategories)
+            ->with('termsofuse', $termsofuse)
+            ->with('breakingnews', $breakingnews);
     }
 
     public function addcontactus(Request $request)
@@ -1007,22 +1006,22 @@ class FrontController extends Controller
         ]);
         if ($validator->passes()) {
             try {
-                $data=array(
-                    'name'=>$request->name,
-                    'email'=>$request->email,
-                    'contact'=>$request->contact,
-                    'content'=>$request->message,
-                    );
+                $data = array(
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'contact' => $request->contact,
+                    'content' => $request->message,
+                );
                 Contactus::create($data);
-                Mail::send('email.contact-enquiry', $data, function($message) {
-                $message->to('prakashprabhaw@gmail.com','Prakash Prabhaw')->from('support@prakashprabhaw.com','Support Prakash Prabhaw')
+                Mail::send('email.contact-enquiry', $data, function ($message) {
+                    $message->to('prakashprabhaw@gmail.com', 'Prakash Prabhaw')->from('support@prakashprabhaw.com', 'Support Prakash Prabhaw')
                         ->subject('New Contact Enquiry');
                 });
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Query Added',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -1030,50 +1029,50 @@ class FrontController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
-    
+
     public function ourteam()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $categories=Teamcategory::with(['teams'])->where('status','active')->get();
+        $categories = Teamcategory::with(['teams'])->where('status', 'active')->get();
         return view('front.our-team')
-        ->with('headersetting',$headersetting)
-        ->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('tags',$tags)
-        ->with('footercategories',$footercategories)
-        ->with('breakingnews',$breakingnews)
-        ->with('categories',$categories);
+            ->with('headersetting', $headersetting)
+            ->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('tags', $tags)
+            ->with('footercategories', $footercategories)
+            ->with('breakingnews', $breakingnews)
+            ->with('categories', $categories);
     }
-    
+
     public function addsubscriber(Request $request)
     {
         $request->validate([
-            'email'=>'required|email|unique:subscribers',
+            'email' => 'required|email|unique:subscribers',
         ]);
         try {
             Subscriber::create([
-                'email'=>$request->email,
+                'email' => $request->email,
             ]);
-            return redirect()->back()->with('success','Subscribed Successfully');
+            return redirect()->back()->with('success', 'Subscribed Successfully');
         } catch (\Exception $ex) {
-            return redirect()->back()->with('error',$ex->getMessage());
+            return redirect()->back()->with('error', $ex->getMessage());
         }
     }
 
@@ -1084,10 +1083,10 @@ class FrontController extends Controller
         ]);
         if ($validator->passes()) {
             try {
-                $questioncurrent=Questionoftheday::where('status','active')->firstOrFail();
-                $question=Questionoftheday::where('id',$questioncurrent->id)->value($request->option.'vote');
-                Questionoftheday::where('id',$questioncurrent->id)->update([
-                    $request->option.'vote'=>$question+1,
+                $questioncurrent = Questionoftheday::where('status', 'active')->firstOrFail();
+                $question = Questionoftheday::where('id', $questioncurrent->id)->value($request->option . 'vote');
+                Questionoftheday::where('id', $questioncurrent->id)->update([
+                    $request->option . 'vote' => $question + 1,
                 ]);
                 session([
                     'questionid' => $questioncurrent->id,
@@ -1096,7 +1095,7 @@ class FrontController extends Controller
                     'msgCode' => '200',
                     'msgText' => 'Vote Added',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -1104,49 +1103,49 @@ class FrontController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
-    
+
     public function epaper()
     {
         // Common
-        $headersetting=Headersetting::first();
-        $footersetting=Footersetting::first();
-        $headercategorieswithsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','yes')->with(['subcategories'])->get();
-        $headercategorieswithoutsubcategory=Category::where('status','active')->where('showonleftside','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $leftcategorieswithoutsubcategory=Category::where('status','active')->where('showonheader','yes')->where('hassubcategory','no')->orderBy('sequence','asc')->get();
-        $tags=Tag::where('status','active')->orderBy('sequence', 'asc')->take(7)->get();
-        $footercategories=Category::where('status','active')->where('showonfooter','yes')->get();
-        $breaking_news_ids = Postcategory::latest('id')->where('category_id',14)->limit(10)->pluck('post_id')->toArray();
-        $breakingnews = Post::latest('id')->select(['id','slug','title'])->whereIn('id',$breaking_news_ids)->where('status','published')->take(10)->get();
+        $headersetting = Headersetting::first();
+        $footersetting = Footersetting::first();
+        $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
+        $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
+        $tags = Tag::where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
+        $footercategories = Category::where('status', 'active')->where('showonfooter', 'yes')->get();
+        $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
+        $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
         // Common
-        $epaper=Epaper::whereDate('date',now())->first();
-        $dates=Epaper::where('status','active')->orderBy('date','DESC')->get();
+        $epaper = Epaper::whereDate('date', now())->first();
+        $dates = Epaper::where('status', 'active')->orderBy('date', 'DESC')->get();
         return view('front.e-paper')
-        ->with('headersetting',$headersetting)->with('footersetting',$footersetting)
-        ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-        ->with('headercategorieswithoutsubcategories',$headercategorieswithoutsubcategory)
-        ->with('leftcategorieswithoutsubcategories',$leftcategorieswithoutsubcategory)
-        ->with('tags',$tags)->with('footercategories',$footercategories)
-        ->with('breakingnews',$breakingnews)->with('epaper',$epaper)->with('dates',$dates);
+            ->with('headersetting', $headersetting)->with('footersetting', $footersetting)
+            ->with('headercategorieswithsubcategories', $headercategorieswithsubcategory)
+            ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
+            ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
+            ->with('tags', $tags)->with('footercategories', $footercategories)
+            ->with('breakingnews', $breakingnews)->with('epaper', $epaper)->with('dates', $dates);
     }
-    
+
     public function filterepaper(Request $request)
     {
         try {
-            if($request->filled('date')){
-                $epaper=Epaper::whereDate('date',$request->date)->first();
+            if ($request->filled('date')) {
+                $epaper = Epaper::whereDate('date', $request->date)->first();
             } else {
-                $epaper=Epaper::whereDate('date',now())->first();
+                $epaper = Epaper::whereDate('date', now())->first();
             }
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('front.ajax.e-paper')->with('epaper',$epaper)->render(),
+                "html" => view('front.ajax.e-paper')->with('epaper', $epaper)->render(),
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),
@@ -1156,30 +1155,30 @@ class FrontController extends Controller
     public function fetchepaperbydate($date)
     {
         try {
-            if($date){
-                $epaper=Epaper::whereDate('date',$date)->get();
+            if ($date) {
+                $epaper = Epaper::whereDate('date', $date)->get();
             } else {
-                $epaper=Epaper::whereDate('date',now())->get();
+                $epaper = Epaper::whereDate('date', now())->get();
             }
             return response()->json([
                 "msgCode" => "200",
                 "success" => true,
-                "html" => view('front.ajax.e-paper-by-date')->with('datas',$epaper)->render(),
+                "html" => view('front.ajax.e-paper-by-date')->with('datas', $epaper)->render(),
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),
             ]);
         }
     }
-    
-    
+
+
     public function customfunction()
     {
-        try{
-            $posts=Post::where('id',8853)->get();
-            foreach($posts as $post) {
+        try {
+            $posts = Post::where('id', 8853)->get();
+            foreach ($posts as $post) {
                 dump(Storage::size($post->image));
                 // if(isset($post->image) && Storage::exists($post->image)){
                 //     // dump(Storage::size($post->image));

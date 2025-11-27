@@ -25,6 +25,16 @@
               </select>
               <div class="text-danger" id="category-err"></div>
             </div>
+            <div class="col-sm-6">
+              <label class="label-control">Settings</label><br>
+              <label><input type="checkbox" name="hassubcategory" value="yes" id="hassubsubcategory" @if ($subcategory->hassubsubcategory=='yes')
+                checked
+              @endif> Has Sub Sub Category</label><br>
+              <label><input type="checkbox" name="showonheader" value="yes" id="showonheader" @if ($subcategory->showonheader=='yes')
+                checked
+              @endif> Show on Header</label><br>
+            </div>
+
 			  <div class="col-sm-6">
               <label class="label-control">Sub Category</label>
               <input type="text" class="text-control" placeholder="Enter Sub Category Name" name="name" value="{{ $subcategory->name }}">

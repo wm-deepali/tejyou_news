@@ -1,60 +1,42 @@
 @include('front.header')
 
+
+<!-- Header Area End Here -->
 <!-- News Feed Area Start Here -->
-<section class="bg-accent border-bottom add-top-margin">
-    <div class="container">
-        <div class="row no-gutters d-flex align-items-center">
-            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                <div class="topic-box topic-box-margin">Top Stories</div>
-            </div>
-            <div class="col-lg-10 col-md-9 col-sm-8 col-6">
-                <div class="feeding-text-dark">
-                    <ol id="sample" class="ticker">
-                        <li>
-                            <a href="#">लखनऊमुख्यमंत्री योगी ने उद्योगपतियों को दिया रात्रिभोज सीएम आवास रात्रिभोज में
-                                शामिल हुए निवेशक उद्योगपतियों को सीएम आवास पर किया आमंत्रित GBC</a>
-                        </li>
-                        <li>
-                            <a href="#">एसबीआई, केंद्र सरकार और चुनाव आयोग को इलेक्टोरल बांड पर सुप्रीम कोर्ट ने 15
-                                मार्च तक डाटा पब्लिक करने को कहा.</a>
-                        </li>
-                        <li>
-                            <a href="#">ममता बनर्जी का इस्तीफा... कोर्ट से बाहर कर दूंगा', किस पर फूटा CJI चंद्रचूड़ का
-                                गुस्सा?</a>
-                        </li>
-                    </ol>
+<!-- <section class="bg-accent border-bottom add-top-margin">
+                <div class="container">
+                    <div class="row no-gutters d-flex align-items-center">
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                            <div class="topic-box topic-box-margin">Top Stories</div>
+                        </div>
+                        <div class="col-lg-10 col-md-9 col-sm-8 col-6">
+                            <div class="feeding-text-dark">
+                                <ol id="sample" class="ticker">
+                                    <li>
+                                        <a href="#">लखनऊमुख्यमंत्री योगी ने उद्योगपतियों को दिया रात्रिभोज सीएम आवास रात्रिभोज में शामिल हुए निवेशक उद्योगपतियों को सीएम आवास पर किया आमंत्रित GBC</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">एसबीआई, केंद्र सरकार और चुनाव आयोग को इलेक्टोरल बांड पर सुप्रीम कोर्ट ने 15 मार्च तक डाटा पब्लिक करने को कहा.</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">ममता बनर्जी का इस्तीफा... कोर्ट से बाहर कर दूंगा', किस पर फूटा CJI चंद्रचूड़ का गुस्सा?</a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+            </section> -->
 <!-- News Feed Area End Here -->
 <!-- News Info List Area Start Here -->
-<section class="bg-body">
-    <div class="container">
-        <ul class="news-info-list text-center--md">
-            <li>
-                <i class="fa fa-map-marker" aria-hidden="true"></i>Greater Noida, Uttar Pradesh
-            </li>
-            <li>
-                <i class="fa fa-calendar" aria-hidden="true"></i><span id="current_date"></span>
-            </li>
-            <li>
-                <i class="fa fa-clock-o" aria-hidden="true"></i>Last Update 11.30 am
-            </li>
-            <li>
-                <i class="fa fa-cloud" aria-hidden="true"></i>29&#8451; Greater Noida, Uttar Pradesh
-            </li>
-        </ul>
-    </div>
-</section>
+
 <!-- News Info List Area End Here -->
 <!-- News Slider Area Start Here -->
 <section class="bg-accent section-space-less2">
     <div class="container">
         <div class="row tab-space1">
-            <div class="col-lg-6 col-md-12">
-                <div class="img-overlay-70 img-scale-animate mb-2">
+            <div class="col-lg-6 col-md-12 banner-img">
+                <div class="img-overlay-70 img-scale-animate mb-2 img-ban">
                     <img src="https://tejyug.com/public/storage/posts/qPCqLgYa9B8K4vjPkOIsrtL6Od0p3Uus3Q0q1BkN.jpg"
                         alt="news" class="img-fluid width-100">
                     <div class="mask-content-lg">
@@ -94,7 +76,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-12">
-                        <div class="img-overlay-70 img-scale-animate mb-2">
+                        <div class="img-overlay-70 img-scale-animate mb-2" style="height: 100%;">
                             <div class="mask-content-sm">
                                 <div class="topic-box-sm color-apple mb-10">Sports</div>
                                 <h3 class="title-medium-light">
@@ -102,11 +84,11 @@
                                 </h3>
                             </div>
                             <img src="https://tejyug.com/public/storage/posts/oVPH75JjKY14ikvS4jSyYbMTFb8noqh8Mr4sWl18.jpg"
-                                alt="news" class="img-fluid width-100">
+                                alt="news" class="img-fluid width-100" style="height: 100%;">
                         </div>
                     </div>
                     <div class="col-sm-6 col-12">
-                        <div class="img-overlay-70 img-scale-animate mb-2">
+                        <div class="img-overlay-70 img-scale-animate mb-2" style="height: 100%;">
                             <div class="mask-content-sm">
                                 <div class="topic-box-sm color-razzmatazz mb-10">Crime</div>
                                 <h3 class="title-medium-light">
@@ -114,7 +96,7 @@
                                 </h3>
                             </div>
                             <img src="https://tejyug.com/public/storage/posts/8lz9LiIFqSgtpaBjkF68cqUz3T53uf2v7ZAGtJJU.jpg"
-                                alt="news" class="img-fluid width-100">
+                                alt="news" class="img-fluid width-100" style="height: 100%;">
                         </div>
                     </div>
                 </div>
@@ -148,8 +130,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="img-overlay-70 img-scale-animate mb-30">
                                     <a href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news5.jpg" alt="news"
-                                            class="img-fluid width-100">
+                                        <img src="{{ asset('website') }}/img/news/news5.jpg" alt="news" class="img-fluid width-100">
                                     </a>
                                     <div class="mask-content-lg">
                                         <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
@@ -357,8 +338,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="img-overlay-70 img-scale-animate mb-30">
                                     <a href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news48.jpg" alt="news"
-                                            class="img-fluid width-100">
+                                        <img src="{{ asset('website') }}/img/news/news48.jpg" alt="news" class="img-fluid width-100">
                                     </a>
                                     <div class="mask-content-lg">
                                         <div class="topic-box-sm color-web-orange mb-20">Gadget</div>
@@ -385,8 +365,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news6.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news6.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -406,8 +385,7 @@
                                 </div>
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-2.html">
-                                        <img src="{{ asset('website') }}/img/news/news7.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news7.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -427,8 +405,7 @@
                                 </div>
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news8.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news8.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -448,8 +425,7 @@
                                 </div>
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news9.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news9.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -473,8 +449,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="img-overlay-70 img-scale-animate mb-30">
                                     <a href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news49.jpg" alt="news"
-                                            class="img-fluid width-100">
+                                        <img src="{{ asset('website') }}/img/news/news49.jpg" alt="news" class="img-fluid width-100">
                                     </a>
                                     <div class="mask-content-lg">
                                         <div class="topic-box-sm color-web-orange mb-20">Gadget</div>
@@ -501,8 +476,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news6.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news6.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -522,8 +496,7 @@
                                 </div>
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-2.html">
-                                        <img src="{{ asset('website') }}/img/news/news7.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news7.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -543,8 +516,7 @@
                                 </div>
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news8.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news8.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -564,8 +536,7 @@
                                 </div>
                                 <div class="media mb-30">
                                     <a class="width38-lg width40-md img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news9.jpg" alt="news"
-                                            class="img-fluid">
+                                        <img src="{{ asset('website') }}/img/news/news9.jpg" alt="news" class="img-fluid">
                                     </a>
                                     <div class="media-body">
                                         <div class="post-date-dark">
@@ -609,8 +580,7 @@
                                     <a href="single-news-3.html">Rosie Huntington Whitel Habits Career Art </a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('website') }}/img/news/news10.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news10.jpg" alt="news" class="img-fluid width-100">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-6">
@@ -629,8 +599,7 @@
                                     <a href="single-news-3.html">सुबह 5 बजे उठने की आदत ने बदल दी इनकी पूरी जिंदगी </a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('website') }}/img/news/news11.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news11.jpg" alt="news" class="img-fluid width-100">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-6">
@@ -650,8 +619,7 @@
                                     </a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('website') }}/img/news/news12.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news12.jpg" alt="news" class="img-fluid width-100">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-6">
@@ -670,8 +638,7 @@
                                     <a href="single-news-3.html">30 की उम्र में भी 20 जैसे दिखने के 7 देसी नुस्खे </a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('website') }}/img/news/news13.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news13.jpg" alt="news" class="img-fluid width-100">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-6">
@@ -691,8 +658,7 @@
                                     </a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('website') }}/img/news/news14.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news14.jpg" alt="news" class="img-fluid width-100">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-6">
@@ -711,8 +677,7 @@
                                     <a href="single-news-3.html">बिना जिम गए 30 दिन में 5 किलो वजन कैसे घटाएं? </a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('website') }}/img/news/news15.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news15.jpg" alt="news" class="img-fluid width-100">
                         </div>
                     </div>
                 </div>
@@ -761,8 +726,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                             <div class="mt-25">
                                 <a href="single-news-1.html" class="img-opacity-hover">
-                                    <img src="{{ asset('website') }}/img/news/news42.jpg" alt="ad"
-                                        class="img-fluid mb-10 width-100">
+                                    <img src="{{ asset('website') }}/img/news/news42.jpg" alt="ad" class="img-fluid mb-10 width-100">
                                 </a>
                                 <h3 class="title-medium-dark size-md mb-none">
                                     <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art Rosie.</a>
@@ -772,8 +736,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                             <div class="mt-25">
                                 <a href="single-news-2.html" class="img-opacity-hover">
-                                    <img src="{{ asset('website') }}/img/news/news43.jpg" alt="ad"
-                                        class="img-fluid mb-10 width-100">
+                                    <img src="{{ asset('website') }}/img/news/news43.jpg" alt="ad" class="img-fluid mb-10 width-100">
                                 </a>
                                 <h3 class="title-medium-dark size-md mb-none">
                                     <a href="single-news-2.html">Brings air of distinction to Delafield tist.</a>
@@ -783,8 +746,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                             <div class="mt-25">
                                 <a href="single-news-3.html" class="img-opacity-hover">
-                                    <img src="{{ asset('website') }}/img/news/news44.jpg" alt="ad"
-                                        class="img-fluid mb-10 width-100">
+                                    <img src="{{ asset('website') }}/img/news/news44.jpg" alt="ad" class="img-fluid mb-10 width-100">
                                 </a>
                                 <h3 class="title-medium-dark size-md mb-none">
                                     <a href="single-news-3.html">Haunts of the Hea Lans capes of Lynn Zirman Career.</a>
@@ -794,8 +756,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                             <div class="mt-25">
                                 <a href="single-news-1.html" class="img-opacity-hover">
-                                    <img src="{{ asset('website') }}/img/news/news45.jpg" alt="ad"
-                                        class="img-fluid mb-10 width-100">
+                                    <img src="{{ asset('website') }}/img/news/news45.jpg" alt="ad" class="img-fluid mb-10 width-100">
                                 </a>
                                 <h3 class="title-medium-dark size-md mb-none">
                                     <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie
@@ -1161,8 +1122,7 @@
                 <div class="row tenies">
                     <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
                         <div class="img-overlay-70 img-scale-animate mb-30">
-                            <img src="{{ asset('website') }}/img/news/news31.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news31.jpg" alt="news" class="img-fluid width-100">
                             <div class="topic-box-top-lg">
                                 <div class="topic-box-sm color-cod-gray mb-20">Tenis</div>
                             </div>
@@ -1191,8 +1151,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
@@ -1214,8 +1173,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
@@ -1237,8 +1195,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
@@ -1260,8 +1217,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1284,8 +1240,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-2.html">
-                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
@@ -1308,8 +1263,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1335,8 +1289,7 @@
                 <div class="row cricket">
                     <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
                         <div class="img-overlay-70 img-scale-animate mb-30">
-                            <img src="{{ asset('website') }}/img/news/news51.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news51.jpg" alt="news" class="img-fluid width-100">
                             <div class="topic-box-top-lg">
                                 <div class="topic-box-sm color-cod-gray mb-20">Cricket</div>
                             </div>
@@ -1365,8 +1318,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
@@ -1388,8 +1340,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
@@ -1411,8 +1362,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
@@ -1434,8 +1384,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1458,8 +1407,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-2.html">
-                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
@@ -1482,8 +1430,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1509,8 +1456,7 @@
                 <div class="row football">
                     <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
                         <div class="img-overlay-70 img-scale-animate mb-30">
-                            <img src="{{ asset('website') }}/img/news/news50.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news50.jpg" alt="news" class="img-fluid width-100">
                             <div class="topic-box-top-lg">
                                 <div class="topic-box-sm color-cod-gray mb-20">Football</div>
                             </div>
@@ -1539,8 +1485,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
@@ -1562,8 +1507,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
@@ -1585,8 +1529,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
@@ -1608,8 +1551,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1632,8 +1574,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-2.html">
-                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
@@ -1656,8 +1597,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1683,8 +1623,7 @@
                 <div class="row cycling">
                     <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
                         <div class="img-overlay-70 img-scale-animate mb-30">
-                            <img src="{{ asset('website') }}/img/news/news52.jpg" alt="news"
-                                class="img-fluid width-100">
+                            <img src="{{ asset('website') }}/img/news/news52.jpg" alt="news" class="img-fluid width-100">
                             <div class="topic-box-top-lg">
                                 <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
                             </div>
@@ -1713,8 +1652,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news32.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Ragbe</div>
@@ -1736,8 +1674,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news33.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Boxing</div>
@@ -1759,8 +1696,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news34.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Diving</div>
@@ -1782,8 +1718,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-1.html">
-                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news35.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1806,8 +1741,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-2.html">
-                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news36.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Riding</div>
@@ -1830,8 +1764,7 @@
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                 <div class="mb-25 position-relative">
                                     <a class="img-opacity-hover" href="single-news-3.html">
-                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news"
-                                            class="img-fluid width-100 mb-15">
+                                        <img src="{{ asset('website') }}/img/news/news37.jpg" alt="news" class="img-fluid width-100 mb-15">
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">Cycling</div>
@@ -1886,8 +1819,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
@@ -1922,8 +1854,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-2.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-web-orange mb-20">Food</div>
@@ -1958,8 +1889,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-3.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
@@ -1994,8 +1924,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-apple mb-20">Life Style</div>
@@ -2032,8 +1961,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-2.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-web-orange mb-20">Food</div>
@@ -2068,8 +1996,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-3.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
@@ -2104,8 +2031,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
@@ -2140,8 +2066,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-apple mb-20">Life Style</div>
@@ -2178,8 +2103,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-3.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
@@ -2214,8 +2138,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-apple mb-20">Life Style</div>
@@ -2250,8 +2173,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
@@ -2286,8 +2208,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-2.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-web-orange mb-20">Food</div>
@@ -2324,8 +2245,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-3.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
@@ -2360,8 +2280,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
@@ -2396,8 +2315,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-2.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-web-orange mb-20">Food</div>
@@ -2432,8 +2350,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-apple mb-20">Life Style</div>
@@ -2470,8 +2387,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news41.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-apple mb-20">Life Style</div>
@@ -2506,8 +2422,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-1.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news38.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-cinnabar mb-20">Politics</div>
@@ -2542,8 +2457,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-2.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news39.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-web-orange mb-20">Food</div>
@@ -2578,8 +2492,7 @@
                                 <div class="media media-none--lg mb-30">
                                     <div class="position-relative width-40">
                                         <a href="single-news-3.html" class="img-opacity-hover">
-                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news"
-                                                class="img-fluid">
+                                            <img src="{{ asset('website') }}/img/news/news40.jpg" alt="news" class="img-fluid">
                                         </a>
                                         <div class="topic-box-top-xs">
                                             <div class="topic-box-sm color-azure-radiance mb-20">Sports</div>
@@ -2629,8 +2542,7 @@
                     <div class="newsletter-area bg-primary">
                         <h2 class="title-medium-light size-xl">Subscribe to our mailing list to get the new updates!
                         </h2>
-                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter"
-                            class="img-fluid mb-40">
+                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter" class="img-fluid mb-40">
                         <p>Subscribe our newsletter to stay updated every moment</p>
                         <div class="input-group stylish-input-group">
                             <input type="text" placeholder="Enter your mail" class="form-control">
@@ -2774,6 +2686,4 @@
         </div>
     </div>
 </section>
-<!-- Category Area End Here -->
-<!-- Footer Area Start Here -->
 @include('front.footer')

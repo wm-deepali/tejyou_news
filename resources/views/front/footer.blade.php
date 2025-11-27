@@ -1,3 +1,4 @@
+<!-- Footer Area Start Here -->
 <footer>
 	<div class="footer-area-top">
 		<div class="container">
@@ -9,12 +10,13 @@
 							<li>
 								<div class="media">
 									<a href="post-style-1.html">
-										<img src="{{ asset('website') }}/img/footer/post1.jpg" alt="post"
-											class="img-fluid">
+										<img src="https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
+											alt="post" class="img-fluid" width="70px">
 									</a>
 									<div class="media-body">
 										<h3 class="title-medium-light size-md mb-10">
-											<a href="#">Basketball Stars Face Off itim ate Playoff Beard Battle</a>
+											<a href="#">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना खिलाकर
+												पूछा हाल।</a>
 										</h3>
 										<div class="post-date-light">
 											<ul>
@@ -30,20 +32,21 @@
 							</li>
 							<li>
 								<div class="media">
-									<a href="post-style-2.html">
-										<img src="{{ asset('website') }}/img/footer/post2.jpg" alt="post"
-											class="img-fluid">
+									<a href="post-style-1.html">
+										<img src="https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
+											alt="post" class="img-fluid" width="70px">
 									</a>
 									<div class="media-body">
 										<h3 class="title-medium-light size-md mb-10">
-											<a href="#">Basketball Stars Face Off in ate Playoff Beard Battle</a>
+											<a href="#">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना खिलाकर
+												पूछा हाल।</a>
 										</h3>
 										<div class="post-date-light">
 											<ul>
 												<li>
 													<span>
 														<i class="fa fa-calendar" aria-hidden="true"></i>
-													</span>August 22, 2017
+													</span>November 11, 2017
 												</li>
 											</ul>
 										</div>
@@ -52,20 +55,21 @@
 							</li>
 							<li>
 								<div class="media">
-									<a href="post-style-3.html">
-										<img src="{{ asset('website') }}/img/footer/post3.jpg" alt="post"
-											class="img-fluid">
+									<a href="post-style-1.html">
+										<img src="https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
+											alt="post" class="img-fluid" width="70px">
 									</a>
 									<div class="media-body">
 										<h3 class="title-medium-light size-md mb-10">
-											<a href="#">Basketball Stars Face tim ate Playoff Battle</a>
+											<a href="#">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना खिलाकर
+												पूछा हाल।</a>
 										</h3>
 										<div class="post-date-light">
 											<ul>
 												<li>
 													<span>
 														<i class="fa fa-calendar" aria-hidden="true"></i>
-													</span>March 31, 2017
+													</span>November 11, 2017
 												</li>
 											</ul>
 										</div>
@@ -80,42 +84,42 @@
 						<h2 class="title-bold-light title-bar-left text-uppercase">Popular Categories</h2>
 						<ul class="popular-categories">
 							<li>
-								<a href="#">Gadgets
+								<a href="#">राजनीति
 									<span>15</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">Architecture
+								<a href="#">खबरें हटके
 									<span>10</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">New look 2017
+								<a href="#">ताज़ा खबर
 									<span>14</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">Reviews
+								<a href="#">क्राइम
 									<span>13</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">Mobile and Phones
+								<a href="#">वीडियो
 									<span>19</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">Recipes
+								<a href="#">हेल्थ
 									<span>26</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">Decorating
+								<a href="#">विदेश
 									<span>21</span>
 								</a>
 							</li>
 							<li>
-								<a href="#">IStreet fashion
+								<a href="#">टेक्नोलॉजी
 									<span>09</span>
 								</a>
 							</li>
@@ -129,72 +133,63 @@
 							<li>
 								<a href="gallery-style1.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post4.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post4.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style2.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post5.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post5.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style1.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post6.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post6.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style2.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post7.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post7.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style1.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post8.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post8.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style2.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post9.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post9.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style1.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post10.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post10.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style2.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post11.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post11.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
 							<li>
 								<a href="gallery-style1.html">
 									<figure>
-										<img src="{{ asset('website') }}/img/footer/post12.jpg" alt="post"
-											class="img-fluid">
+										<img src="{{ asset('website') }}/img/footer/post12.jpg" alt="post" class="img-fluid">
 									</figure>
 								</a>
 							</li>
@@ -209,8 +204,7 @@
 			<div class="row">
 				<div class="col-12 text-center">
 					<a href="index.html" class="footer-logo img-fluid">
-						<img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid"
-							width="100px">
+						<img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid" width="100px">
 					</a>
 					<ul class="footer-social">
 						<li>
@@ -300,88 +294,24 @@
 			<li class="panel panel-default">
 				<div class="panel-heading">
 					<a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse"
-						data-parent="#accordion" href="#collapseOne">
+						data-parent="#accordion" href="#">
 						<i class="fa fa-home" aria-hidden="true"></i>Home Pages</a>
 				</div>
-				<div aria-expanded="false" id="collapseOne" role="tabpanel" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul class="offcanvas-sub-nav">
-							<li>
-								<a href="index.html">Home 1</a>
-							</li>
-							<li>
-								<a href="index2.html">Home 2</a>
-							</li>
-							<li>
-								<a href="index3.html">Home 3</a>
-							</li>
-							<li>
-								<a href="index4.html">Home 4</a>
-							</li>
-							<li>
-								<a href="index5.html">Home 5</a>
-							</li>
-							<li>
-								<a href="index6.html">Home 6</a>
-							</li>
-							<li>
-								<a href="index7.html">Home 7</a>
-							</li>
-						</ul>
-					</div>
-				</div>
+
 			</li>
 			<li>
-				<a href="author-post.html">
-					<i class="fa fa-user" aria-hidden="true"></i>Author Post Page</a>
+				<a href="#">
+					<i class="fa fa-user" aria-hidden="true"></i>Editor Page</a>
 			</li>
-			<li class="panel panel-default">
-				<div class="panel-heading">
-					<a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse"
-						data-parent="#accordion" href="#collapseTwo">
-						<i class="fa fa-file-text" aria-hidden="true"></i>Post Pages</a>
-				</div>
-				<div aria-expanded="false" id="collapseTwo" role="tabpanel" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul class="offcanvas-sub-nav">
-							<li>
-								<a href="post-style-1.html">Post Style 1</a>
-							</li>
-							<li>
-								<a href="post-style-2.html">Post Style 2</a>
-							</li>
-							<li>
-								<a href="post-style-3.html">Post Style 3</a>
-							</li>
-							<li>
-								<a href="post-style-4.html">Post Style 4</a>
-							</li>
-						</ul>
-					</div>
-				</div>
+			<li>
+				<a href="#">
+					<i class="fa fa-user" aria-hidden="true"></i>News Listing</a>
 			</li>
-			<li class="panel panel-default">
-				<div class="panel-heading">
-					<a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse"
-						data-parent="#accordion" href="#collapseThree">
-						<i class="fa fa-info-circle" aria-hidden="true"></i>News Details Pages</a>
-				</div>
-				<div aria-expanded="false" id="collapseThree" role="tabpanel" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul class="offcanvas-sub-nav">
-							<li>
-								<a href="single-news-1.html">News Details 1</a>
-							</li>
-							<li>
-								<a href="single-news-2.html">News Details 2</a>
-							</li>
-							<li>
-								<a href="single-news-3.html">News Details 3</a>
-							</li>
-						</ul>
-					</div>
-				</div>
+			<li>
+				<a href="single-news-1.html">
+					<i class="fa fa-user" aria-hidden="true"></i>News Detail</a>
 			</li>
+
 			<li>
 				<a href="archive.html">
 					<i class="fa fa-archive" aria-hidden="true"></i>Archive Page</a>

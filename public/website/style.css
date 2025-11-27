@@ -757,10 +757,27 @@ ul.item2-inline li:last-child {
 }
 
 .tab-space1 {
+    height: 413px;
     margin-left: -1px;
     margin-right: -1px
 }
+.menu-bar {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
 
+
+.banner-img{
+    height: 100%;
+}
+.img-ban{
+    height: 100%;
+    overflow: hidden;
+}
+.img-ban img{
+    height: 100%;
+}
 .tab-space1>div {
     padding: 0 1px
 }
@@ -994,6 +1011,7 @@ ul.item2-inline li:last-child {
 }
 
 #preloader {
+    /* background: url(img/preloader.gif) center center no-repeat #e53935; */
     height: 100%;
     left: 0;
     overflow: visible;
@@ -2428,7 +2446,7 @@ ul.item2-inline li:last-child {
 }
 
 .section-space-less2 {
-    padding: 50px 0 48px
+    padding: 240px 0 48px
 }
 
 @media only screen and (max-width:767px) {
@@ -2974,7 +2992,7 @@ ul.news-info-list li {
 
 @media only screen and (max-width:1199px) {
     ul.news-info-list li {
-        margin-right: 12px
+        margin-right: 0px
     }
 }
 
@@ -2985,7 +3003,7 @@ ul.news-info-list li:last-child {
 ul.news-info-list li i {
     color: #e53935;
     font-size: 16px;
-    margin-right: 15px
+    margin-right: 2px
 }
 
 ul.header-social {
@@ -3128,7 +3146,7 @@ ul.header-social li a {
     right: 33px;
     z-index: 10;
     height: 42px;
-    width: 800px;
+    width: 500px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
@@ -3138,7 +3156,7 @@ ul.header-social li a {
     border: none;
     padding: 5px 30px 8px;
     color: #111;
-    display: none;
+    /* display: none; */
     -webkit-box-shadow: 0 3px 10px 2px rgba(229, 57, 53, .3);
     -moz-box-shadow: 0 3px 10px 2px rgba(229, 57, 53, .3);
     box-shadow: 0 3px 10px 2px rgba(229, 57, 53, .3)
@@ -3147,14 +3165,14 @@ ul.header-social li a {
 @media only screen and (max-width:1199px) {
     .header-search-light .search-input {
         right: 25px;
-        width: 740px
+        width: 500px
     }
 }
 
 @media only screen and (max-width:991px) {
     .header-search-light .search-input {
         right: 25px;
-        width: 560px
+        width: 500px
     }
 }
 
@@ -3301,7 +3319,7 @@ ul.header-social li a {
 
 .offcanvas-menu-btn a.menu-bar span {
     display: block;
-    height: 1px;
+    height: 3px;
     width: 28px;
     background-color: #fff;
     margin-top: 7px;

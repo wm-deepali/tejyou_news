@@ -113,8 +113,7 @@
                                             @foreach ($categories as $category)
                                             <li>
                                                 <label>
-                                                    <input type="checkbox" class="category" name="category[]" value="{{ $category->id }}" @if (!empty($postcategoryids) && in_array($category->id,$postcategoryids))
-                                                        checked
+                                                    <input type="checkbox" class="category" name="category[]" value="{{ $category->id }}" @if (!empty($postcategoryids) && in_array($category->id,$postcategoryids)) checked
                                                     @endif> {{ $category->name }}
                                                 </label>
                                             </li>
@@ -145,6 +144,30 @@
 									</div>
 								</div>
 							</div>
+                            <div class="form-group row">
+    <div class="col-sm-12">
+        <div class="category-side">
+            <h3>Sub-Sub Categories</h3>
+            <div class="text-danger" id="subsubcategory-err"></div>
+            <ul id="subsubcategory">
+                @if(isset($subsubcategories) && count($subsubcategories) > 0)
+                    @foreach ($subsubcategories as $subsubcategory)
+                    <li>
+                        <label>
+                            <input type="checkbox" class="subsubcategory" name="subsubcategory[]" value="{{ $subsubcategory->id }}"
+                            @if(!empty($postsubsubcategoryids) && in_array($subsubcategory->id, $postsubsubcategoryids))
+                                checked
+                            @endif
+                            > {{ $subsubcategory->name }}
+                        </label>
+                    </li>
+                    @endforeach
+                @endif
+            </ul>
+        </div>
+    </div>
+</div>
+
 							<div class="form-group row">
 								<div class="col-sm-12">
 									<div class="category-side">
@@ -194,7 +217,7 @@
       </div>
     </div>
   </div>
-</div>-->
+</div>
 @include('admin.footer')
 <script>
     $.ajaxSetup({
@@ -281,6 +304,7 @@
         formData.append('metadescription',$('#metadescription').val());
         formData.append('category',$(".category:checked").map(function(){return $(this).val();}).toArray());
         formData.append('subcategory',$(".subcategory:checked").map(function(){return $(this).val();}).toArray());
+        formData.append('subsubcategory', $(".subsubcategory:checked").map(function(){ return $(this).val(); }).toArray());
         formData.append('tag',$(".tag:checked").map(function(){return $(this).val();}).toArray());
         if(typeof($('#image')[0].files[0])=='undefined'){
             formData.append('image','');
@@ -369,6 +393,36 @@
         });
     });
 
+      // When subcategory checkbox changes
+    $(document).on('click', '.subcategory', function () {
+            $("#subsubcategory").html(''); // clear previous sub-subcategories
+            let subcategories = $(".subcategory:checked").map(function () { return $(this).val(); }).toArray();
+
+            if (subcategories.length == 0) {
+                return; // no subcategories selected
+            }
+
+            $.ajax({
+                url: "{{ URL::to('fetch-subsubcategory-by-subcategory') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: { 'subcategories': subcategories },
+                success: function (result) {
+                    if (result.msgCode == '200') {
+                        $("#subsubcategory").html(result.html);
+                    } else {
+                        toastr.error('error encountered ' + result.msgText);
+                    }
+                    $("#loader").modal('hide');
+                },
+                error: function (error) {
+                    toastr.error('error encountered ' + error.statusText);
+                    $("#loader").modal('hide');
+                }
+            });
+        });
+
+
     $(document).on('click','.draft-update-post-btn',function(event){
         $('#title-err').html('');
         $('#slug-err').html('');
@@ -394,6 +448,7 @@
         formData.append('metadescription',$('#metadescription').val());
         formData.append('category',$(".category:checked").map(function(){return $(this).val();}).toArray());
         formData.append('subcategory',$(".subcategory:checked").map(function(){return $(this).val();}).toArray());
+        formData.append('subsubcategory', $(".subsubcategory:checked").map(function(){ return $(this).val(); }).toArray());
         formData.append('tag',$(".tag:checked").map(function(){return $(this).val();}).toArray());
         if(typeof($('#image')[0].files[0])=='undefined'){
             formData.append('image','');

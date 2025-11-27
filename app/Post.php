@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $fillable=[
+    protected $fillable = [
         'user_id',
         'postnumber',
         'title',
@@ -31,7 +31,7 @@ class Post extends Model
 
     public function approvedby()
     {
-        return $this->belongsTo('App\User','approvedby_id');
+        return $this->belongsTo('App\User', 'approvedby_id');
     }
 
     public function categories()
@@ -49,6 +49,16 @@ class Post extends Model
         return $this->hasMany('App\Postsubcategory');
     }
 
+    public function getSubcategoryIds()
+    {
+        return $this->subcategories()->pluck('subcategory_id')->toArray();
+    }
+
+    public function subsubcategories()
+    {
+        return $this->hasMany('App\Postsubsubcategory');
+    }
+
     public function tags()
     {
         return $this->hasMany('App\Posttag');
@@ -56,9 +66,9 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany('App\Comment')->whereNull('parent_id')->where('status','active');
+        return $this->hasMany('App\Comment')->whereNull('parent_id')->where('status', 'active');
     }
-    
+
     public function category()
     {
         return $this->hasOneThrough(Category::class, PostCategory::class, 'post_id', 'id', 'id', 'category_id');
