@@ -24,7 +24,7 @@ class CategoryController extends Controller
     {
         $this->authorize('is-admin');
         $categories = Category::all();
-        return view('admin.manage-category')->with('categories',$categories);
+        return view('admin.manage-category')->with('categories', $categories);
     }
 
     /**
@@ -34,16 +34,15 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        try{
+        try {
             return response()->json([
                 "msgCode" => "200",
                 "html" => view('admin.ajax.add-category')->render(),
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -74,26 +73,27 @@ class CategoryController extends Controller
         if ($validator->passes()) {
             try {
                 $image = "";
-                if($request->hasFile('image')){
+                if ($request->hasFile('image')) {
                     $image = $request->image->store("categoryimage");
                 }
                 Category::create([
-                    'name'=>$request->name,
-                    'hassubcategory'=>$request->hassubcategory ?? 'no',
-                    'showonheader'=>$request->showonheader ?? 'no',
-                    'showonfooter'=>$request->showonfooter ?? 'no',
-                    'showonleftside'=>$request->showonleftside ?? 'no',
-                    'slug'=>$request->slug,
-                    'metatitle'=>$request->metatitle,
-                    'metadescription'=>$request->metadescription,
-                    'metakeyword'=>$request->metakeyword,
-                    'image'=>$image
+                    'name' => $request->name,
+                    'hassubcategory' => $request->hassubcategory ?? 'no',
+                    'showonheader' => $request->showonheader ?? 'no',
+                    'showonfooter' => $request->showonfooter ?? 'no',
+                    'show_in_menu' => $request->show_in_menu ?? 'no', // <-- new field
+                    'slug' => $request->slug,
+                    'metatitle' => $request->metatitle,
+                    'metadescription' => $request->metadescription,
+                    'metakeyword' => $request->metakeyword,
+                    'image' => $image
                 ]);
+
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Category Created',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -101,8 +101,8 @@ class CategoryController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -126,24 +126,22 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        try{
+        try {
             $this->authorize('is-admin');
-            $category=Category::findOrFail($id);
+            $category = Category::findOrFail($id);
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.edit-category')->with('category',$category)->render(),
+                "html" => view('admin.ajax.edit-category')->with('category', $category)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -167,46 +165,47 @@ class CategoryController extends Controller
             'showonheader' => 'nullable',
             'showonfooter' => 'nullable',
             'showonleftside' => 'nullable',
-            "slug"=>["required",Rule::unique('categories')->ignore($id)],
+            "slug" => ["required", Rule::unique('categories')->ignore($id)],
             'metatitle' => 'required|max:255',
-            'image' => $category->image ? 'nullable|image|mimes:jpg,png,svg,jpeg,gif|max:2048' :"required|image|mimes:jpg,png,svg,jpeg,gif|max:2048",
+            'image' => $category->image ? 'nullable|image|mimes:jpg,png,svg,jpeg,gif|max:2048' : "required|image|mimes:jpg,png,svg,jpeg,gif|max:2048",
             'metadescription' => 'required|max:255',
             'metakeyword' => 'required|max:255',
         ]);
         if ($validator->passes()) {
             try {
-               $category1 = Category::findOrFail($id);
+                $category1 = Category::findOrFail($id);
                 $image = "";
-                if($request->hasFile('image')){
-                    if($category1->image && Storage::exists($category1->image)){
+                if ($request->hasFile('image')) {
+                    if ($category1->image && Storage::exists($category1->image)) {
                         Storage::delete($category1->image);
                     }
                     $image = $request->image->store("categoryimage");
-                }else{
-                  $image =  $category1->image;
+                } else {
+                    $image = $category1->image;
                 }
-                Category::where('id',$id)->update([
-                    'name'=>$request->name,
-                    'hassubcategory'=>$request->hassubcategory ?? 'no',
-                    'showonheader'=>$request->showonheader ?? 'no',
-                    'showonfooter'=>$request->showonfooter ?? 'no',
-                    'showonleftside'=>$request->showonleftside ?? 'no',
-                    'slug'=>$request->slug,
-                    'metatitle'=>$request->metatitle,
-                    'metadescription'=>$request->metadescription,
-                    'metakeyword'=>$request->metakeyword,
-                    'image'=>$image
+                Category::where('id', $id)->update([
+                    'name' => $request->name,
+                    'hassubcategory' => $request->hassubcategory ?? 'no',
+                    'showonheader' => $request->showonheader ?? 'no',
+                    'showonfooter' => $request->showonfooter ?? 'no',
+                    'show_in_menu' => $request->show_in_menu ?? 'no', // <-- new field
+                    'slug' => $request->slug,
+                    'metatitle' => $request->metatitle,
+                    'metadescription' => $request->metadescription,
+                    'metakeyword' => $request->metakeyword,
+                    'image' => $image
                 ]);
+
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Category Updated',
                 ]);
-            } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => 'Data Not found by id#' . $id,
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -214,8 +213,8 @@ class CategoryController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -230,17 +229,17 @@ class CategoryController extends Controller
     {
         try {
             Category::findOrFail($id);
-            Category::where('id',$id)->delete();
+            Category::where('id', $id)->delete();
             return response()->json([
                 'msgCode' => '200',
                 'msgText' => 'Category Deleted',
             ]);
-        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),
@@ -248,29 +247,29 @@ class CategoryController extends Controller
         }
     }
 
-    public function changestatus($id,$status)
+    public function changestatus($id, $status)
     {
         try {
-            if ($status=='active') {
-                $updatedstatus='block';
+            if ($status == 'active') {
+                $updatedstatus = 'block';
             } else {
-                $updatedstatus='active';
+                $updatedstatus = 'active';
             }
             Category::findOrFail($id);
-            Category::where('id',$id)->update([
-                'status'=>$updatedstatus,
+            Category::where('id', $id)->update([
+                'status' => $updatedstatus,
             ]);
             return response()->json([
                 'msgCode' => '200',
                 'msgText' => 'Status Changed',
                 'status' => $updatedstatus,
             ]);
-        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),

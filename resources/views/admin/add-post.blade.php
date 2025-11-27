@@ -110,6 +110,18 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
+                                        <div class="category-side">
+                                            <h3>Post Settings</h3>
+                                            <label>
+                                                <input type="checkbox" name="breaking_news" id="breaking_news"
+                                                    value="yes">
+                                                Mark as Breaking News
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
                                         <label class="label-control">Image tag</label>
                                         <input type="text" class="text-control" name="imagetag" id="imagetag">
                                         <div class="text-danger" id="imagetag-err"></div>
@@ -324,6 +336,7 @@
             formData.append('subcategory', $(".subcategory:checked").map(function () { return $(this).val(); }).toArray());
             formData.append('subsubcategory', $(".subsubcategory:checked").map(function () { return $(this).val(); }).toArray());
             formData.append('tag', $(".tag:checked").map(function () { return $(this).val(); }).toArray());
+            formData.append('breaking_news', $('#breaking_news').is(':checked') ? 'yes' : 'no');
             if (typeof ($('#image')[0].files[0]) == 'undefined') {
                 formData.append('image', '');
             } else {
@@ -381,6 +394,9 @@
                         }
                         if (result.errors.tag) {
                             $('#tag-err').html(result.errors.tag[0]);
+                        }
+                        if (result.errors.breaking_news) {
+                            $('#breaking_news-err').html(result.errors.breaking_news[0]);
                         }
                     } else {
                         toastr.error('error encountered ' + result.msgText);
@@ -509,6 +525,7 @@
             formData.append('subcategory', $(".subcategory:checked").map(function () { return $(this).val(); }).toArray());
             formData.append('subsubcategory', $(".subsubcategory:checked").map(function () { return $(this).val(); }).toArray());
             formData.append('tag', $(".tag:checked").map(function () { return $(this).val(); }).toArray());
+            formData.append('breaking_news', $('#breaking_news').is(':checked') ? 'yes' : 'no');
             if (typeof ($('#image')[0].files[0]) == 'undefined') {
                 formData.append('image', '');
             } else {
@@ -566,6 +583,9 @@
                         }
                         if (result.errors.tag) {
                             $('#tag-err').html(result.errors.tag[0]);
+                        }
+                        if (result.errors.breaking_news) {
+                            $('#breaking_news-err').html(result.errors.breaking_news[0]);
                         }
                     } else {
                         toastr.error('error encountered ' + result.msgText);

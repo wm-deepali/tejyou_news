@@ -1,4 +1,23 @@
 <!-- Footer Area Start Here -->
+@php
+	$mostViewedPosts = App\Post::where('status', 'published')
+		->orderBy('views', 'desc')
+		->take(5) // adjust how many posts you want to show
+		->get();
+
+	$footerCategories = App\Category::where('status', 'active')
+		->where('showonfooter', 'yes')
+		->orderBy('sequence', 'asc')
+		->get();
+
+	// Fetch latest 9 posts with images
+	$galleryPosts = App\Post::where('status', 'published')
+		->whereNotNull('image')
+		->orderBy('created_at', 'desc')
+		->take(9)
+		->get();
+
+@endphp
 <footer>
 	<div class="footer-area-top">
 		<div class="container">
@@ -7,195 +26,82 @@
 					<div class="footer-box">
 						<h2 class="title-bold-light title-bar-left text-uppercase">Most Viewed Posts</h2>
 						<ul class="most-view-post">
-							<li>
-								<div class="media">
-									<a href="post-style-1.html">
-										<img src="https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-											alt="post" class="img-fluid" width="70px">
-									</a>
-									<div class="media-body">
-										<h3 class="title-medium-light size-md mb-10">
-											<a href="#">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना खिलाकर
-												पूछा हाल।</a>
-										</h3>
-										<div class="post-date-light">
-											<ul>
-												<li>
-													<span>
-														<i class="fa fa-calendar" aria-hidden="true"></i>
-													</span>November 11, 2017
-												</li>
-											</ul>
+							@foreach($mostViewedPosts as $post)
+								<li>
+									<div class="media">
+										<a href="#">
+											<img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"
+												alt="{{ $post->title }}" class="img-fluid" width="70px">
+										</a>
+										<div class="media-body">
+											<h3 class="title-medium-light size-md mb-10">
+												<a href="#">{{ $post->title }}</a>
+											</h3>
+											<div class="post-date-light">
+												<ul>
+													<li>
+														<span>
+															<i class="fa fa-calendar" aria-hidden="true"></i>
+														</span>{{ $post->created_at->format('F d, Y') }}
+													</li>
+												</ul>
+											</div>
 										</div>
 									</div>
-								</div>
-							</li>
-							<li>
-								<div class="media">
-									<a href="post-style-1.html">
-										<img src="https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-											alt="post" class="img-fluid" width="70px">
-									</a>
-									<div class="media-body">
-										<h3 class="title-medium-light size-md mb-10">
-											<a href="#">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना खिलाकर
-												पूछा हाल।</a>
-										</h3>
-										<div class="post-date-light">
-											<ul>
-												<li>
-													<span>
-														<i class="fa fa-calendar" aria-hidden="true"></i>
-													</span>November 11, 2017
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="media">
-									<a href="post-style-1.html">
-										<img src="https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-											alt="post" class="img-fluid" width="70px">
-									</a>
-									<div class="media-body">
-										<h3 class="title-medium-light size-md mb-10">
-											<a href="#">सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना खिलाकर
-												पूछा हाल।</a>
-										</h3>
-										<div class="post-date-light">
-											<ul>
-												<li>
-													<span>
-														<i class="fa fa-calendar" aria-hidden="true"></i>
-													</span>November 11, 2017
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</li>
+								</li>
+							@endforeach
+
+							@if($mostViewedPosts->isEmpty())
+								<li>No posts available</li>
+							@endif
 						</ul>
 					</div>
 				</div>
+
 				<div class="col-xl-4 col-lg-3 col-md-6 col-sm-12">
 					<div class="footer-box">
 						<h2 class="title-bold-light title-bar-left text-uppercase">Popular Categories</h2>
 						<ul class="popular-categories">
-							<li>
-								<a href="#">राजनीति
-									<span>15</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">खबरें हटके
-									<span>10</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">ताज़ा खबर
-									<span>14</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">क्राइम
-									<span>13</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">वीडियो
-									<span>19</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">हेल्थ
-									<span>26</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">विदेश
-									<span>21</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">टेक्नोलॉजी
-									<span>09</span>
-								</a>
-							</li>
+							@foreach($footerCategories as $category)
+								<li>
+									<a href="#">
+										{{ $category->name }}
+										<span>{{ $category->posts()->count() }}</span>
+									</a>
+								</li>
+							@endforeach
+
+							@if($footerCategories->isEmpty())
+								<li>No categories available</li>
+							@endif
 						</ul>
 					</div>
 				</div>
+
+
+
 				<div class="col-xl-4 col-lg-5 col-md-12 col-sm-12">
 					<div class="footer-box">
 						<h2 class="title-bold-light title-bar-left text-uppercase">Post Gallery</h2>
 						<ul class="post-gallery shine-hover ">
-							<li>
-								<a href="gallery-style1.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post4.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style2.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post5.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style1.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post6.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style2.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post7.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style1.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post8.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style2.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post9.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style1.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post10.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style2.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post11.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
-							<li>
-								<a href="gallery-style1.html">
-									<figure>
-										<img src="{{ asset('website') }}/img/footer/post12.jpg" alt="post" class="img-fluid">
-									</figure>
-								</a>
-							</li>
+							@foreach($galleryPosts as $post)
+								<li>
+									<a href="#">
+										<figure>
+											<img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/footer/post-default.jpg') }}"
+												alt="{{ $post->title }}" class="img-fluid">
+										</figure>
+									</a>
+								</li>
+							@endforeach
+
+							@if($galleryPosts->isEmpty())
+								<li>No news available</li>
+							@endif
 						</ul>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -204,7 +110,8 @@
 			<div class="row">
 				<div class="col-12 text-center">
 					<a href="index.html" class="footer-logo img-fluid">
-						<img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid" width="100px">
+						<img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid"
+							width="100px">
 					</a>
 					<ul class="footer-social">
 						<li>

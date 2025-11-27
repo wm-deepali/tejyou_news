@@ -98,8 +98,37 @@
     <!-- Preloader End Here -->
     <div id="wrapper" class="wrapper">
         <!-- Header Area Start Here -->
-        <header>
+        @php
+            $headerCategoriesWithSub = App\Category::where('status', 'active')
+                ->where('showonheader', 'yes')
+                ->where('hassubcategory', 'yes')
+                ->with('subcategories')
+                ->get();
 
+            $headercategorieswithoutsub = App\Category::where('status', 'active')
+                ->where('showonheader', 'yes')
+                ->where('hassubcategory', 'no')
+                ->orderBy('sequence', 'asc')
+                ->get();
+
+            $postMenuCategory = App\Category::where('status', 'active')
+                ->where('show_in_menu', 'yes')
+                ->with([
+                    'posts' => function ($q) {
+                        $q->orderBy('created_at', 'desc')
+                            ->take(4);
+                    }
+                ])
+                ->orderBy('sequence', 'asc')
+                ->get();
+
+            $breakingNewsPosts = App\Post::where('status', 'published')
+                ->where('breaking_news', 'yes')
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
+        @endphp
+        <header>
             <div id="header-layout1" class="header-style1">
                 <div class="main-menu-area bg-primarytextcolor header-menu-fixed" id="sticker">
                     <!-- Top Bar (Location, Date, Weather) -->
@@ -120,7 +149,8 @@
                         </div>
                         <div class="logo-area">
                             <a href="index.html">
-                                <img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid" width="40px">
+                                <img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid"
+                                    width="40px">
                             </a>
                         </div>
 
@@ -146,7 +176,8 @@
                             <div class="col-lg-2 d-none d-lg-block">
                                 <div class="logo-area">
                                     <a href="index.html">
-                                        <img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid" width="70px">
+                                        <img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo"
+                                            class="img-fluid" width="70px">
                                     </a>
                                 </div>
                             </div>
@@ -186,97 +217,58 @@
                             <nav>
                                 <ul class="news5-nav">
 
-                                    <!-- Latest - Card Style Mega Menu -->
-                                    <li class="has-mega">
-                                        <a href="#">टॉप न्यूज़ <span class="arrow"></span></a>
-
-                                        <div class="mega-dropdown-card">
-                                            <div class="mega-grid">
-
-                                                <!-- Card 1 -->
-                                                <div class="mega-card">
-                                                    <img src="	https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-                                                        alt="">
-                                                    <div class="mega-card-content">
-                                                        <span class="cat-badge">टॉप न्यूज़</span>
-                                                        <h4>सिरौली पुलिस चौकी पर तैनात पुलिस बल ने भूखे लोगो को खाना
-                                                            खिलाकर पूछा हाल।</h4>
-                                                        <span class="meta">2 months ago • 1 min read</span>
-                                                    </div>
+                                    {{-- Categories showing posts --}}
+                                    @foreach($postMenuCategory as $category)
+                                        <li class="has-mega">
+                                            <a href="#">{{ $category->name }} <span class="arrow"></span></a>
+                                            <div class="mega-dropdown-card">
+                                                <div class="mega-grid">
+                                                    @forelse($category->posts as $post)
+                                                        <div class="mega-card">
+                                                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
+                                                                alt="{{ $post->title }}">
+                                                            <div class="mega-card-content">
+                                                                <span class="cat-badge">{{ $category->name }}</span>
+                                                                <h4>{{ \Illuminate\Support\Str::limit($post->title, 70) }}</h4>
+                                                                <span
+                                                                    class="meta">{{ $post->created_at->diffForHumans() }}</span>
+                                                            </div>
+                                                        </div>
+                                                    @empty
+                                                        <div class="mega-card">
+                                                            <h4>No posts available</h4>
+                                                        </div>
+                                                    @endforelse
                                                 </div>
-
-                                                <!-- Card 2 -->
-                                                <div class="mega-card">
-                                                    <img src="	https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-                                                        alt="">
-                                                    <div class="mega-card-content">
-                                                        <span class="cat-badge">टॉप न्यूज़</span>
-                                                        <h4>E-tailers to deliver food at doorstep in Lucknow</h4>
-                                                        <span class="meta">23 days ago • 15 comments</span>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Card 3 -->
-                                                <div class="mega-card">
-                                                    <img src="	https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-                                                        alt="">
-                                                    <div class="mega-card-content">
-                                                        <span class="cat-badge">टॉप न्यूज़</span>
-                                                        <h4>यूपी यानी अनलिमिटेड पोटेंशियलः सीएम योगी</h4>
-                                                        <span class="meta">29 days ago • 20 likes</span>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Card 4 -->
-                                                <div class="mega-card">
-                                                    <img src="	https://tejyug.com/public/front/images/Tej-Yug-News-logo.png"
-                                                        alt="">
-                                                    <div class="mega-card-content">
-                                                        <span class="cat-badge">टॉप न्यूज़</span>
-                                                        <h4>उत्तर प्रदेश पुलिस द्वारा किए गए सराहनीय कार्य का विवरण
-                                                            दिनांक: 15-02-2024</h4>
-                                                        <span class="meta">2 months ago • 5 shares</span>
-                                                    </div>
-                                                </div>
-
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li class="has-mega">
-                                        <a href="#">राज्य <span class="arrow"></span></a>
+                                        </li>
+                                    @endforeach
 
-                                        <!-- Naya simple vertical dropdown, purana mega-dropdown-card use nahi kar rahe -->
-                                        <div class="state-dropdown-only">
-                                            <ul class="state-list-simple">
-                                                <li><a href="#"> दिल्ली</a></li>
-                                                <li><a href="#">चंडीगढ़</a></li>
-                                                <li><a href="#">नई दिल्ली</a></li>
-                                                <li><a href="#">मध्य प्रदेश</a></li>
-                                                <li><a href="#">उत्तराखंड</a></li>
+                                    {{-- Categories with subcategories --}}
+                                    @foreach($headerCategoriesWithSub as $category)
+                                        <li class="has-mega">
+                                            <a href="#">{{ $category->name }} <span class="arrow"></span></a>
+                                            <div class="state-dropdown-only">
+                                                <ul class="state-list-simple">
+                                                    @foreach($category->subcategories as $sub)
+                                                        <li><a href="#">{{ $sub->name }}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    @endforeach
 
-                                                <!-- Baaki jitne chahiye daal do -->
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="has-mega"><a href="#"> राजनीति</a></li>
-
-
-                                    <li class="has-mega"><a href="#">खबरें हटके</a></li>
-                                    <li class="has-mega"><a href="#">ताज़ा खबर</a></li>
-                                    <li class="has-mega"><a href="#">क्राइम</a></li>
-                                    <li class="has-mega"><a href="#">वीडियो</a></li>
-                                    <li><a href="#"> हेल्थ</a></li>
-                                    <li><a href="#"> विदेश</a></li>
-                                    <li><a href="#"> टेक्नोलॉजी</a></li>
-                                    <li><a href="#"> मनोरंजन</a></li>
-                                    <li><a href="#"> साहित्य/लेख</a></li>
-
+                                    {{-- Categories without subcategories --}}
+                                    @foreach($headercategorieswithoutsub as $category)
+                                        <li class="has-mega"><a href="#">{{ $category->name }}</a></li>
+                                    @endforeach
                                 </ul>
+
                             </nav>
                         </div>
                     </div>
 
-                    <section class="bg-accent border-bottom ">
+                    <section class="bg-accent border-bottom">
                         <div class="container">
                             <div class="row no-gutters d-flex align-items-center">
                                 <div class="col-lg-2 col-md-3 col-sm-4 col-6">
@@ -285,25 +277,22 @@
                                 <div class="col-lg-10 col-md-9 col-sm-8 col-6">
                                     <div class="feeding-text-dark">
                                         <ol id="sample" class="ticker">
-                                            <li>
-                                                <a href="#">लखनऊमुख्यमंत्री योगी ने उद्योगपतियों को दिया रात्रिभोज सीएम
-                                                    आवास रात्रिभोज में शामिल हुए निवेशक उद्योगपतियों को सीएम आवास पर
-                                                    किया आमंत्रित GBC</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">एसबीआई, केंद्र सरकार और चुनाव आयोग को इलेक्टोरल बांड पर
-                                                    सुप्रीम कोर्ट ने 15 मार्च तक डाटा पब्लिक करने को कहा.</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">ममता बनर्जी का इस्तीफा... कोर्ट से बाहर कर दूंगा', किस पर
-                                                    फूटा CJI चंद्रचूड़ का गुस्सा?</a>
-                                            </li>
+                                            @forelse($breakingNewsPosts as $post)
+                                                <li>
+                                                    <a href="#">
+                                                        {{ \Illuminate\Support\Str::limit($post->title, 150) }}
+                                                    </a>
+                                                </li>
+                                            @empty
+                                                <li>No breaking news available</li>
+                                            @endforelse
                                         </ol>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
+
                 </div>
             </div>
         </header>

@@ -26,13 +26,16 @@ class HomeController extends Controller
     public function index()
     {
         try {
-            $reporter=User::where('role','reporter')->get();
-            $pendingpost=Post::where('status','pending')->get();
-            $post=Post::all();
-            return view('admin.index')->with('post',$post)
-            ->with('reporter',$reporter)->with('pendingpost',$pendingpost);
+            $totalPosts = Post::count();
+            $totalReporters = User::where('role', 'reporter')->count();
+            $pendingPosts = Post::where('status', 'pending')->count();
+            $totalViews = Post::sum('views');
+
+            return view('admin.index', compact('totalPosts', 'totalReporters', 'pendingPosts', 'totalViews'));
+
         } catch (\Exception $ex) {
             dd($ex->getMessage());
         }
     }
+
 }

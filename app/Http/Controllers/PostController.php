@@ -130,6 +130,7 @@ class PostController extends Controller
                     'metatitle' => $request->metatitle,
                     'metadescription' => $request->metadescription,
                     'metakeyword' => $request->metakeyword,
+                    'breaking_news' => $request->breaking_news === 'yes' ? 'yes' : 'no',
                 ];
 
                 if ($request->hasFile('image')) {
@@ -317,7 +318,17 @@ class PostController extends Controller
         try {
             $post = Post::findOrFail($id);
 
-            $data = $request->only(['title', 'slug', 'content', 'video', 'metatitle', 'metadescription', 'metakeyword']);
+            $data = $request->only([
+                'title',
+                'slug',
+                'content',
+                'video',
+                'metatitle',
+                'metadescription',
+                'metakeyword'
+            ]);
+
+            $data['breaking_news'] = $request->breaking_news === 'yes' ? 'yes' : 'no';
 
             // Handle image upload or selection
             if ($request->hasFile('image')) {
@@ -339,11 +350,47 @@ class PostController extends Controller
 
             $post->update($data);
 
-            // Sync relationships instead of deleting all
-            $post->categories()->sync($request->category ? explode(',', $request->category) : []);
-            $post->subcategories()->sync($request->subcategory ? explode(',', $request->subcategory) : []);
-            $post->subsubcategories()->sync($request->subsubcategory ? explode(',', $request->subsubcategory) : []);
-            $post->tags()->sync($request->tag ? explode(',', $request->tag) : []);
+            // ---- Handle categories ----
+            $existingCategoryIds = $post->categories()->pluck('category_id')->toArray();
+            $newCategoryIds = $request->category ? explode(',', $request->category) : [];
+
+            // Delete removed
+            $post->categories()->whereNotIn('category_id', $newCategoryIds)->delete();
+
+            // Add new
+            foreach (array_diff($newCategoryIds, $existingCategoryIds) as $catId) {
+                $post->categories()->create(['category_id' => $catId]);
+            }
+
+            // ---- Handle subcategories ----
+            $existingSubcategoryIds = $post->subcategories()->pluck('subcategory_id')->toArray();
+            $newSubcategoryIds = $request->subcategory ? explode(',', $request->subcategory) : [];
+
+            $post->subcategories()->whereNotIn('subcategory_id', $newSubcategoryIds)->delete();
+
+            foreach (array_diff($newSubcategoryIds, $existingSubcategoryIds) as $subId) {
+                $post->subcategories()->create(['subcategory_id' => $subId]);
+            }
+
+            // ---- Handle subsubcategories ----
+            $existingSubsubIds = $post->subsubcategories()->pluck('subsubcategory_id')->toArray();
+            $newSubsubIds = $request->subsubcategory ? explode(',', $request->subsubcategory) : [];
+
+            $post->subsubcategories()->whereNotIn('subsubcategory_id', $newSubsubIds)->delete();
+
+            foreach (array_diff($newSubsubIds, $existingSubsubIds) as $subsubId) {
+                $post->subsubcategories()->create(['subsubcategory_id' => $subsubId]);
+            }
+
+            // ---- Handle tags ----
+            $existingTagIds = $post->tags()->pluck('tag_id')->toArray();
+            $newTagIds = $request->tag ? explode(',', $request->tag) : [];
+
+            $post->tags()->whereNotIn('tag_id', $newTagIds)->delete();
+
+            foreach (array_diff($newTagIds, $existingTagIds) as $tagId) {
+                $post->tags()->create(['tag_id' => $tagId]);
+            }
 
             DB::commit();
 

@@ -103,6 +103,19 @@
                                     <div class="text-danger" id="image-err"></div>
 								</div>
 							</div>
+                            <div class="form-group row">
+    <div class="col-sm-12">
+        <div class="category-side">
+            <h3>Post Settings</h3>
+            <label>
+                <input type="checkbox" name="breaking_news" id="breaking_news" value="yes"
+                @if(isset($post->breaking_news) && $post->breaking_news == 'yes') checked @endif>
+                Mark as Breaking News
+            </label>
+        </div>
+    </div>
+</div>
+
 							<div class="form-group row">
 								<div class="col-sm-12">
 									<div class="category-side">
@@ -306,6 +319,7 @@
         formData.append('subcategory',$(".subcategory:checked").map(function(){return $(this).val();}).toArray());
         formData.append('subsubcategory', $(".subsubcategory:checked").map(function(){ return $(this).val(); }).toArray());
         formData.append('tag',$(".tag:checked").map(function(){return $(this).val();}).toArray());
+        formData.append('breaking_news', $('#breaking_news').is(':checked') ? 'yes' : 'no');
         if(typeof($('#image')[0].files[0])=='undefined'){
             formData.append('image','');
         } else {
@@ -357,6 +371,9 @@
                     }
                     if(result.errors.tag) {
                         $('#tag-err').html(result.errors.tag[0]);
+                    }
+                    if (result.errors.breaking_news) {
+                        $('#breaking_news-err').html(result.errors.breaking_news[0]);
                     }
                 } else {
                     toastr.error('error encountered '+result.msgText);
@@ -450,6 +467,7 @@
         formData.append('subcategory',$(".subcategory:checked").map(function(){return $(this).val();}).toArray());
         formData.append('subsubcategory', $(".subsubcategory:checked").map(function(){ return $(this).val(); }).toArray());
         formData.append('tag',$(".tag:checked").map(function(){return $(this).val();}).toArray());
+        formData.append('breaking_news', $('#breaking_news').is(':checked') ? 'yes' : 'no');
         if(typeof($('#image')[0].files[0])=='undefined'){
             formData.append('image','');
         } else {
@@ -501,6 +519,9 @@
                     }
                     if(result.errors.tag) {
                         $('#tag-err').html(result.errors.tag[0]);
+                    }
+                    if (result.errors.breaking_news) {
+                        $('#breaking_news-err').html(result.errors.breaking_news[0]);
                     }
                 } else {
                     toastr.error('error encountered '+result.msgText);
