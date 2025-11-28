@@ -89,7 +89,7 @@
 									<a href="#">
 										<figure>
 											<img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/footer/post-default.jpg') }}"
-												alt="{{ $post->title }}" class="img-fluid">
+												alt="{{ $post->title }}" class="img-fluid" style="height:70px;">
 										</figure>
 									</a>
 								</li>

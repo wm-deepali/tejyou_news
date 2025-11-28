@@ -1,70 +1,26 @@
 @include('front.header')
-<!-- News Feed Area Start Here -->
-<section class="bg-accent border-bottom add-top-margin">
-    <div class="container">
-        <div class="row no-gutters d-flex align-items-center">
-            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                <div class="topic-box topic-box-margin">Top Stories</div>
-            </div>
-            <div class="col-lg-10 col-md-9 col-sm-8 col-6">
-                <div class="feeding-text-dark">
-                    <ol id="sample" class="ticker">
-                        <li>
-                            <a href="#">लखनऊमुख्यमंत्री योगी ने उद्योगपतियों को दिया रात्रिभोज सीएम आवास रात्रिभोज में
-                                शामिल हुए निवेशक उद्योगपतियों को सीएम आवास पर किया आमंत्रित GBC</a>
-                        </li>
-                        <li>
-                            <a href="#">एसबीआई, केंद्र सरकार और चुनाव आयोग को इलेक्टोरल बांड पर सुप्रीम कोर्ट ने 15
-                                मार्च तक डाटा पब्लिक करने को कहा.</a>
-                        </li>
-                        <li>
-                            <a href="#">ममता बनर्जी का इस्तीफा... कोर्ट से बाहर कर दूंगा', किस पर फूटा CJI चंद्रचूड़ का
-                                गुस्सा?</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- News Feed Area End Here -->
-<!-- News Info List Area Start Here -->
-<section class="bg-body">
-    <div class="container">
-        <ul class="news-info-list text-center--sm">
-            <li>
-                <i class="fa fa-map-marker" aria-hidden="true"></i>Australia
-            </li>
-            <li>
-                <i class="fa fa-calendar" aria-hidden="true"></i><span id="current_date"></span>
-            </li>
-            <li>
-                <i class="fa fa-clock-o" aria-hidden="true"></i>Last Update 11.30 am
-            </li>
-            <li>
-                <i class="fa fa-cloud" aria-hidden="true"></i>29&#8451; Sydney, Australia
-            </li>
-        </ul>
-    </div>
-</section>
-<!-- News Info List Area End Here -->
+
 <!-- Breadcrumb Area Start Here -->
-<section class="breadcrumbs-area" style="background-image: url('img/banner/breadcrumbs-banner.jpg');">
+<section class="breadcrumbs-area"
+    style="background-image: url('{{ asset('website/img/banner/breadcrumbs-banner.jpg') }}');">
     <div class="container">
         <div class="breadcrumbs-content">
-            <h1>Business</h1>
+            <h1>{{ $post->title }}</h1>
             <ul>
                 <li>
-                    <a href="index.html">Home</a> -
+                    <a href="{{ route('home') }}">Home</a> -
                 </li>
                 <li>
-                    <a href="#">Business</a> -
+                    <a href="{{ route('category.posts', $post->category->slug ?? 0) }}">
+                        {{ $post->category->name ?? 'Category' }}
+                    </a> -
                 </li>
-                <li>Single post style_01</li>
+                <li>{{ $post->title }}</li>
             </ul>
         </div>
     </div>
 </section>
+
 <!-- Breadcrumb Area End Here -->
 <!-- News Details Page Area Start Here -->
 <section class="bg-body section-space-less30">
@@ -73,88 +29,88 @@
             <div class="col-lg-8 col-md-12 mb-30">
                 <div class="news-details-layout1">
                     <div class="position-relative mb-30">
-                        <img src="img/news/news177.jpg" alt="news-details" class="img-fluid">
+                        @if($post->video)
+                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                        @else
+                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/news/news177.jpg') }}"
+                                alt="news-details" class="img-fluid">
+                        @endif
                         <div class="topic-box-top-sm">
-                            <div class="topic-box-sm color-cinnabar mb-20">Business</div>
+                            <div class="topic-box-sm color-cinnabar mb-20">
+                                {{ $post->category->name ?? 'Uncategorized' }}
+                            </div>
                         </div>
                     </div>
-                    <h2 class="title-semibold-dark size-c30">10 Hdrenaline fuelled activities that will chase the post
-                        summer blues away</h2>
+                    <h2 class="title-semibold-dark size-c30">{{ $post->title }}</h2>
+
                     <ul class="post-info-dark mb-30">
                         <li>
                             <a href="#">
-                                <span>By</span> Mark Willy</a>
+                                <span>By</span> {{ $post->user->name ?? 'Admin' }}
+                            </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="fa fa-calendar" aria-hidden="true"></i>Jan 10, 2017</a>
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                {{ $post->created_at->format('M d, Y') }}
+                            </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="fa fa-eye" aria-hidden="true"></i>202</a>
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                {{ $post->views }}
+                            </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="fa fa-comments" aria-hidden="true"></i>20</a>
+                                <i class="fa fa-comments" aria-hidden="true"></i>
+                                {{ $post->comments->count() }}
+                            </a>
                         </li>
                     </ul>
-                    <p>Nmply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                        andard dummy text ever since the 1500s, when an unknown printer took a galley of type
-                        andser crambled it to make a type specimen book. It has survived not only five centuries,
-                        but also the leap into electronic typesetting, remaining.</p>
-                    <p>It is a long established fact that a reader will be distracted by the readable content of
-                        a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less
-                        normal distrib ution of letters, as opposed to using 'Content here, content here', making
-                        it look like readabl aree English. Many desktop publishing packages and web page editors
-                        now use Lorem Ipsum s their default model text, and a search.</p>
-                    <img src="img/news/news178.jpg" alt="news-details" class="img-fluid pull-left mr-40 mb-15">
-                    <p>Nmply dummy text of the printing and typesetting ustry. Lorem Ipsum has been the industry's
-                        stydedy andard dummy text ever since the, when new wwan printer took a galley of type
-                        andsercrambled it toit make a type specimen book. It has survived anneyt only five centuries,
-                        but also theleap into electro nic typesetting, remaining.</p>
-                    <p>It is a long established fact that a reader will be dist racted by the readable content of
-                        a page when looking at its layout.</p>
-                    <blockquote cite="#" class="bg-accent mt-50 mb-50">
-                        Srem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                        the industry's standard dummy
-                        text ever since the 1500s. Lorem Ipsum is simply .
-                    </blockquote>
-                    <p>Nmply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                        st andard dummy text ever since the 1500s, when an unknown printer took a galley of type
-                        andse aerr crambled it to make a type specimen book. It has survived not only five centuries,
-                        but also they area leap into electronic typesetting, remaining.</p>
-                    <ul class="blog-tags item-inline">
-                        <li>Tags</li>
-                        <li>
-                            <a href="#">#Business</a>
-                        </li>
-                        <li>
-                            <a href="#">#Magazine</a>
-                        </li>
-                        <li>
-                            <a href="#">#Lifestyle</a>
-                        </li>
-                    </ul>
+                    {!! $post->content !!}
+                    {{-- Tags --}}
+                    @if($post->tags->count() > 0)
+                        <ul class="blog-tags item-inline">
+                            <li>Tags</li>
+                            @foreach($post->tags as $tag)
+                                <li>
+                                    <a href="#">#{{ $tag->name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+
+                    @php
+                        $postUrl = url()->current();
+                        $postTitle = urlencode($post->title);
+                    @endphp
+
                     <div class="post-share-area mb-40 item-shadow-1">
                         <p>You can share this post!</p>
                         <ul class="social-default item-inline">
                             <li>
-                                <a href="#" class="facebook">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ $postUrl }}" class="facebook"
+                                    target="_blank">
                                     <i class="fa fa-facebook" aria-hidden="true"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="twitter">
+                                <a href="https://twitter.com/intent/tweet?url={{ $postUrl }}&text={{ $postTitle }}"
+                                    class="twitter" target="_blank">
                                     <i class="fa fa-twitter" aria-hidden="true"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="google">
+                                <a href="https://plus.google.com/share?url={{ $postUrl }}" class="google"
+                                    target="_blank">
                                     <i class="fa fa-google-plus" aria-hidden="true"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="pinterest">
+                                <a href="https://pinterest.com/pin/create/button/?url={{ $postUrl }}&description={{ $postTitle }}"
+                                    class="pinterest" target="_blank">
                                     <i class="fa fa-pinterest" aria-hidden="true"></i>
                                 </a>
                             </li>
@@ -164,131 +120,166 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="linkedin">
+                                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ $postUrl }}&title={{ $postTitle }}"
+                                    class="linkedin" target="_blank">
                                     <i class="fa fa-linkedin" aria-hidden="true"></i>
                                 </a>
                             </li>
                         </ul>
                     </div>
+
                     <div class="row no-gutters divider blog-post-slider">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                            <a href="#" class="prev-article">
-                                <i class="fa fa-angle-left" aria-hidden="true"></i>Previous article</a>
-                            <h3 class="title-medium-dark pr-50">Wonderful Outdoors Experience: Eagle Spotting in Alaska
-                            </h3>
+                            @if($prevPost)
+                                <a href="{{ route('post.show', $prevPost->slug) }}" class="prev-article">
+                                    <i class="fa fa-angle-left" aria-hidden="true"></i>Previous article
+                                </a>
+                                <h3 class="title-medium-dark pr-50">{{ $prevPost->title }}</h3>
+                            @endif
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6 text-right">
-                            <a href="#" class="next-article">Next article
-                                <i class="fa fa-angle-right" aria-hidden="true"></i>
-                            </a>
-                            <h3 class="title-medium-dark pl-50">The only thing that overcomes hard luck is hard work
-                            </h3>
+                            @if($nextPost)
+                                <a href="{{ route('post.show', $nextPost->slug) }}" class="next-article">
+                                    Next article <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                </a>
+                                <h3 class="title-medium-dark pl-50">{{ $nextPost->title }}</h3>
+                            @endif
                         </div>
                     </div>
+
                     <div class="author-info p-35-r mb-50 border-all">
                         <div class="media media-none-xs">
-                            <img src="img/author.jpg" alt="author" class="img-fluid rounded-circle">
+                            <img src="{{ $post->user->image ? URL::asset('storage/' . $post->user->image) : asset('website/img/author.jpg') }}"
+                                alt="{{ $post->user->name }}" class="img-fluid rounded-circle">
                             <div class="media-body pt-10 media-margin30">
-                                <h3 class="size-lg mb-5">Mark Willy</h3>
-                                <div class="post-by mb-5">By Admin</div>
-                                <p class="mb-15">Dorem Ipsum is simply dummy text of the printing and typesetting
-                                    industr been
-                                    the industry's standard dummy text ever since.</p>
+                                <h3 class="size-lg mb-5">{{ $post->user->name }}</h3>
+                                <div class="post-by mb-5">By {{ $post->user->role ?? 'Admin' }}</div>
+                                <p class="mb-15">{{ $post->user->bio ?? 'No bio available.' }}</p>
                                 <ul class="author-social-style2 item-inline">
-                                    <li>
-                                        <a href="#" title="facebook">
-                                            <i class="fa fa-facebook" aria-hidden="true"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="twitter">
-                                            <i class="fa fa-twitter" aria-hidden="true"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="google-plus">
-                                            <i class="fa fa-google-plus" aria-hidden="true"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="linkedin">
-                                            <i class="fa fa-linkedin" aria-hidden="true"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="pinterest">
-                                            <i class="fa fa-pinterest" aria-hidden="true"></i>
-                                        </a>
-                                    </li>
+                                    @if($post->user->facebook)
+                                        <li><a href="{{ $post->user->facebook }}" title="facebook"><i
+                                                    class="fa fa-facebook"></i></a></li>
+                                    @endif
+                                    @if($post->user->twitter)
+                                        <li><a href="{{ $post->user->twitter }}" title="twitter"><i
+                                                    class="fa fa-twitter"></i></a></li>
+                                    @endif
+                                    @if($post->user->linkedin)
+                                        <li><a href="{{ $post->user->linkedin }}" title="linkedin"><i
+                                                    class="fa fa-linkedin"></i></a></li>
+                                    @endif
+                                    @if($post->user->google_plus)
+                                        <li><a href="{{ $post->user->google_plus }}" title="google-plus"><i
+                                                    class="fa fa-google-plus"></i></a></li>
+                                    @endif
+                                    @if($post->user->pinterest)
+                                        <li><a href="{{ $post->user->pinterest }}" title="pinterest"><i
+                                                    class="fa fa-pinterest"></i></a></li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
                     </div>
+
                     <div class="comments-area">
-                        <h2 class="title-semibold-dark size-xl border-bottom mb-40 pb-20">03 Comments</h2>
+                        <h2 class="title-semibold-dark size-xl border-bottom mb-40 pb-20">
+                            {{ $post->comments->count() }} Comment{{ $post->comments->count() > 1 ? 's' : '' }}
+                        </h2>
                         <ul>
-                            <li>
-                                <div class="media media-none-xs">
-                                    <img src="img/blog1.jpg" class="img-fluid rounded-circle" alt="comments">
-                                    <div class="media-body comments-content media-margin30">
-                                        <h3 class="title-semibold-dark">
-                                            <a href="#">Nitiya ,
-                                                <span> August 29, 2017</span>
-                                            </a>
-                                        </h3>
-                                        <p>Borem Ipsum is simply dummy text of the printing and typesetting industry
-                                            Lorem Ipsum has been the industry's standard dummy text.</p>
+                            @foreach($post->comments as $comment)
+                                <li>
+                                    <div class="media media-none-xs">
+                                        <img src="{{ URL::asset('front/images/matt.jpg') }}" alt="{{ $comment->name }}"
+                                            class="img-fluid rounded-circle">
+                                        <div class="media-body comments-content media-margin30">
+                                            <h3 class="title-semibold-dark">
+                                                <a href="#">{{ $comment->name }},
+                                                    <span>{{ $comment->created_at->format('F d, Y') }}</span>
+                                                </a>
+                                            </h3>
+                                            <p>{{ $comment->content }}</p>
+                                            <a href="javascript:void(0)" comment_id="{{ $comment->id }}"
+                                                class="reply-box">Reply</a>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="media media-none-xs">
-                                    <img src="img/blog2.jpg" class="img-fluid rounded-circle" alt="comments">
-                                    <div class="media-body comments-content media-margin30">
-                                        <h3 class="title-semibold-dark">
-                                            <a href="#">Fahim ,
-                                                <span> August 29, 2017</span>
-                                            </a>
-                                        </h3>
-                                        <p>Borem Ipsum is simply dummy text of the printing and typesetting industry
-                                            Lorem Ipsum has been the industry's standard dummy text.</p>
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
-                    <div class="leave-comments">
+
+                    <div class="leave-comments comments-form">
                         <h2 class="title-semibold-dark size-xl mb-40">Leave Comments</h2>
-                        <form id="leave-comments">
+                        <form id="add-comment-form">
                             <div class="row">
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
-                                        <input placeholder="Name*" class="form-control" type="text">
-                                        <div class="help-block with-errors"></div>
+                                        <input placeholder="Name*" class="form-control" name="name" type="text">
+                                        <div id="name-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
-                                        <input placeholder="Email*" class="form-control" type="email">
-                                        <div class="help-block with-errors"></div>
+                                        <input placeholder="Email*" class="form-control" name="email" type="email">
+                                        <div id="email-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
-                                        <input placeholder="Web Address" class="form-control" type="text">
-                                        <div class="help-block with-errors"></div>
+                                        <input placeholder="Mobile Number" name="contact" class="form-control"
+                                            type="text">
+                                        <div id="contact-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <textarea placeholder="Message*" class="textarea form-control" id="form-message"
-                                            rows="8" cols="20"></textarea>
-                                        <div class="help-block with-errors"></div>
+                                        <textarea name="comment" placeholder="Message*" class="textarea form-control"
+                                            id="form-message" rows="8" cols="20"></textarea>
+                                        <div id="comment-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group mb-none">
-                                        <button type="submit" class="btn-ftg-ptp-45">Post Comment</button>
+                                        <button type="submit" class="btn-ftg-ptp-45 add-comment-btn">Post
+                                            Comment</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="leave-comments reply-form" style="display:none;">
+                        <h2 class="title-semibold-dark size-xl mb-40">Leave Reply</h2>
+                        <form id="add-comment-reply-form">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <input placeholder="Name*" class="form-control" name="name" type="text">
+                                        <div id="name-err" class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <input placeholder="Email*" class="form-control" name="email" type="email">
+                                        <div id="replyemail-err" class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <input placeholder="Mobile Number" name="contact" class="form-control"
+                                            type="text">
+                                        <div id="replycontact-err" class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea name="comment" placeholder="Message*" class="textarea form-control"
+                                            id="form-message" rows="8" cols="20"></textarea>
+                                        <div id="replycomment-err" class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group mb-none">
+                                        <button type="submit" class="btn-ftg-ptp-45 add-comment-reply-btn">Post
+                                            Reply</button>
                                     </div>
                                 </div>
                             </div>
@@ -327,7 +318,7 @@
                 <div class="sidebar-box">
                     <div class="ne-banner-layout1 text-center">
                         <a href="#">
-                            <img src="img/banner/banner3.jpg" alt="ad" class="img-fluid">
+                            <img src="{{ asset('website') }}/img/banner/banner3.jpg" alt="ad" class="img-fluid">
                         </a>
                     </div>
                 </div>
@@ -336,90 +327,26 @@
                         <div class="topic-box-lg color-cod-gray">Recent News</div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 col-md-4 col-sm-6 col-6">
-                            <div class="mt-25 position-relative">
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Nature</div>
+                        @foreach($randomPosts as $r)
+                            <div class="col-lg-6 col-md-4 col-sm-6 col-6">
+                                <div class="mt-25 position-relative">
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">{{ $r->category->name ?? 'News' }}
+                                        </div>
+                                    </div>
+
+                                    <a href="{{ route('post.show', $r->id) }}"
+                                        class="mb-10 display-block img-opacity-hover">
+                                        <img src="{{ asset('storage/' . $r->image) }}" alt="{{ $r->title }}"
+                                            class="img-fluid m-auto width-100">
+                                    </a>
+
+                                    <h3 class="title-medium-dark size-md mb-none">
+                                        <a href="{{ route('post.show', $r->id) }}">{{ Str::limit($r->title, 60) }}</a>
+                                    </h3>
                                 </div>
-                                <a href="single-news-1.html" class="mb-10 display-block img-opacity-hover">
-                                    <img src="img/news/news171.jpg" alt="ad" class="img-fluid m-auto width-100">
-                                </a>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie TBeauty
-                                        Habits.</a>
-                                </h3>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 col-6">
-                            <div class="mt-25 position-relative">
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Application</div>
-                                </div>
-                                <a href="single-news-1.html" class="mb-10 display-block img-opacity-hover">
-                                    <img src="img/news/news172.jpg" alt="ad" class="img-fluid m-auto width-100">
-                                </a>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie TBeauty
-                                        Habits.</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 col-6">
-                            <div class="mt-25 position-relative">
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Life Style</div>
-                                </div>
-                                <a href="single-news-1.html" class="mb-10 display-block img-opacity-hover">
-                                    <img src="img/news/news173.jpg" alt="ad" class="img-fluid m-auto width-100">
-                                </a>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie TBeauty
-                                        Habits.</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 col-6">
-                            <div class="mt-25 position-relative">
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Technology</div>
-                                </div>
-                                <a href="single-news-1.html" class="mb-10 display-block img-opacity-hover">
-                                    <img src="img/news/news174.jpg" alt="ad" class="img-fluid m-auto width-100">
-                                </a>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie TBeauty
-                                        Habits.</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 col-6">
-                            <div class="mt-25 position-relative">
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Accessories</div>
-                                </div>
-                                <a href="single-news-1.html" class="mb-10 display-block img-opacity-hover">
-                                    <img src="img/news/news175.jpg" alt="ad" class="img-fluid m-auto width-100">
-                                </a>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie TBeauty
-                                        Habits.</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-4 col-sm-6 col-6">
-                            <div class="mt-25 position-relative">
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Model</div>
-                                </div>
-                                <a href="single-news-1.html" class="mb-10 display-block img-opacity-hover">
-                                    <img src="img/news/news176.jpg" alt="ad" class="img-fluid m-auto width-100">
-                                </a>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="single-news-1.html">Rosie Huntington Whitl Habits Career Art.Rosie TBeauty
-                                        Habits.</a>
-                                </h3>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="sidebar-box">
@@ -429,7 +356,8 @@
                     <div class="newsletter-area bg-primary">
                         <h2 class="title-medium-light size-xl pl-30 pr-30">Subscribe to our mailing list to get the new
                             updates!</h2>
-                        <img src="img/banner/newsletter.png" alt="newsletter" class="img-fluid m-auto mb-15">
+                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter"
+                            class="img-fluid m-auto mb-15">
                         <p>Subscribe our newsletter to stay updated</p>
                         <div class="input-group stylish-input-group">
                             <input type="text" placeholder="Enter your mail" class="form-control">
@@ -446,160 +374,52 @@
                         <div class="topic-box-lg color-cod-gray">Tags</div>
                     </div>
                     <ul class="sidebar-tags">
-                        <li>
-                            <a href="#">Apple</a>
-                        </li>
-                        <li>
-                            <a href="#">Business</a>
-                        </li>
-                        <li>
-                            <a href="#">Architecture</a>
-                        </li>
-                        <li>
-                            <a href="#">Gadgets</a>
-                        </li>
-                        <li>
-                            <a href="#">Software</a>
-                        </li>
-                        <li>
-                            <a href="#">Microsoft</a>
-                        </li>
-                        <li>
-                            <a href="#">Robotic</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology</a>
-                        </li>
-                        <li>
-                            <a href="#">Others</a>
-                        </li>
+                        @foreach($post->tags as $tag)
+                            <li>
+                                <a href="#">#{{ $tag->name ?? 'Tag' }}</a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
+
                 <div class="sidebar-box">
                     <div class="topic-border color-cod-gray mb-30">
-                        <div class="topic-box-lg color-cod-gray">Most Reviews</div>
+                        <div class="topic-box-lg color-cod-gray">Most Viewed</div>
                     </div>
-                    <div class="position-relative mb30-list bg-body">
-                        <div class="topic-box-top-xs">
-                            <div class="topic-box-sm color-cod-gray mb-20">Apple</div>
-                        </div>
-                        <div class="media">
-                            <a class="img-opacity-hover" href="single-news-1.html">
-                                <img src="img/news/news117.jpg" alt="news" class="img-fluid">
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>February 10, 2017
-                                        </li>
-                                    </ul>
+
+                    @foreach($mostViewedPosts as $mPost)
+                        <div class="position-relative mb30-list bg-body">
+                            <div class="topic-box-top-xs">
+                                <div class="topic-box-sm color-cod-gray mb-20">
+                                    {{ $mPost->category->name ?? 'General' }}
                                 </div>
-                                <h3 class="title-medium-dark mb-none">
-                                    <a href="single-news-2.html">Can Be Monit roade year with Program.</a>
-                                </h3>
+                            </div>
+                            <div class="media">
+                                <a class="img-opacity-hover" href="{{ route('post.show', $mPost->slug) }}">
+                                    <img src="{{ asset('storage/' . $mPost->image) }}" alt="{{ $mPost->title }}"
+                                        class="img-fluid">
+                                </a>
+                                <div class="media-body">
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>{{ $mPost->created_at->format('F d, Y') }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark mb-none">
+                                        <a href="{{ route('post.show', $mPost->slug) }}">
+                                            {{ Str::limit($mPost->title, 50) }}
+                                        </a>
+                                    </h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="position-relative mb30-list bg-body">
-                        <div class="topic-box-top-xs">
-                            <div class="topic-box-sm color-cod-gray mb-20">Gadgets</div>
-                        </div>
-                        <div class="media">
-                            <a class="img-opacity-hover" href="single-news-2.html">
-                                <img src="img/news/news118.jpg" alt="news" class="img-fluid">
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>June 06, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark mb-none">
-                                    <a href="single-news-3.html">Can Be Monit roade year with Program.</a>
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="position-relative mb30-list bg-body">
-                        <div class="topic-box-top-xs">
-                            <div class="topic-box-sm color-cod-gray mb-20">Software</div>
-                        </div>
-                        <div class="media">
-                            <a class="img-opacity-hover" href="single-news-3.html">
-                                <img src="img/news/news119.jpg" alt="news" class="img-fluid">
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>August 22, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark mb-none">
-                                    <a href="single-news-1.html">Can Be Monit roade year with Program.</a>
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="position-relative mb30-list bg-body">
-                        <div class="topic-box-top-xs">
-                            <div class="topic-box-sm color-cod-gray mb-20">Tech</div>
-                        </div>
-                        <div class="media">
-                            <a class="img-opacity-hover" href="single-news-1.html">
-                                <img src="img/news/news120.jpg" alt="news" class="img-fluid">
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>February 10, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark mb-none">
-                                    <a href="single-news-2.html">Can Be Monit roade year with Program.</a>
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="position-relative mb30-list bg-body">
-                        <div class="topic-box-top-xs">
-                            <div class="topic-box-sm color-cod-gray mb-20">Ipad</div>
-                        </div>
-                        <div class="media">
-                            <a class="img-opacity-hover" href="single-news-1.html">
-                                <img src="img/news/news121.jpg" alt="news" class="img-fluid">
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>February 10, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark mb-none">
-                                    <a href="single-news-2.html">Can Be Monit roade year with Program.</a>
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
+
             </div>
         </div>
     </div>
@@ -607,3 +427,106 @@
 <!-- News Details Page Area End Here -->
 
 @include('front.footer')
+<script type="text/javascript"
+    async>function generic_social_share(url) { window.open(url, 'sharer', 'toolbar=0,status=0,width=648,height=395'); return true; }</script>
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $(document).ajaxStart(function () {
+        $("#loader").modal('show');
+    });
+    $(document).ajaxComplete(function () {
+        $("#loader").modal('hide');
+    });
+    $(document).ready(function () {
+
+
+        $(document).on('click', '.add-comment-btn', function (event) {
+            $('#name-err').html('');
+            $('#email-err').html('');
+            $('#contact-err').html('');
+            $('#comment-err').html('');
+            $.ajax({
+                url: "{{ URL::to('add-comment') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: $('#add-comment-form').serialize(),
+                success: function (result) {
+                    if (result.msgCode === '200') {
+                        toastr.success(result.msgText);
+                        location.reload();
+                    } else if (result.msgCode === '401') {
+                        if (result.errors.name) {
+                            $('#name-err').html(result.errors.name[0]);
+                        }
+                        if (result.errors.email) {
+                            $('#email-err').html(result.errors.email[0]);
+                        }
+                        if (result.errors.contact) {
+                            $('#contact-err').html(result.errors.contact[0]);
+                        }
+                        if (result.errors.comment) {
+                            $('#comment-err').html(result.errors.comment[0]);
+                        }
+                    } else {
+                        toastr.error('error encountered ' + result.msgText);
+                    }
+                },
+                error: function (error) {
+                    toastr.error('error encountered ' + error.statusText);
+                }
+            });
+        });
+
+        $(document).on("click", ".reply-box", function (event) {
+            let comment_id = $(this).attr('comment_id');
+            $('.comments-form').hide();
+            $('.reply-form').show();
+            $("#add-comment-reply-form").find('#name').focus();
+            $("#comment_id").val(comment_id);
+            document.getElementById('add-comment-reply-form').reset();
+        });
+
+        $(document).on('click', '.add-comment-reply-btn', function (event) {
+            $('#replyname-err').html('');
+            $('#replyemail-err').html('');
+            $('#replycontact-err').html('');
+            $('#replycomment-err').html('');
+            let comment_id = $("#comment_id").val();
+            $.ajax({
+                url: `{{ URL::to('add-comment-reply/${comment_id}') }}`,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#add-comment-reply-form').serialize(),
+                success: function (result) {
+                    if (result.msgCode === '200') {
+                        toastr.success(result.msgText);
+                        location.reload();
+                    } else if (result.msgCode === '401') {
+                        if (result.errors.name) {
+                            $('#replyname-err').html(result.errors.name[0]);
+                        }
+                        if (result.errors.email) {
+                            $('#replyemail-err').html(result.errors.email[0]);
+                        }
+                        if (result.errors.contact) {
+                            $('#replycontact-err').html(result.errors.contact[0]);
+                        }
+                        if (result.errors.comment) {
+                            $('#replycomment-err').html(result.errors.comment[0]);
+                        }
+                    } else {
+                        toastr.error('error encountered ' + result.msgText);
+                    }
+                },
+                error: function (error) {
+                    toastr.error('error encountered ' + error.statusText);
+                }
+            });
+        });
+
+    });
+</script>

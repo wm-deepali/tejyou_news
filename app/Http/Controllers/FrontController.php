@@ -36,396 +36,193 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Cache; // ← Add this line
+
 
 class FrontController extends Controller
 {
-    public function index($slug = "")
+    public function index()
     {
-        try {
-            // Common
-            $headersetting = Headersetting::select('datetimeformat', 'image')->first();
-            $footersetting = Footersetting::first();
-            $headercategorieswithsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'yes')->with(['subcategories'])->get();
-            $headercategorieswithoutsubcategory = Category::where('status', 'active')->where('showonleftside', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
-            $leftcategorieswithoutsubcategory = Category::where('status', 'active')->where('showonheader', 'yes')->where('hassubcategory', 'no')->orderBy('sequence', 'asc')->get();
-            $tags = Tag::select(['id', 'slug', 'name'])->where('status', 'active')->orderBy('sequence', 'asc')->take(7)->get();
-            $footercategories = Category::select(['id', 'slug', 'name'])->where('status', 'active')->where('showonfooter', 'yes')->get();
-            $breaking_news_ids = Postcategory::latest('id')->where('category_id', 14)->limit(10)->pluck('post_id')->toArray();
-            $breakingnews = Post::latest('id')->select(['id', 'slug', 'title'])->whereIn('id', $breaking_news_ids)->where('status', 'published')->take(10)->get();
-            // // Common
-            // $homepagewidget=Homepagewidget::firstOrFail();
+        // 1️⃣ Recent posts
+        $recentNews = Post::with('category', 'user')
+            ->where('status', 'published')
+            ->whereNotNull('image')
+            ->latest()
+            ->take(4)
+            ->get();
 
-            // $centercategoryids=$homepagewidget->centercategories->pluck('category_id')->toArray();
+        // 4️⃣ Get 4 subcategories of 'rajya'
+        $rajyaCategory = Category::where('slug', 'rajya')
+            ->first();
 
-            // $center_1_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[0])->limit(4)->pluck('post_id')->toArray();
-            // $center1posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_1_post_ids)->where('status','published')->take(4)->get();
-            // $center1category=Category::findOrFail($centercategoryids[0]);
+        $subcategories = $rajyaCategory->subcategories()
+            ->wherehas('posts') // only subcategories having posts
+            ->take(4) // limit to 4 subcategories
+            ->get();
 
-            // $center_2_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[1])->limit(4)->pluck('post_id')->toArray();
-            // $center2posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_2_post_ids)->where('status','published')->take(4)->get();
-            // $center2category=Category::findOrFail($centercategoryids[1]);
-
-            // $center_3_post_ids = Postcategory::latest('id')->where('category_id',$centercategoryids[2])->limit(4)->pluck('post_id')->toArray();
-            // $center3posts = Post::select(['id','slug','image','title'])->latest('id')->whereIn('id',$center_3_post_ids)->where('status','published')->take(4)->get();
-            // $center3category=Category::findOrFail($centercategoryids[2]);
-
-            // $videocategoryids=$homepagewidget->videocategories->pluck('category_id')->toArray();
-            // $videocategories=Category::whereIn('id',$videocategoryids)->get();
-            // if($homepagewidget->cataloguecategory=='*'){
-            //     if ($homepagewidget->catalogueposttype=='all') {
-            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id','desc')->take(5)->get();
-            //     } elseif($homepagewidget->catalogueposttype=='trending') {
-            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->catalogueposttype=='latest') {
-            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->catalogueposttype=='oldest') {
-            //         $catalogueposts=Post::select(['id','slug','image','title'])->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            //     }
-            // } else {
-            //     if ($homepagewidget->catalogueposttype=='all') {
-            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->cataloguecategory);
-            //         })->where('status','published')->orderBy('id','desc')->take(5)->get();
-            //     } elseif($homepagewidget->catalogueposttype=='trending') {
-            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->cataloguecategory);
-            //         })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->catalogueposttype=='latest') {
-            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->cataloguecategory);
-            //         })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->catalogueposttype=='oldest') {
-            //         $catalogueposts = Post::select(['id','slug','image','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->cataloguecategory);
-            //         })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            //     }
-            // }
-            // if ($homepagewidget->categorytab1posttype=='all') {
-            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab1);
-            //     })->where('status','published')->orderBy('id', 'desc')->take(7)->get();
-            // } elseif($homepagewidget->categorytab1posttype=='trending') {
-            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab1);
-            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-            // } elseif($homepagewidget->categorytab1posttype=='latest') {
-            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab1);
-            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-            // } elseif($homepagewidget->categorytab1posttype=='oldest') {
-            //     $uppertab1posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab1);
-            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-            // }
-            // $uppertab1category=Category::findOrFail($homepagewidget->categorytab1);
-            // if ($homepagewidget->categorytab2posttype=='all') {
-            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab2);
-            //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
-            // } elseif($homepagewidget->categorytab2posttype=='trending') {
-            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab2);
-            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-            // } elseif($homepagewidget->categorytab2posttype=='latest') {
-            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab2);
-            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-            // } elseif($homepagewidget->categorytab2posttype=='oldest') {
-            //     $uppertab2posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab2);
-            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-            // }
-            // $uppertab2category=Category::findOrFail($homepagewidget->categorytab2);
-            // if ($homepagewidget->categorytab3posttype=='all') {
-            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab3);
-            //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
-            // } elseif($homepagewidget->categorytab3posttype=='trending') {
-            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab3);
-            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-            // } elseif($homepagewidget->categorytab3posttype=='latest') {
-            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab3);
-            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-            // } elseif($homepagewidget->categorytab3posttype=='oldest') {
-            //     $uppertab3posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab3);
-            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-            // }
-            // $uppertab3category=Category::findOrFail($homepagewidget->categorytab3);
-            // if ($homepagewidget->categorytab4posttype=='all') {
-            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab4);
-            //     })->where('status','published')->orderBy('id','desc')->take(7)->get();
-            // } elseif($homepagewidget->categorytab4posttype=='trending') {
-            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab4);
-            //     })->where('status','published')->take(7)->orderBy('views', 'desc')->get();
-            // } elseif($homepagewidget->categorytab4posttype=='latest') {
-            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab4);
-            //     })->where('status','published')->take(7)->orderBy('id', 'desc')->get();
-            // } elseif($homepagewidget->categorytab4posttype=='oldest') {
-            //     $uppertab4posts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->categorytab4);
-            //     })->where('status','published')->take(7)->orderBy('id', 'asc')->get();
-            // }
-            // $uppertab4category=Category::findOrFail($homepagewidget->categorytab4);
-            // if($homepagewidget->slidercategory=='*'){
-            //     if ($homepagewidget->sliderposttype=='all') {
-            //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('id','desc')->take(5)->get();
-            //     } elseif($homepagewidget->sliderposttype=='trending') {
-            //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->sliderposttype=='latest') {
-            //         $sliderposts=Post::select(['id','slug','title','image'])->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->sliderposttype=='oldest') {
-            //         $sliderposts=Post::where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            //     }
-            // } else {
-            //     if ($homepagewidget->sliderposttype=='all') {
-            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->slidercategory);
-            //         })->where('status','published')->orderBy('id','desc')->take(5)->get();
-            //     } elseif($homepagewidget->sliderposttype=='trending') {
-            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->slidercategory);
-            //         })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->sliderposttype=='latest') {
-            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->slidercategory);
-            //         })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            //     } elseif($homepagewidget->sliderposttype=='oldest') {
-            //         $sliderposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->slidercategory);
-            //         })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            //     }
-            // }
-            // if($homepagewidget->trendingcategory=='*'){
-            //     if ($homepagewidget->trendingposttype=='all') {
-            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id','desc')->take(9)->get();
-            //     } elseif($homepagewidget->trendingposttype=='trending') {
-            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('views', 'desc')->take(9)->get();
-            //     } elseif($homepagewidget->trendingposttype=='latest') {
-            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id', 'desc')->take(9)->get();
-            //     } elseif($homepagewidget->trendingposttype=='oldest') {
-            //         $trendingposts=Post::select(['id','slug','title'])->where('status','published')->orderBy('id', 'asc')->take(9)->get();
-            //     }
-            // } else {
-            //     if ($homepagewidget->trendingposttype=='all') {
-            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->trendingcategory);
-            //         })->where('status','published')->orderBy('id','desc')->take(9)->get();
-            //     } elseif($homepagewidget->trendingposttype=='trending') {
-            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->trendingcategory);
-            //         })->where('status','published')->orderBy('views', 'desc')->take(9)->get();
-            //     } elseif($homepagewidget->trendingposttype=='latest') {
-            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->trendingcategory);
-            //         })->where('status','published')->orderBy('id', 'desc')->take(9)->get();
-            //     } elseif($homepagewidget->trendingposttype=='oldest') {
-            //         $trendingposts = Post::select(['id','slug','title'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //             $query->where('category_id',$homepagewidget->trendingcategory);
-            //         })->where('status','published')->orderBy('id', 'asc')->take(9)->get();
-            //     }
-            // }
-            // if ($homepagewidget->otherwidgetposttype=='all') {
-            //     $other_widget_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->otherwidgetcategory)->limit(16)->pluck('post_id')->toArray();
-            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$other_widget_post_ids)->where('status','published')->take(16)->get();
-            // } elseif($homepagewidget->otherwidgetposttype=='trending') {
-            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
-            //     })->where('status','published')->orderBy('views', 'desc')->take(16)->get();
-            // } elseif($homepagewidget->otherwidgetposttype=='latest') {
-            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
-            //     })->where('status','published')->orderBy('id', 'desc')->take(16)->get();
-            // } elseif($homepagewidget->otherwidgetposttype=='oldest') {
-            //     $otherwidgetposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->otherwidgetcategory);
-            //     })->where('status','published')->orderBy('id', 'asc')->take(16)->get();
-            // }
-            // $otherwidgetcategory=Category::findOrFail($homepagewidget->otherwidgetcategory);
-
-            // if ($homepagewidget->youmaylikeposttype=='all') {
-            //     $you_may_like_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->youmaylikecategory)->limit(4)->pluck('post_id')->toArray();
-            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$you_may_like_post_ids)->where('status','published')->take(4)->get();
-            // } elseif($homepagewidget->youmaylikeposttype=='trending') {
-            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->youmaylikecategory);
-            //     })->where('status','published')->orderBy('views', 'desc')->take(4)->get();
-            // } elseif($homepagewidget->youmaylikeposttype=='latest') {
-            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->youmaylikecategory);
-            //     })->where('status','published')->orderBy('id', 'desc')->take(4)->get();
-            // } elseif($homepagewidget->youmaylikeposttype=='oldest') {
-            //     $youmaylikeposts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->youmaylikecategory);
-            //     })->where('status','published')->orderBy('id', 'asc')->take(4)->get();
-            // }
-            // $youmaylikecategory=Category::findOrFail($homepagewidget->youmaylikecategory);
-
-            // if ($homepagewidget->sidebartab1posttype=='all') {
-            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab1category);
-            //     })->where('status','published')->orderBy('id','desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab1posttype=='trending') {
-            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab1category);
-            //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            // }
-            // elseif($homepagewidget->sidebartab1posttype=='latest') {
-            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab1category);
-            //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab1posttype=='oldest') {
-            //     $sidebartab1posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab1category);
-            //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            // }
-            // $sidebartab1category=Category::findOrFail($homepagewidget->sidebartab1category);
-            // if ($homepagewidget->sidebartab2posttype=='all') {
-            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab2category);
-            //     })->where('status','published')->orderBy('id','desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab2posttype=='trending') {
-            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab2category);
-            //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab2posttype=='latest') {
-            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab2category);
-            //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab2posttype=='oldest') {
-            //     $sidebartab2posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab2category);
-            //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            // }
-            // $sidebartab2category=Category::findOrFail($homepagewidget->sidebartab2category);
-            // if ($homepagewidget->sidebartab3posttype=='all') {
-            //     $sidebar_tab3_post_ids = Postcategory::latest('id')->where('category_id',$homepagewidget->sidebartab3category)->limit(5)->pluck('post_id')->toArray();
-            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->latest('id')->whereIn('id',$sidebar_tab3_post_ids)->where('status','published')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab3posttype=='trending') {
-            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab3category);
-            //     })->where('status','published')->orderBy('views', 'desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab3posttype=='latest') {
-            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab3category);
-            //     })->where('status','published')->orderBy('id', 'desc')->take(5)->get();
-            // } elseif($homepagewidget->sidebartab3posttype=='oldest') {
-            //     $sidebartab3posts = Post::select(['id','slug','title','image'])->whereHas('categories', function (Builder $query) use($homepagewidget) {
-            //         $query->where('category_id',$homepagewidget->sidebartab3category);
-            //     })->where('status','published')->orderBy('id', 'asc')->take(5)->get();
-            // }
-            // $sidebartab3category=Category::findOrFail($homepagewidget->sidebartab3category);
-            // $question=Questionoftheday::where('status','active')->first();
-            // $today=now()->toDateString();
-            // $uppersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','uppersidebar300x250')->where('status','active')->get();
-            // $middlesidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlesidebar300x250')->where('status','active')->get();
-            // $lowersidebar300x250=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowersidebar300x250')->where('status','active')->get();
-            // $uppersidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','uppersidebar300x600')->where('status','active')->get();
-            // $middlesidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlesidebar300x600')->where('status','active')->get();
-            // $lowersidebar300x600=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowersidebar300x600')->where('status','active')->get();
-            // $upperbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','upperbanner728x90')->where('status','active')->get();
-            // $middlebanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','middlebanner728x90')->where('status','active')->get();
-            // $lowerbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowerbanner728x90')->where('status','active')->get();
-            // $lowestbanner728x90=Ad::whereDate('startdate','<=',$today)->whereDate('enddate','>=',$today)->where('page','homepage')->where('position','lowestbanner728x90')->where('status','active')->get();
-            // $adsetting=Adsetting::first();
-            $postnews = [];
-            if ($slug != "") {
-                $category1 = Category::where('slug', $slug)->first();
-                if ($category1) {
-                    $idcate = $category1->id;
-                    // $postnews=Post::select(['id','slug','title','image','content','video'])->where('status','published')->whereHas('categories', function (Builder $query) use($idcate) {
-                    //     $query->where('category_id',$idcate);
-                    // })->orderBy('views', 'desc')->take(5)->get();
-                    $postnews = Post::with('categories:id,category_id')
-                        ->select(['id', 'slug', 'title', 'image', 'video', 'content'])
-                        ->where('status', 'published')
-                        ->whereHas('categories', function (Builder $query) use ($idcate) {
-                            $query->where('category_id', $idcate);
-                        })
-                        ->orderByDesc('views')
-                        // ->take(5)
-                        ->get();
-                }
-
-            } else {
-                $idcate = 21;
-                // $postnews=Post::select(['id','slug','title','image','content','video'])->where('status','published')->orderBy('views', 'desc')->whereHas('categories', function (Builder $query) use($idcate) {
-                //     $query->where('category_id',$idcate);
-                // })->orderBy('views', 'desc')->take(5)->get();
-                $postnews = Post::with('categories:id,category_id')
-                    ->select(['id', 'slug', 'title', 'image', 'video', 'content'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function (Builder $query) use ($idcate) {
-                        $query->where('category_id', $idcate);
-                    })
-                    ->orderByDesc('views')
-                    //->take(5)
-                    ->get();
-            }
-            $videodatas = Post::select('id', 'video')->where('status', 'published')->where('video', '!=', "")->orderBy('views', 'desc')->get()->toArray();
-            // $videodatas = [];
-            return view('front.index')
-                // ->with('headersetting',$headersetting)
-                // ->with('footersetting',$footersetting)
-                // ->with('homepagewidget',$homepagewidget)
-                // ->with('tags',$tags)
-                ->with('videodatas', $this->divideArrayIntoGroups($videodatas, 4))
-                ->with('slug', $slug)
-                // ->with('headercategorieswithsubcategories',$headercategorieswithsubcategory)
-                ->with('leftcategorieswithoutsubcategories', $leftcategorieswithoutsubcategory)
-                ->with('headercategorieswithoutsubcategories', $headercategorieswithoutsubcategory)
-                ->with('footercategories', $footercategories)
-                //  ->with('catalogueposts',$catalogueposts)
-                ->with('postnews', $postnews);
-            // ->with('uppertab1category',$uppertab1category)
-            // ->with('uppertab1posts',$uppertab1posts)
-            // ->with('uppertab2category',$uppertab2category)
-            // ->with('uppertab2posts',$uppertab2posts)
-            // ->with('uppertab3category',$uppertab3category)
-            // ->with('uppertab3posts',$uppertab3posts)
-            // ->with('uppertab4category',$uppertab4category)
-            // ->with('uppertab4posts',$uppertab4posts)
-            // ->with('sliderposts',$sliderposts)
-            // ->with('trendingposts',$trendingposts)
-            // ->with('otherwidgetcategory',$otherwidgetcategory)
-            // ->with('otherwidgetposts',$otherwidgetposts)
-            // ->with('youmaylikecategory',$youmaylikecategory)
-            // ->with('youmaylikeposts',$youmaylikeposts)
-            // ->with('sidebartab1category',$sidebartab1category)
-            // ->with('sidebartab1posts',$sidebartab1posts)
-            // ->with('sidebartab2category',$sidebartab2category)
-            // ->with('sidebartab2posts',$sidebartab2posts)
-            // ->with('sidebartab3category',$sidebartab3category)
-            // ->with('sidebartab3posts',$sidebartab3posts)
-            // ->with('center1category',$center1category)
-            // ->with('center1posts',$center1posts)
-            // ->with('center2category',$center2category)
-            // ->with('center2posts',$center2posts)
-            // ->with('center3category',$center3category)
-            // ->with('center3posts',$center3posts)
-            // ->with('videocategories',$videocategories)
-            // ->with('breakingnews',$breakingnews)
-            // ->with('question',$question)
-            // ->with('uppersidebar300x250',$uppersidebar300x250)
-            // ->with('middlesidebar300x250',$middlesidebar300x250)
-            // ->with('lowersidebar300x250',$lowersidebar300x250)
-            // ->with('uppersidebar300x600',$uppersidebar300x600)
-            // ->with('middlesidebar300x600',$middlesidebar300x600)
-            // ->with('lowersidebar300x600',$lowersidebar300x600)
-            // ->with('upperbanner728x90',$upperbanner728x90)
-            // ->with('middlebanner728x90',$middlebanner728x90)
-            // ->with('lowerbanner728x90',$lowerbanner728x90)
-            // ->with('lowestbanner728x90',$lowestbanner728x90)
-            // ->with('adsetting',$adsetting);
-        } catch (\Exception $ex) {
-            echo $ex->getMessage() . "-" . $ex->getLine();
+        // For each subcategory, fetch latest 5 posts with images
+        foreach ($subcategories as $subcategory) {
+            $subcategory->posts = $subcategory->posts()
+                ->whereNotNull('image')
+                ->latest()
+                ->take(5)
+                ->get();
         }
+
+        // Optionally, attach subcategories back to main category for easier access
+        $rajyaCategory->subcategories = $subcategories;
+
+
+
+        // 3️⃣ Another random category for "other section" (posts only)
+        $videshCategory = Category::with([
+            'posts' => function ($q) {
+                $q->whereNotNull('image')->latest()->take(6);
+            }
+        ])
+            ->where('slug', 'videsh')
+            ->whereHas('posts')
+            ->first();
+
+        // 4️⃣ Video posts
+        $videoPosts = Cache::remember('video_posts', 300, function () {
+            return Post::where('status', 'published')
+                ->where('video', '!=', "")
+                ->latest('views')
+                ->take(3)
+                ->get();
+        });
+
+        // 5 Another random category for "other section" (posts only)
+        $khelCategory = Category::with([
+            'posts' => function ($q) {
+                $q->whereNotNull('image')->latest()->take(4);
+            }
+        ])
+            ->where('slug', 'khel')
+            ->whereHas('posts')
+            ->first();
+
+        // 6 Another random category for "other section" (posts only)
+        $rajneetiCategory = Category::with([
+            'posts' => function ($q) {
+                $q->whereNotNull('image')->latest()->take(4);
+            }
+        ])
+            ->where('slug', 'rajneeti')
+            ->whereHas('posts')
+            ->first();
+
+        // 7 Another random category for "other section" (posts only)
+        $crimeCategory = Category::with([
+            'posts' => function ($q) {
+                $q->whereNotNull('image')->latest()->take(4);
+            }
+        ])
+            ->where('slug', 'crime')
+            ->whereHas('posts')
+            ->first();
+
+        $otherCategorySlugs = ['manoranjan', 'sahataya', 'desh', 'accident'];
+
+        $otherCategories = Category::whereIn('slug', $otherCategorySlugs)
+            ->whereHas('posts')
+            ->get();
+
+        foreach ($otherCategories as $category) {
+            $category->posts = $category->posts()->whereNotNull('image')->latest()->take(7)->get();
+        }
+
+        $moreCategorySlugs = ['health', 'technology', 'taza-khabar', 'tapa-naya', 'breaking-news'];
+        $moreCategories = Category::whereIn('slug', $moreCategorySlugs)
+            ->whereHas('posts')
+            ->get();
+
+        foreach ($moreCategories as $category) {
+            $category->posts = $category->posts()->whereNotNull('image')->latest()->take(4)->get();
+        }
+
+        $categoryBoxes = Post::whereNotNull('image')
+            ->where('status', 'published')
+            ->inRandomOrder()
+            ->take(6)
+            ->get();
+
+
+        return view('front.index', compact(
+            'recentNews',
+            'rajyaCategory',
+            'videshCategory',
+            'videoPosts',
+            'khelCategory',
+            'rajneetiCategory',
+            'crimeCategory',
+            'otherCategories',
+            'moreCategories',
+            'categoryBoxes'
+        ));
     }
+
+
+    public function newsDetail($slug)
+    {
+        $post = Post::with([
+            'user',
+            'category',
+            'comments',
+            'tags'
+        ])->where('slug', $slug)
+            ->where('status', 'published')
+            ->firstOrFail();
+
+        // Get 6 random posts for sidebar
+        $randomPosts = Post::inRandomOrder()->where('status', 'published')->limit(6)->get();
+
+        $prevPost = Post::where('id', '<', $post->id)
+            ->where('status', 'published')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $nextPost = Post::where('id', '>', $post->id)
+            ->where('status', 'published')
+            ->orderBy('id', 'asc')
+            ->first();
+
+        // Most viewed posts (excluding current post)
+        $mostViewedPosts = Post::where('status', 'published')
+            ->where('id', '!=', $post->id)
+            ->orderBy('views', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('front.news-detail', compact('post', 'randomPosts', 'prevPost', 'nextPost', 'mostViewedPosts'));
+    }
+
+    // Category posts 
+    public function categoryPosts($slug)
+    {
+        // Get category along with subcategories
+        $category = Category::with('subcategories')->where('slug', $slug)->firstOrFail();
+
+        // Start query for posts in this category
+        $posts = Post::whereHas('categories', function ($query) use ($category) {
+            $query->where('category_id', $category->id);
+        });
+
+        // Filter by subcategory if requested
+        if ($subcategorySlug = request()->query('subcategory')) {
+            $sub_category = Subcategory::where('slug', $subcategorySlug)->firstOrFail();
+            $posts->whereHas('subcategories', function ($query) use ($sub_category) {
+                $query->where('subcategory_id', $sub_category->id);
+            });
+        }
+
+        // Finalize query
+        $posts = $posts->where('status', 'published')->latest()->paginate(10)->withQueryString();
+
+        return view('front.category-posts', compact('category', 'posts', 'subcategorySlug'));
+    }
+
     public function divideArrayIntoGroups($array, $groupSize)
     {
         return array_chunk($array, $groupSize);

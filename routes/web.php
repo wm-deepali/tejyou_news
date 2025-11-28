@@ -90,6 +90,7 @@ Route::get('custom-function', 'FrontController@customfunction')->name('custom-fu
 Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
 
+
 // category routes
 Route::resource('manage-category', 'CategoryController');
 Route::post('add-category', 'CategoryController@store');
@@ -172,6 +173,10 @@ Route::post('update-ad-setting', 'AdsettingController@updateadsetting')->name('u
 Route::get('manage-report', 'PostController@managereport')->name('manage-report');
 Route::get('fetchsubcategories/{id}', 'PostController@fetchsubcategories');
 Route::post('generate-report', 'PostController@generatereport')->name('generate-report');
+
 Route::get('/{slug}', 'FrontController@index')->name('homecategory');
+Route::get('/post/{slug}', 'FrontController@newsDetail')->name('post.show');
+Route::get('/category/{slug}', 'FrontController@categoryPosts')->name('category.posts');
+
 Route::get('/{categoryurl}/{posturl}/detail', 'FrontController@postdetail')->name('postdetail');
 Route::get('/{posturl}/detail', 'FrontController@postdetails')->name('postdetails');

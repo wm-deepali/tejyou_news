@@ -102,7 +102,11 @@
             $headerCategoriesWithSub = App\Category::where('status', 'active')
                 ->where('showonheader', 'yes')
                 ->where('hassubcategory', 'yes')
-                ->with('subcategories')
+                ->with([
+                    'subcategories' => function ($q) {
+                        $q->where('showonheader', 'yes');
+                    }
+                ])
                 ->get();
 
             $headercategorieswithoutsub = App\Category::where('status', 'active')
@@ -137,8 +141,8 @@
                             <ul class="news-info-list text-center--md">
                                 <li><i class="fa fa-cloud"></i> 29°C Noida, Uttar Pradesh</li> |
                                 <li><i class="fa fa-calendar"></i> <span id="current_date"></span></li>
-                                <!-- <li><i class="fa fa-clock-o"></i> Last Update 11:30 am</li> -->
-                                <!-- <li><i class="fa fa-cloud"></i> 29°C Greater Noida, Uttar Pradesh</li> -->
+                                <li><i class="fa fa-clock-o"></i> Last Update 11:30 am</li>
+                                <li><i class="fa fa-cloud"></i> 29°C Greater Noida, Uttar Pradesh</li>
                             </ul>
                         </div>
                     </section>
@@ -220,25 +224,30 @@
                                     {{-- Categories showing posts --}}
                                     @foreach($postMenuCategory as $category)
                                         <li class="has-mega">
-                                            <a href="#">{{ $category->name }} <span class="arrow"></span></a>
+                                            <a href="{{ route('category.posts', $category->slug) }}">{{ $category->name }}
+                                                <span class="arrow"></span></a>
                                             <div class="mega-dropdown-card">
                                                 <div class="mega-grid">
                                                     @forelse($category->posts as $post)
                                                         <div class="mega-card">
-                                                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
-                                                                alt="{{ $post->title }}">
-                                                            <div class="mega-card-content">
-                                                                <span class="cat-badge">{{ $category->name }}</span>
-                                                                <h4>{{ \Illuminate\Support\Str::limit($post->title, 70) }}</h4>
-                                                                <span
-                                                                    class="meta">{{ $post->created_at->diffForHumans() }}</span>
-                                                            </div>
+                                                            <a href="{{ route('post.show', $post->slug) }}">
+                                                                <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
+                                                                    alt="{{ $post->title }}">
+                                                                <div class="mega-card-content">
+                                                                    <span class="cat-badge">{{ $category->name }}</span>
+                                                                    <h4>{{ \Illuminate\Support\Str::limit($post->title, 70) }}
+                                                                    </h4>
+                                                                    <span
+                                                                        class="meta">{{ $post->created_at->diffForHumans() }}</span>
+                                                                </div>
+                                                            </a>
                                                         </div>
                                                     @empty
                                                         <div class="mega-card">
                                                             <h4>No posts available</h4>
                                                         </div>
                                                     @endforelse
+
                                                 </div>
                                             </div>
                                         </li>
@@ -247,11 +256,14 @@
                                     {{-- Categories with subcategories --}}
                                     @foreach($headerCategoriesWithSub as $category)
                                         <li class="has-mega">
-                                            <a href="#">{{ $category->name }} <span class="arrow"></span></a>
+                                            <a href="{{ route('category.posts', $category->slug) }}">{{ $category->name }}
+                                                <span class="arrow"></span></a>
                                             <div class="state-dropdown-only">
                                                 <ul class="state-list-simple">
                                                     @foreach($category->subcategories as $sub)
-                                                        <li><a href="#">{{ $sub->name }}</a></li>
+                                                        <li><a
+                                                                href="{{ route('category.posts', $category->slug) }}?subcategory={{ $sub->slug }}">{{ $sub->name }}</a>
+                                                        </li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -260,7 +272,9 @@
 
                                     {{-- Categories without subcategories --}}
                                     @foreach($headercategorieswithoutsub as $category)
-                                        <li class="has-mega"><a href="#">{{ $category->name }}</a></li>
+                                        <li class="has-mega"><a
+                                                href="{{ route('category.posts', $category->slug) }}">{{ $category->name }}</a>
+                                        </li>
                                     @endforeach
                                 </ul>
 
@@ -268,32 +282,31 @@
                         </div>
                     </div>
 
-                    <section class="bg-accent border-bottom">
-                        <div class="container">
-                            <div class="row no-gutters d-flex align-items-center">
-                                <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                                    <div class="topic-box topic-box-margin">Breaking News</div>
-                                </div>
-                                <div class="col-lg-10 col-md-9 col-sm-8 col-6">
-                                    <div class="feeding-text-dark">
-                                        <ol id="sample" class="ticker">
-                                            @forelse($breakingNewsPosts as $post)
-                                                <li>
-                                                    <a href="#">
-                                                        {{ \Illuminate\Support\Str::limit($post->title, 150) }}
-                                                    </a>
-                                                </li>
-                                            @empty
-                                                <li>No breaking news available</li>
-                                            @endforelse
-                                        </ol>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
                 </div>
             </div>
         </header>
         <!-- Header Area End Here -->
+        <section class="bg-accent border-bottom add-top-margin">
+            <div class="container">
+                <div class="row no-gutters d-flex align-items-center">
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                        <div class="topic-box topic-box-margin">Breaking News</div>
+                    </div>
+                    <div class="col-lg-10 col-md-9 col-sm-8 col-6">
+                        <div class="feeding-text-dark">
+                            <ol id="sample" class="ticker">
+                                @forelse($breakingNewsPosts as $post)
+                                    <li>
+                                        <a href="{{ route('post.show', $post->slug) }}">
+                                            {{ \Illuminate\Support\Str::limit($post->title, 150) }}
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li>No breaking news available</li>
+                                @endforelse
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>

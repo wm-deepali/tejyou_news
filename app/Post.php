@@ -60,10 +60,12 @@ class Post extends Model
         return $this->hasMany('App\Postsubsubcategory');
     }
 
+    // In Post.php
     public function tags()
     {
-        return $this->hasMany('App\Posttag');
+        return $this->belongsToMany(Tag::class, 'posttags', 'post_id', 'tag_id');
     }
+
 
     public function comments()
     {
