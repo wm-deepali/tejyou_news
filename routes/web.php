@@ -60,7 +60,7 @@ Route::get('nevigation', function () {
 Route::get('faq', function () {
     return view('front.faq');
 });
-Route::get('/', 'FrontController@index')->name('/');
+
 Route::get('become-a-reporter', 'FrontController@becomeareporter')->name('become-a-reporter');
 Route::get('fetchVideos', 'FrontController@fetchVideos')->name('fetchVideos');
 Route::post('submit-become-a-reporter', 'FrontController@storebecomeareporter')->name('submit-become-a-reporter');
@@ -76,7 +76,6 @@ Route::get('terms-of-use', 'FrontController@termsofuse')->name('terms-of-use');
 Route::get('our-team', 'FrontController@ourteam')->name('our-team');
 Route::post('add-comment', 'FrontController@addcomment');
 Route::post('add-comment-reply/{id}', 'FrontController@addcommentreply');
-Route::get('search', 'FrontController@search')->name('search');
 Route::get('searchpost', 'FrontController@searchsdata')->name('searchpost');
 Route::post('add-contact-us', 'FrontController@addcontactus');
 
@@ -120,6 +119,7 @@ Route::post('fetch-subsubcategory-by-subcategory', 'PostController@fetchSubSubca
 
 Route::post('search-image-by-tag', 'PostController@searchimagebytag')->name('search-image-by-tag');
 Route::resource('manage-comment', 'CommentController');
+Route::get('manage-report', 'PostController@managereport')->name('manage-report');
 Route::resource('manage-reporter', 'ReporterController');
 Route::post('update-reporter/{id}', 'ReporterController@update');
 Route::post('approve-reporter/{id}', 'ReporterController@approve');
@@ -170,13 +170,15 @@ Route::post('update-ad/{id}', 'AdController@update')->name('update-ad');
 Route::get('ad-setting', 'AdsettingController@adsetting')->name('ad-setting');
 Route::post('update-ad-setting', 'AdsettingController@updateadsetting')->name('update-ad-setting');
 
-Route::get('manage-report', 'PostController@managereport')->name('manage-report');
+
 Route::get('fetchsubcategories/{id}', 'PostController@fetchsubcategories');
 Route::post('generate-report', 'PostController@generatereport')->name('generate-report');
 
-Route::get('/{slug}', 'FrontController@index')->name('homecategory');
-Route::get('/post/{slug}', 'FrontController@newsDetail')->name('post.show');
-Route::get('/category/{slug}', 'FrontController@categoryPosts')->name('category.posts');
+Route::get('/', 'FrontController@index')->name('homecategory');
+Route::get('/search', 'FrontController@search')->name('search');
+Route::get('/{slug}/detail', 'FrontController@newsDetail')->name('post.show');
+Route::get('/{categoryurl}/{subcategoryurl?}', 'FrontController@categoryPosts')->name('category.posts');
+
 
 Route::get('/{categoryurl}/{posturl}/detail', 'FrontController@postdetail')->name('postdetail');
 Route::get('/{posturl}/detail', 'FrontController@postdetails')->name('postdetails');

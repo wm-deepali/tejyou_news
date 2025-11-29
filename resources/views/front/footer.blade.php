@@ -29,13 +29,13 @@
 							@foreach($mostViewedPosts as $post)
 								<li>
 									<div class="media">
-										<a href="#">
+										<a href="{{ route('post.show', $post->slug) }}">
 											<img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"
 												alt="{{ $post->title }}" class="img-fluid" width="70px">
 										</a>
 										<div class="media-body">
 											<h3 class="title-medium-light size-md mb-10">
-												<a href="#">{{ $post->title }}</a>
+												<a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
 											</h3>
 											<div class="post-date-light">
 												<ul>
@@ -64,7 +64,7 @@
 						<ul class="popular-categories">
 							@foreach($footerCategories as $category)
 								<li>
-									<a href="#">
+									<a href="{{ route('category.posts', $category->slug) }}">
 										{{ $category->name }}
 										<span>{{ $category->posts()->count() }}</span>
 									</a>
@@ -86,7 +86,7 @@
 						<ul class="post-gallery shine-hover ">
 							@foreach($galleryPosts as $post)
 								<li>
-									<a href="#">
+									<a href="{{ route('post.show', $post->slug) }}">
 										<figure>
 											<img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/footer/post-default.jpg') }}"
 												alt="{{ $post->title }}" class="img-fluid" style="height:70px;">
@@ -197,58 +197,43 @@
 		</a>
 	</div>
 	<div class="offcanvas-main-body">
-		<ul id="accordion" class="offcanvas-nav panel-group">
+		<ul id="accordion" class="offcanvas-nav panel-group" style="margin-bottom:40px;">
 			<li class="panel panel-default">
 				<div class="panel-heading">
 					<a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse"
-						data-parent="#accordion" href="#">
-						<i class="fa fa-home" aria-hidden="true"></i>Home Pages</a>
-				</div>
-
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-user" aria-hidden="true"></i>Editor Page</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-user" aria-hidden="true"></i>News Listing</a>
-			</li>
-			<li>
-				<a href="single-news-1.html">
-					<i class="fa fa-user" aria-hidden="true"></i>News Detail</a>
-			</li>
-
-			<li>
-				<a href="archive.html">
-					<i class="fa fa-archive" aria-hidden="true"></i>Archive Page</a>
-			</li>
-			<li class="panel panel-default">
-				<div class="panel-heading">
-					<a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse"
-						data-parent="#accordion" href="#collapseFour">
-						<i class="fa fa-picture-o" aria-hidden="true"></i>Gallery Pages</a>
-				</div>
-				<div aria-expanded="false" id="collapseFour" role="tabpanel" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul class="offcanvas-sub-nav">
-							<li>
-								<a href="gallery-style-1.html">Gallery Style 1</a>
-							</li>
-							<li>
-								<a href="gallery-style-2.html">Gallery Style 2</a>
-							</li>
-						</ul>
-					</div>
+						data-parent="#accordion" href="{{ route('homecategory') }}">
+						<i class="fa fa-home" aria-hidden="true"></i>Home </a>
 				</div>
 			</li>
 			<li>
-				<a href="404.html">
-					<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>404 Error Page</a>
+				<a href="#"><i class="fa fa-user" aria-hidden="true"></i>Our Reporters</a>
 			</li>
 			<li>
-				<a href="contact.html">
-					<i class="fa fa-phone" aria-hidden="true"></i>Contact Page</a>
+				<a href="{{ route('about-us') }}"><i class="fa fa-user" aria-hidden="true"></i>About Us</a>
+			</li>
+			<li>
+				<a href="{{ route('our-team') }}"><i class="fa fa-user" aria-hidden="true"></i>Our Team</a>
+			</li>
+			<li>
+				<a href="{{ url('/advertisement') }}"><i class="fa fa-archive" aria-hidden="true"></i>Advertise with Us</a>
+			</li>
+			<li>
+				<a href="archive.html"><i class="fa fa-archive" aria-hidden="true"></i>Archive</a>
+			</li>
+			<li>
+				<a href="archive.html"><i class="fa fa-archive" aria-hidden="true"></i>Gallery</a>
+			</li>
+			<li>
+				<a href="{{ route('terms-of-use') }}"><i class="fa fa-archive" aria-hidden="true"></i>Terms & Conditions</a>
+			</li>
+			<li>
+				<a href="{{ route('privacy-policy') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Privacy Policy</a>
+			</li>
+			<li>
+				<a href="{{ route('cookie-policy') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Cookies Policy</a>
+			</li>
+			<li>
+				<a href="{{ route('contact-us') }}"><i class="fa fa-phone" aria-hidden="true"></i>Contact Us</a>
 			</li>
 		</ul>
 	</div>
@@ -283,6 +268,9 @@
 <script src="{{ asset('website') }}/js/ticker.js" type="text/javascript"></script>
 <!-- Custom Js -->
 <script src="{{ asset('website') }}/js/main.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

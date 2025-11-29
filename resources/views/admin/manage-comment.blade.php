@@ -1,4 +1,5 @@
 @include('admin.header')
+
 <section class="breadcrumb-section">
   <div class="container">
     <div class="row">
@@ -15,6 +16,7 @@
     </div>
   </div>
 </section>
+
 <section class="content-main-body">
   <div class="container">
     <div class="row">
@@ -27,37 +29,24 @@
                   <thead>
                     <tr>
                       <th>Sr. No.</th>
-                      <th>Post ID</th>
-                      <th>Link</th>
-                      <th>Details</th>
-                      <th>Type</th>
+                      <th>Date & Time</th>
+                      <th>News Title</th>
+                      <th>Comment By</th>
+                      <th>Comment</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @if (isset($comments) && count($comments)>0)
-                        @foreach ($comments as $comment)
-                        <tr>
-                          <td>{{ $loop->iteration }}</td>
-                          <td>{{ $comment->post->postnumber }}</td>
-                          <td><a href="{{ route('postdetail',[$comment->post->categories[0]->category->slug,$comment->post->slug]) }}" target="_blank">{{ $comment->post->title }}</a></td>
-                          <td><a href="javascript:void(0)" class="cu-info" comment_id="{{ $comment->id }}">Comment/User Info</a></td>
-                          <td>{{ $comment->type }}</td>
-                          <td>{{ $comment->status }}</td>
-                          <td>
-                            <ul class="action">
-                              <li><a href="javascript:void(0)" class="edit-comment" comment_id="{{ $comment->id }}"><i class="fas fa-pencil-alt"></i></a></li>
-                              @if ($comment->status=='block')
-                              <li><a href="javascript:void(0)" comment_id="{{ $comment->id }}" class="approve-comment" title="Approve Comment"><i class="fas fa-check"></i></a></li>    
-                              @endif
-                              <li><a href="javascript:void(0)" comment_id="{{ $comment->id }}" class="delete-comment"><i class="fas fa-trash"></i></a></li>
-                            </ul>
-                          </td>
-                        </tr>
-                        @endforeach
-                    @endif
-                  </tbody>
+  @if(isset($comments) && count($comments) > 0)
+    @foreach($comments as $comment)
+      @if($comment->post)
+        @include('admin.comments-row', ['comment' => $comment, 'level' => 0, 'globalIndex' => $loop->index])
+      @endif
+    @endforeach
+  @endif
+</tbody>
+
                 </table>
               </div>
             </div>
@@ -68,158 +57,95 @@
   </div>
 </section>
 
-<div class="modal" id="cu-info">
-</div>
-
-<div class="modal" id="edit-comment">
+<!-- VIEW COMMENT MODAL -->
+<div class="modal fade" id="view-comment-modal" tabindex="-1" role="dialog" aria-labelledby="viewCommentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="view-comment-content">
+      <!-- AJAX content will load here -->
+    </div>
+  </div>
 </div>
 
 @include('admin.footer')
+
 <script>
-  $.ajaxSetup({
-  headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-  });
-  $( document ).ajaxStart(function() {
-  $("#loader").modal('show');
-  });
-  $( document ). ajaxComplete(function() {
-  $("#loader").modal('hide');
-  });
-  $(document).ready(function(){
-  $(document).on("click",".cu-info",function(event){
-    let comment_id=$(this).attr('comment_id');
-      $.ajax({
-          url:`{{ URL::to('manage-comment/${comment_id}') }}`,
-          type:"get",
-          dataType:"json",
-          success:function(result)
-          {
-              if(result.msgCode==='200')
-              {
-                  $("#cu-info").html(result.html);
-                  $("#cu-info").modal('show');
-              }
-              else if(result.msgCode==='400')
-              {
-                  toastr.error('error encountered '+result.msgText);
-              }
-              $("#loader").modal('hide');
-          },
-          error:function(error){
-              toastr.error('error encountered '+error.statusText);
-              $("#loader").modal('hide');
-          }
-      });
+$.ajaxSetup({
+  headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+});
+
+$(document).ajaxStart(function(){ $("#loader").modal('show'); });
+$(document).ajaxComplete(function(){ $("#loader").modal('hide'); });
+
+$(document).ready(function(){
+
+  $('#manage-comment').DataTable();
+
+  // VIEW COMMENT
+  $(document).on('click', '.view-comment', function(){
+    let comment_id = $(this).attr('comment_id');
+    $.ajax({
+      url: `{{ URL::to('manage-comment/${comment_id}') }}`,
+      type: 'GET',
+      dataType: 'json',
+      success: function(res){
+        if(res.msgCode === '200'){
+          $('#view-comment-content').html(res.html);
+          $('#view-comment-modal').modal('show');
+        } else {
+          toastr.error(res.msgText);
+        }
+      },
+      error: function(err){
+        toastr.error(err.statusText);
+      }
+    });
   });
 
-  $(document).on("click",".edit-comment",function(event){
-      let comment_id = $(this).attr('comment_id');
-      $.ajax({
-          url:`{{ URL::to('manage-comment/${comment_id}/edit') }}`,
-          type:"get",
-          dataType:"json",
-          success:function(result)
-          {
-              if(result.msgCode==='200')
-              {
-                  $("#edit-comment").html(result.html);
-                  $("#edit-comment").modal('show');
-              }
-              else if(result.msgCode==='400')
-              {
-                  toastr.error('error encountered '+result.msgText);
-              }
-              $("#loader").modal('hide');
-          },
-          error:function(error){
-              toastr.error('error encountered '+error.statusText);
-              $("#loader").modal('hide');
-          }
-      });
+  // UPDATE COMMENT STATUS FROM MODAL
+  $(document).on('click', '.update-comment-status', function(){
+    let comment_id = $(this).attr('comment_id');
+    let status = $('#comment-status-'+comment_id).val();
+    $.ajax({
+      url: `{{ URL::to('manage-comment/${comment_id}') }}`,
+      type: 'PUT',
+      data: { status: status },
+      dataType: 'json',
+      success: function(res){
+        if(res.msgCode === '200'){
+          toastr.success(res.msgText);
+          location.reload();
+        } else {
+          toastr.error(res.msgText);
+        }
+      },
+      error: function(err){
+        toastr.error(err.statusText);
+      }
+    });
   });
 
-  $(document).on('click','.update-comment-btn',function(event){
-      $('#comment-err').html('');
-      let comment_id = $('#update-comment-form').attr('comment_id');
-      $.ajax({
-          url:`{{ URL::to('manage-comment/${comment_id}') }}`,
-          type:'PUT',
-          dataType:'json',
-          data:$('#update-comment-form').serialize(),
-          success:function(result){
-              if(result.msgCode === '200') {
-                  toastr.success(result.msgText);
-                  location.reload();
-              } else if (result.msgCode === '401') {
-                  if(result.errors.comment) {
-                      $('#comment-err').html(result.errors.comment[0]);
-                  }
-              } else {
-                  toastr.error('error encountered '+result.msgText);
-              }
-              $("#loader").modal('hide');
-          },
-          error:function(error){
-              toastr.error('error encountered '+error.statusText);
-              $("#loader").modal('hide');
-          }
-      });
+  // DELETE COMMENT
+  $(document).on('click', '.delete-comment', function(){
+    if(!confirm('Are you sure to delete this comment?')) return;
+    let comment_id = $(this).attr('comment_id');
+    $.ajax({
+      url: `{{ URL::to('manage-comment/${comment_id}') }}`,
+      type: 'DELETE',
+      dataType: 'json',
+      context: this,
+      success: function(res){
+        if(res.msgCode === '200'){
+          $(this).closest('tr').remove();
+          toastr.success(res.msgText);
+        } else {
+          toastr.error(res.msgText);
+        }
+      },
+      error: function(err){
+        toastr.error(err.statusText);
+      }
+    });
   });
 
-  $(document).on("click",".delete-comment",function(event){
-      let comment_id = $(this).attr('comment_id');
-      $.ajax({
-          url:`{{ URL::to('manage-comment/${comment_id}') }}`,
-          type:"DELETE",
-          dataType:"json",
-          context:this,
-          success:function(result)
-          {
-              if(result.msgCode==='200')
-              {
-                  $(this).closest('tr').remove();
-                  toastr.success(result.msgText);
-              }
-              else if(result.msgCode==='400')
-              {
-                  toastr.error('error encountered '+result.msgText);
-              }
-              $("#loader").modal('hide');
-          },
-          error:function(error){
-              toastr.error('error encountered '+error.statusText);
-              $("#loader").modal('hide');
-          }
-      });
-  });
-
-  $(document).on('click','.approve-comment',function(event){
-      let comment_id = $(this).attr('comment_id');
-      $.ajax({
-          url:`{{ URL::to('approve-comment/${comment_id}') }}`,
-          type:'PUT',
-          dataType:'json',
-          context:this,
-          success:function(result){
-              if(result.msgCode==='200')
-              {
-                  toastr.success(result.msgText);
-                  location.reload();
-              }
-              else if(result.msgCode==='400')
-              {
-                  toastr.error('error encountered '+result.msgText);
-              }
-              $("#loader").modal('hide');
-          },
-          error:function(error){
-              toastr.error('error encountered '+error.statusText);
-              $("#loader").modal('hide');
-          }
-      })
-  })
-    $('#manage-comment').DataTable();
-  });
-  </script>
+});
+</script>

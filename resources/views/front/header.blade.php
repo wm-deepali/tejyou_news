@@ -60,6 +60,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -88,6 +89,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('website') }}/css/ie-only.css">
     <!-- Modernizr Js -->
     <script src="{{ asset('website') }}/js/modernizr-2.8.3.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 
 <body>
@@ -196,13 +199,43 @@
                                 <div class="header-action-item">
                                     <ul>
                                         <li>
-                                            <form id="top-search-form" class="header-search-light">
-                                                <input type="text" class="search-input" placeholder="Search....">
+                                            <form id="top-search-form-mobile" class="header-search-light"
+                                                action="{{ route('search') }}" method="GET">
+                                                <input type="text" name="q" class="search-input"
+                                                    placeholder="Search...." required>
                                                 <button class="search-button"><i class="fa fa-search"></i></button>
                                             </form>
+
                                         </li>
-                                        <li><a href="e-paper.html"><button class="login-btn">ई-पेपर</button></a></li>
-                                        <li><button class="login-btn"><i class="fa fa-user"></i> Sign in</button></li>
+                                        <li><a href="{{ route('e-paper') }}"><button
+                                                    class="login-btn">ई-पेपर</button></a></li>
+                                        @guest
+                                            <li>
+                                                <a href="{{ route('login') }}" class="login-btn">
+                                                    <i class="fa fa-user"></i> Sign in
+                                                </a>
+                                            </li>
+                                        @endguest
+
+                                        @auth
+                                            <li class="dropdown">
+                                                <a href="#" class="login-btn dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
+                                                </a>
+
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="{{ route('home') }}">Dashboard</a>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('logout') }}" method="POST">
+                                                            @csrf
+                                                            <button class="dropdown-item" type="submit">Logout</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        @endauth
+
                                         <li>
                                             <div id="side-menu-trigger" class="offcanvas-menu-btn">
                                                 <a href="#" class="menu-bar"><span></span><span></span><span></span></a>
@@ -262,7 +295,7 @@
                                                 <ul class="state-list-simple">
                                                     @foreach($category->subcategories as $sub)
                                                         <li><a
-                                                                href="{{ route('category.posts', $category->slug) }}?subcategory={{ $sub->slug }}">{{ $sub->name }}</a>
+                                                                href="{{ route('category.posts', [$category->slug, $sub->slug])}}">{{ $sub->name }}</a>
                                                         </li>
                                                     @endforeach
                                                 </ul>
@@ -310,3 +343,15 @@
                 </div>
             </div>
         </section>
+        <script>
+            document.querySelector('#top-search-form .search-input')
+                .addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        document.getElementById('top-search-form').submit();
+                    }
+                });
+            document.querySelector('#top-search-form .search-button').addEventListener('click', function () {
+                document.getElementById('top-search-form').submit();
+            });
+        </script>

@@ -49,7 +49,7 @@
                       <td>{{ $ad->type }}</td>
                       <td>{{ $ad->page }} - 
                         @if ($ad->page=='homepage')
-                        <a href="{{ route('/') }}" target="_blank">View</a>
+                        <a href="{{ url('/') }}" target="_blank">View</a>
                         @elseif($ad->page=='categorypage')
                         <a href="{{ route('postbycategory',$category->slug) }}" target="_blank">View</a>
                         @else

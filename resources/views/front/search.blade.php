@@ -1,114 +1,182 @@
 @include('front.header')
 
-<main class="page-content">
+<!-- Breadcrumb Area Start Here -->
+<section class="breadcrumbs-area"
+    style="background-image: url('{{ asset('website/img/banner/breadcrumbs-banner.jpg') }}');">
+    <div class="container">
+        <div class="breadcrumbs-content">
+            <h1>Search Results</h1>
+            <ul>
+                <li>
+                    <a href="{{ url('/') }}">Home</a> -
+                </li>
+                <li>Search: "{{ $query ?? $tagSlug}}"</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="bg-body section-space-less30">
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="breadcrumb-sec">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <nav class="breadcrumb-m" aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="item">You are here :&nbsp;&nbsp;</li>
-                                    <li class="breadcrumb-item"><a href="{{ route('/') }}">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Search : {{ $keyword }}</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-9">
-                <div class="showing-result"> <span>Showing of {{ $posts ? $posts->firstItem() 
-                    : "" }} - {{ $posts ? $posts->lastItem() : "" }} from results</span>
-                    <h4>Total {{ $posts ? $posts->total() :"" }} result found</h4>
-                </div>
-                <div class="article-listing">
-                    <div class="row">
-                        @if (isset($posts) && count($posts)>0)
-                        @foreach ($posts as $post)
-                        <div class="col-sm-12">
-                            <div class="media">
-                                <a href="{{ route('postdetail',[$post->categories[0]->category->slug,$post->slug]) }}">
-                                    @if (isset($post->image) && Storage::exists($post->image))
-                                    <img class="mr-3" src="{{ URL::asset('storage/'.$post->image) }}" alt="{{ $post->title }}">
-                                    @else
-                                    <img src="{{ URL::asset('front/images/ppn-logo.jpeg') }}" alt="{{ $post->title }}" class="img-fluid">
-                                    @endif
-                                </a>
-                                <div class="media-body">
-                                    <a href="{{ route('postdetail',[$post->categories[0]->category->slug,$post->slug]) }}">
-                                        <span class="posted-on">{{ \Carbon\Carbon::parse($post->created_at)->format('j F, Y') }}</span>
-                                        <h5 class="mt-0">{{ $post->title }}</h5>
-                                        <!--<p>{!! Str::limit($post->content, 500) !!}</p>-->
+
+            <!-- Posts Section -->
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+
+                    @forelse($posts as $post)
+                        <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                            <div class="media media-none--lg mb-30">
+                                <div class="position-relative width-40">
+                                    <a href="{{ route('post.show', $post->slug) }}"
+                                        class="img-opacity-hover img-overlay-70">
+                                        <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
+                                            alt="{{ $post->title }}" class="img-fluid">
                                     </a>
-                                    <div class="div-tags">
+                                </div>
+
+                                <div class="media-body p-mb-none-child media-margin30">
+                                    <div class="post-date-dark">
                                         <ul>
-                                            @if (isset($post->tags) && count($post->tags)>0)
-                                            @foreach ($post->tags as $tag)
                                             <li>
-                                                <form action="{{ route('search') }}" method="GET">
-								                    <input type="hidden" name="tag" value="{{ $tag->tag->slug ?? 'NA' }}">
-								                    <button type="submit" class="btn btn-link">{{ $tag->tag->name ?? 'NA' }}</button>
-							                    </form>
+                                                <span>by</span>
+                                                <a href="#">{{ $post->user->name ?? 'Admin' }}</a>
                                             </li>
-                                            @endforeach
-                                            @endif
+                                            <li>
+                                                <span><i class="fa fa-calendar"></i></span>
+                                                {{ $post->created_at->format('M d, Y') }}
+                                            </li>
                                         </ul>
                                     </div>
+
+                                    <h3 class="title-semibold-dark size-lg mb-15">
+                                        <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
+                                    </h3>
+
+                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($post->content), 150) }}</p>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
-                        @endif
+                    @empty
+                        <div class="col-12 text-center">
+                            <p class="text-muted mb-0">No results found for “{{ $query ?? $tagSlug }}”.</p>
+                        </div>
+                    @endforelse
+
+                </div>
+
+                <!-- Pagination -->
+                @php
+                    $start = max($posts->currentPage() - 2, 1);
+                    $end = min($posts->currentPage() + 2, $posts->lastPage());
+                @endphp
+
+                <div class="row mt-20-r mb-30">
+                    <div class="col-sm-8 col-12">
+                        <div class="pagination-btn-wrapper text-center--xs mb15--xs">
+                            <ul>
+                                {{-- Previous --}}
+                                @if (!$posts->onFirstPage())
+                                    <li><a href="{{ $posts->previousPageUrl() }}">&laquo;</a></li>
+                                @endif
+
+                                {{-- First Page --}}
+                                @if ($start > 1)
+                                    <li><a href="{{ $posts->url(1) }}">1</a></li>
+                                    @if ($start > 2)
+                                        <li><span>...</span></li>
+                                    @endif
+                                @endif
+
+                                {{-- Page Links --}}
+                                @for ($i = $start; $i <= $end; $i++)
+                                    <li class="{{ $posts->currentPage() == $i ? 'active' : '' }}">
+                                        <a href="{{ $posts->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+
+                                {{-- Last Page --}}
+                                @if ($end < $posts->lastPage())
+                                    @if ($end < $posts->lastPage() - 1)
+                                        <li><span>...</span></li>
+                                    @endif
+                                    <li><a href="{{ $posts->url($posts->lastPage()) }}">{{ $posts->lastPage() }}</a></li>
+                                @endif
+
+                                {{-- Next --}}
+                                @if ($posts->hasMorePages())
+                                    <li><a href="{{ $posts->nextPageUrl() }}">&raquo;</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4 col-12">
+                        <div class="pagination-result text-right pt-10 text-center--xs">
+                            <p class="mb-none">
+                                Page {{ $posts->currentPage() }} of {{ $posts->lastPage() }}
+                            </p>
+                        </div>
                     </div>
                 </div>
-                {{-- <div class="paginate pb-5">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
-                </div> --}}
-                {{ $posts ? $posts->links() :"" }}
+
             </div>
-            <div class="col-sm-3">
-                <div class="sidebar-articles">
-                    <div class="section-title-s">
-                        <h3 class="block_title"><span>Big News</span></h3>
+
+            <!-- Sidebar -->
+            <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-30">
+                        <div class="topic-box-lg color-cod-gray">Stay Connected</div>
                     </div>
-                    @if (isset($bigposts) && count($bigposts)>0)
-                    <div class="inner-sd-article">
-                        <a href="{{ route('postdetail',[$bigposts[0]->categories[0]->category->slug,$bigposts[0]->slug]) }}">
-                            @if (isset($bigposts[0]->image) && Storage::exists($bigposts[0]->image))
-                            <img src="{{ URL::asset('storage/'.$bigposts[0]->image) }}" alt="{{ $bigposts[0]->title }}" class="img-fluid">
-                            @else
-                            <img src="{{ URL::asset('front/images/ppn-logo.jpeg') }}" alt="{{ $bigposts[0]->title }}" class="img-fluid">
-                            @endif
-                            <h3>{{ $bigposts[0]->title }}</h3>
-                        </a>
-                        <ul class="bullet-list">
-                            @foreach ($bigposts as $bigpost)
-                            <li><a href="{{ route('postdetail',[$bigpost->categories[0]->category->slug,$bigpost->slug]) }}">{{ $bigpost->title }}</a></li>
-                            @endforeach
-                        </ul>
+                    <ul class="stay-connected overflow-hidden">
+                        <li class="facebook">
+                            <a href="#"><i class="fa fa-facebook"></i>
+                                <div class="connection-quantity">50.2 k</div>
+                                <p>Fans</p>
+                            </a>
+                        </li>
+                        <li class="twitter">
+                            <a href="#"><i class="fa fa-twitter"></i>
+                                <div class="connection-quantity">10.3 k</div>
+                                <p>Followers</p>
+                            </a>
+                        </li>
+                        <li class="linkedin">
+                            <a href="#"><i class="fa fa-linkedin"></i>
+                                <div class="connection-quantity">25.4 k</div>
+                                <p>Fans</p>
+                            </a>
+                        </li>
+                        <li class="rss">
+                            <a href="#"><i class="fa fa-rss"></i>
+                                <div class="connection-quantity">20.8 k</div>
+                                <p>Subscriber</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="ne-banner-layout1 text-center">
+                        <a href="#"><img src="{{ asset('website/img/banner/banner3.jpg') }}" class="img-fluid"
+                                alt="ad"></a>
                     </div>
-                    @endif
                 </div>
-                <div class="google-ad text-center">
-                    <img src="{{ URL::asset('front/images/300x250.jpg') }}" class="img-fluid">
+
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-25">
+                        <div class="topic-box-lg color-cod-gray">Tags</div>
+                    </div>
+                    <ul class="sidebar-tags">
+                        @foreach(\App\Tag::all() as $tag)
+                            <li><a href="{{ route('search', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a></li>
+                        @endforeach
+                    </ul>
                 </div>
-                <div class="google-ad text-center">
-                    <img src="{{ URL::asset('front/images/300x600.jpg') }}" class="img-fluid">
-                </div>
+
             </div>
         </div>
     </div>
-</main>
+</section>
+
 @include('front.footer')

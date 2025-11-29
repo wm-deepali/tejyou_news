@@ -284,7 +284,8 @@
                             @if($post->video)
                                 {{-- Embed YouTube or self-hosted video --}}
                                 <div class="img-fluid width-100">
-                                      <img class="embed-responsive-item youtube-video" data-videoid="{{$post->video}}" src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" class="d-block w-100" />
+                                    <img class="embed-responsive-item youtube-video" data-videoid="{{$post->video}}"
+                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" class="d-block w-100" />
                                 </div>
                             @endif
                         </div>
@@ -622,7 +623,7 @@
                                                     <ul>
                                                         <li>
                                                             <span>by</span>
-                                                            <a href="#">{{ $post->author_name ?? 'Admin' }}</a>
+                                                            <a href="#">{{ $post->user->name ?? 'Admin' }}</a>
                                                         </li>
                                                         <li>
                                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -657,21 +658,32 @@
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
                     </div>
                     <div class="newsletter-area bg-primary">
-                        <h2 class="title-medium-light size-xl">Subscribe to our mailing list to get the new updates!
+                        <h2 class="title-medium-light size-xl">
+                            Subscribe to our mailing list to get the new updates!
                         </h2>
-                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter"
+                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
                             class="img-fluid mb-40">
-                        <p>Subscribe our newsletter to stay updated every moment</p>
-                        <div class="input-group stylish-input-group">
-                            <input type="text" placeholder="Enter your mail" class="form-control">
+                        <p>Subscribe to our newsletter to stay updated every moment</p>
+
+                        @if(session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('add-subscriber') }}" method="POST" class="input-group stylish-input-group">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                required>
                             <span class="input-group-addon">
-                                <button type="submit">
-                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                </button>
+                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
                             </span>
-                        </div>
+                        </form>
+
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

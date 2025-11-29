@@ -13,7 +13,7 @@
                             <nav class="breadcrumb-m" aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="item">You are here :&nbsp;&nbsp;</li>
-                                    <li class="breadcrumb-item"><a href="{{ route('/') }}">Home</a>
+                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a>
                                     </li>
                                     <li class="breadcrumb-item"><a href="{{ route('postbycategory',$category->slug) }}">{{ $category->name }}</a>
                                     </li>

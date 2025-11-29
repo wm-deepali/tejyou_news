@@ -8,7 +8,7 @@
             <h1>{{ $post->title }}</h1>
             <ul>
                 <li>
-                    <a href="{{ route('home') }}">Home</a> -
+                    <a href="{{ url('/') }}">Home</a> -
                 </li>
                 <li>
                     <a href="{{ route('category.posts', $post->category->slug ?? 0) }}">
@@ -76,7 +76,7 @@
                             <li>Tags</li>
                             @foreach($post->tags as $tag)
                                 <li>
-                                    <a href="#">#{{ $tag->name }}</a>
+                                    <a href="{{ route('search', ['tag' => $tag->slug]) }}">#{{ $tag->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -202,6 +202,29 @@
                                                 class="reply-box">Reply</a>
                                         </div>
                                     </div>
+
+                                    {{-- Display replies --}}
+                                    @if($comment->replies->count())
+                                        <ul style="margin-left: 40px;">
+                                            @foreach($comment->replies as $reply)
+                                                <li>
+                                                    <div class="media media-none-xs">
+                                                        <img src="{{ URL::asset('front/images/matt.jpg') }}"
+                                                            alt="{{ $reply->name }}" class="img-fluid rounded-circle">
+                                                        <div class="media-body comments-content media-margin30">
+                                                            <h3 class="title-semibold-dark">
+                                                                <a href="#">{{ $reply->name }},
+                                                                    <span>{{ $reply->created_at->format('F d, Y') }}</span>
+                                                                </a>
+                                                            </h3>
+                                                            <p>{{ $reply->content }}</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+
                                 </li>
                             @endforeach
                         </ul>
@@ -211,6 +234,7 @@
                         <h2 class="title-semibold-dark size-xl mb-40">Leave Comments</h2>
                         <form id="add-comment-form">
                             <div class="row">
+                                <input type="hidden" name="post_id" id="post_id" value="{{ $post->id }}">
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <input placeholder="Name*" class="form-control" name="name" type="text">
@@ -237,6 +261,12 @@
                                         <div id="comment-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
+                                <div class="col-12 mb-3">
+                                    <div class="g-recaptcha" id="comment-recaptcha"
+                                        data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                    <div id="captcha-err" class="help-block with-errors"></div>
+                                </div>
+
                                 <div class="col-12">
                                     <div class="form-group mb-none">
                                         <button type="submit" class="btn-ftg-ptp-45 add-comment-btn">Post
@@ -250,6 +280,7 @@
                         <h2 class="title-semibold-dark size-xl mb-40">Leave Reply</h2>
                         <form id="add-comment-reply-form">
                             <div class="row">
+                                <input type="hidden" name="post_id" id="post_id" value="{{ $post->id }}">
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <input placeholder="Name*" class="form-control" name="name" type="text">
@@ -259,23 +290,30 @@
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <input placeholder="Email*" class="form-control" name="email" type="email">
-                                        <div id="replyemail-err" class="help-block with-errors"></div>
+                                        <div id="email-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <input placeholder="Mobile Number" name="contact" class="form-control"
                                             type="text">
-                                        <div id="replycontact-err" class="help-block with-errors"></div>
+                                        <div id="contact-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
                                         <textarea name="comment" placeholder="Message*" class="textarea form-control"
                                             id="form-message" rows="8" cols="20"></textarea>
-                                        <div id="replycomment-err" class="help-block with-errors"></div>
+                                        <div id="comment-err" class="help-block with-errors"></div>
                                     </div>
                                 </div>
+                                <div class="col-12 mb-3">
+                                    <div class="g-recaptcha" id="reply-recaptcha"
+                                        data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                    <div id="captcha-err" class="help-block with-errors"></div>
+                                </div>
+                                <input type="hidden" name="comment_id" id="comment_id" value="">
+
                                 <div class="col-12">
                                     <div class="form-group mb-none">
                                         <button type="submit" class="btn-ftg-ptp-45 add-comment-reply-btn">Post
@@ -337,8 +375,13 @@
 
                                     <a href="{{ route('post.show', $r->id) }}"
                                         class="mb-10 display-block img-opacity-hover">
-                                        <img src="{{ asset('storage/' . $r->image) }}" alt="{{ $r->title }}"
-                                            class="img-fluid m-auto width-100">
+                                        @if($r->video)
+                                            <img class="img-fluid m-auto width-100" data-videoid="{{$r->video}}"
+                                                src="https://img.youtube.com/vi/{{$r->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ $r->image ? asset('storage/' . $r->image) : asset('website/img/news/news177.jpg') }}"
+                                                alt="{{ $r->title }}" class="img-fluid m-auto width-100">
+                                        @endif
                                     </a>
 
                                     <h3 class="title-medium-dark size-md mb-none">
@@ -354,74 +397,89 @@
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
                     </div>
                     <div class="newsletter-area bg-primary">
-                        <h2 class="title-medium-light size-xl pl-30 pr-30">Subscribe to our mailing list to get the new
-                            updates!</h2>
-                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter"
+                        <h2 class="title-medium-light size-xl pl-30 pr-30">
+                            Subscribe to our mailing list to get the new updates!
+                        </h2>
+                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
                             class="img-fluid m-auto mb-15">
                         <p>Subscribe our newsletter to stay updated</p>
-                        <div class="input-group stylish-input-group">
-                            <input type="text" placeholder="Enter your mail" class="form-control">
+
+                        @if(session('success'))
+                            <div class="alert alert-success text-center">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('add-subscriber') }}" method="POST"
+                            class="input-group stylish-input-group">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your mail" class="form-control"
+                                required>
                             <span class="input-group-addon">
-                                <button type="submit">
-                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                </button>
+                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
                             </span>
-                        </div>
+                        </form>
+
+                        @error('email')
+                            <span class="text-danger d-block text-center">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
-                <div class="sidebar-box">
-                    <div class="topic-border color-cod-gray mb-25">
-                        <div class="topic-box-lg color-cod-gray">Tags</div>
-                    </div>
-                    <ul class="sidebar-tags">
-                        @foreach($post->tags as $tag)
-                            <li>
-                                <a href="#">#{{ $tag->name ?? 'Tag' }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
+                <div class="topic-border color-cod-gray mb-25">
+                    <div class="topic-box-lg color-cod-gray">Tags</div>
                 </div>
-
-                <div class="sidebar-box">
-                    <div class="topic-border color-cod-gray mb-30">
-                        <div class="topic-box-lg color-cod-gray">Most Viewed</div>
-                    </div>
-
-                    @foreach($mostViewedPosts as $mPost)
-                        <div class="position-relative mb30-list bg-body">
-                            <div class="topic-box-top-xs">
-                                <div class="topic-box-sm color-cod-gray mb-20">
-                                    {{ $mPost->category->name ?? 'General' }}
-                                </div>
-                            </div>
-                            <div class="media">
-                                <a class="img-opacity-hover" href="{{ route('post.show', $mPost->slug) }}">
-                                    <img src="{{ asset('storage/' . $mPost->image) }}" alt="{{ $mPost->title }}"
-                                        class="img-fluid">
-                                </a>
-                                <div class="media-body">
-                                    <div class="post-date-dark">
-                                        <ul>
-                                            <li>
-                                                <span>
-                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                                                </span>{{ $mPost->created_at->format('F d, Y') }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <h3 class="title-medium-dark mb-none">
-                                        <a href="{{ route('post.show', $mPost->slug) }}">
-                                            {{ Str::limit($mPost->title, 50) }}
-                                        </a>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
+                <ul class="sidebar-tags">
+                    @foreach($post->tags as $tag)
+                        <li>
+                            <a href="{{ route('search', ['tag' => $tag->slug]) }}">#{{ $tag->name ?? 'Tag' }}</a>
+                        </li>
                     @endforeach
+                </ul>
+            </div>
+
+            <div class="sidebar-box">
+                <div class="topic-border color-cod-gray mb-30">
+                    <div class="topic-box-lg color-cod-gray">Most Viewed</div>
                 </div>
 
+                @foreach($mostViewedPosts as $mPost)
+                    <div class="position-relative mb30-list bg-body">
+                        <div class="topic-box-top-xs">
+                            <div class="topic-box-sm color-cod-gray mb-20">
+                                {{ $mPost->category->name ?? 'General' }}
+                            </div>
+                        </div>
+                        <div class="media">
+                            <a class="img-opacity-hover" href="{{ route('post.show', $mPost->slug) }}">
+                                @if($mPost->video)
+                                    <img class="img-fluid" data-videoid="{{$mPost->video}}"
+                                        src="https://img.youtube.com/vi/{{$mPost->video}}/0.jpg" />
+                                @else
+                                    <img src="{{ $mPost->image ? asset('storage/' . $mPost->image) : asset('website/img/news/news177.jpg') }}"
+                                        alt="{{ $mPost->title }}" class="img-fluid">
+                                @endif
+                            </a>
+                            <div class="media-body">
+                                <div class="post-date-dark">
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>{{ $mPost->created_at->format('F d, Y') }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h3 class="title-medium-dark mb-none">
+                                    <a href="{{ route('post.show', $mPost->slug) }}">
+                                        {{ Str::limit($mPost->title, 50) }}
+                                    </a>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
+
         </div>
+    </div>
     </div>
 </section>
 <!-- News Details Page Area End Here -->
@@ -435,20 +493,94 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    $(document).ajaxStart(function () {
-        $("#loader").modal('show');
-    });
-    $(document).ajaxComplete(function () {
-        $("#loader").modal('hide');
-    });
+    let commentCaptcha, replyCaptcha;
+
+    function renderCaptchas() {
+        commentCaptcha = grecaptcha.render('comment-recaptcha', {
+            'sitekey': '{{ env('RECAPTCHA_SITE_KEY') }}'
+        });
+        replyCaptcha = grecaptcha.render('reply-recaptcha', {
+            'sitekey': '{{ env('RECAPTCHA_SITE_KEY') }}'
+        });
+    }
+
     $(document).ready(function () {
+        renderCaptchas();
+    });
+
+    function validateCommentForm(formType = "comment") {
+        let valid = true;
+
+        // Reset errors
+        $('#name-err').html('');
+        $('#email-err').html('');
+        $('#contact-err').html('');
+        $('#comment-err').html('');
+        $('#captcha-err').html('');
+
+        // Form selectors depending on form type
+        let formId = (formType === "reply") ? '#add-comment-reply-form' : '#add-comment-form';
+
+        let name = $(formId + " input[name='name']").val().trim();
+        let email = $(formId + " input[name='email']").val().trim();
+        let contact = $(formId + " input[name='contact']").val().trim();
+        let comment = $(formId + " textarea[name='comment']").val().trim();
+        let captcha = (formType === 'reply')
+            ? grecaptcha.getResponse(replyCaptcha)
+            : grecaptcha.getResponse(commentCaptcha);
 
 
+        // NAME
+        if (name.length < 2) {
+            $('#name-err').html("Name is required.");
+            valid = false;
+        }
+
+        // EMAIL
+        let emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailReg.test(email)) {
+            $('#email-err').html("Enter a valid email.");
+            console.log('email iussue');
+
+            valid = false;
+        }
+
+        // CONTACT (optional but must be numeric if entered)
+        if (contact !== "" && !/^[0-9]{8,15}$/.test(contact)) {
+            $('#contact-err').html("Enter valid mobile number (8–15 digits).");
+            console.log('contact issue');
+
+            valid = false;
+        }
+
+        // COMMENT
+        if (comment.length < 5) {
+            $('#comment-err').html("Message must be at least 5 characters.");
+            console.log('co iussue');
+
+
+            valid = false;
+        }
+
+        // reCAPTCHA
+        if (captcha.length === 0) {
+            $('#captcha-err').html("Please verify you are not a robot.");
+            console.log('captcha issue');
+
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    $(document).ready(function () {
         $(document).on('click', '.add-comment-btn', function (event) {
-            $('#name-err').html('');
-            $('#email-err').html('');
-            $('#contact-err').html('');
-            $('#comment-err').html('');
+            event.preventDefault();
+
+            if (!validateCommentForm("comment")) {
+                return false; // Stop AJAX
+            }
+
             $.ajax({
                 url: "{{ URL::to('add-comment') }}",
                 type: 'POST',
@@ -488,13 +620,19 @@
             $("#add-comment-reply-form").find('#name').focus();
             $("#comment_id").val(comment_id);
             document.getElementById('add-comment-reply-form').reset();
+
+            grecaptcha.reset(); // reset captcha for reply
         });
 
+
         $(document).on('click', '.add-comment-reply-btn', function (event) {
-            $('#replyname-err').html('');
-            $('#replyemail-err').html('');
-            $('#replycontact-err').html('');
-            $('#replycomment-err').html('');
+            event.preventDefault();
+
+            if (!validateCommentForm("reply")) {
+                console.log('here');
+
+                return false;
+            }
             let comment_id = $("#comment_id").val();
             $.ajax({
                 url: `{{ URL::to('add-comment-reply/${comment_id}') }}`,

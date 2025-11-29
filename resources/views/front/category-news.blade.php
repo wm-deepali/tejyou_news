@@ -38,7 +38,7 @@
             <h1>{{ $category->name }}</h1>
             <ul>
                 <li>
-                    <a href="{{ route('home') }}">Home</a> -
+                    <a href="{{ url('/') }}">Home</a> -
                 </li>
                 <li>{{ $category->name }}</li>
             </ul>
@@ -58,7 +58,7 @@
             </li>
             @foreach($category->subcategories as $sub)
                 <li class="mx-1 mb-1">
-                    <a href="{{ route('category.posts', $category->slug) }}?subcategory={{ $sub->slug }}"
+                    <a href="{{ route('category.posts', [$category->slug, $sub->slug]) }}"
                         class="tab-link {{ request('subcategory') == $sub->slug ? 'active' : '' }}">
                         {{ $sub->name }}
                     </a>
@@ -93,7 +93,7 @@
                                         <ul>
                                             <li>
                                                 <span>by</span>
-                                                <a href="#">{{ $post->author->name ?? 'Admin' }}</a>
+                                                <a href="#">{{ $post->user->name ?? 'Admin' }}</a>
                                             </li>
                                             <li>
                                                 <span><i
@@ -222,19 +222,30 @@
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
                     </div>
                     <div class="newsletter-area bg-primary">
-                        <h2 class="title-medium-light size-xl pl-30 pr-30">Subscribe to our mailing list to get the new
-                            updates!</h2>
-                        <img src="{{ asset('website') }}/img/banner/newsletter.png" alt="newsletter"
+                        <h2 class="title-medium-light size-xl pl-30 pr-30">
+                            Subscribe to our mailing list to get the new updates!
+                        </h2>
+                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
                             class="img-fluid m-auto mb-15">
                         <p>Subscribe our newsletter to stay updated</p>
-                        <div class="input-group stylish-input-group">
-                            <input type="text" placeholder="Enter your mail" class="form-control">
+
+                        @if(session('success'))
+                            <div class="alert alert-success text-center">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('add-subscriber') }}" method="POST"
+                            class="input-group stylish-input-group">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your mail" class="form-control"
+                                required>
                             <span class="input-group-addon">
-                                <button type="submit">
-                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                </button>
+                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
                             </span>
-                        </div>
+                        </form>
+
+                        @error('email')
+                            <span class="text-danger d-block text-center">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="sidebar-box">
@@ -243,7 +254,7 @@
                     </div>
                     <ul class="sidebar-tags">
                         @foreach(\App\Tag::all() as $tag)
-                            <li><a href="#">{{ $tag->name }}</a></li>
+                            <li><a href="{{ route('search', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a></li>
                         @endforeach
                     </ul>
                 </div>

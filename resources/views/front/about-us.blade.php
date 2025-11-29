@@ -1,24 +1,22 @@
 @include('front.header')
-<main class="page-content">
+<!-- Breadcrumb Area Start Here -->
+<section class="breadcrumbs-area"
+	style="background-image: url('{{ asset('website/img/banner/breadcrumbs-banner.jpg') }}');">
 	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="breadcrumb-sec">
-					<div class="row">
-						<div class="col-sm-12">
-							<nav class="breadcrumb-m" aria-label="breadcrumb">
-								<ol class="breadcrumb">
-									<li class="item">You are here :&nbsp;&nbsp;</li>
-									<li class="breadcrumb-item"><a href="{{ route('/') }}">Home</a>
-									</li>
-									<li class="breadcrumb-item active" aria-current="page">About Us</li>
-								</ol>
-							</nav>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="breadcrumbs-content">
+			<h1>About Us</h1>
+			<ul>
+				<li>
+					<a href="{{ route('home') }}">Home</a> -
+				</li>
+				<li>About Us</li>
+			</ul>
 		</div>
+	</div>
+</section>
+<!-- Breadcrumb Area End Here -->
+<section class="bg-body section-space-less30">
+	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="about-us">
@@ -27,26 +25,25 @@
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<section class="publishers-authors">
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-sm-8">
-					<div class="heading-pa">
-						<h2>Meet Our Publishing Authors</h2>
-						<p>Wherever &amp; whenever you need us. We are here for you - contact us for all your support needs, be it technical, general queries or information support.</p>
-					</div>
+		<div class="row justify-content-center">
+			<div class="col-sm-8">
+				<div class="heading-pa">
+					<h2>Meet Our Publishing Authors</h2>
+					<p>Wherever &amp; whenever you need us. We are here for you - contact us for all your support needs,
+						be it technical, general queries or information support.</p>
 				</div>
 			</div>
-			<div class="row">
-				@if (isset($reporters) && count($reporters)>0)
-					@foreach ($reporters as $reporter)
+		</div>
+		<div class="row">
+			@if (isset($reporters) && count($reporters) > 0)
+				@foreach ($reporters as $reporter)
 					<div class="col-sm-3">
 						<div class="team-main">
 							<div class="team-img">
 								@if (isset($reporter->image) && Storage::exists($reporter->image))
-								<img src="{{ URL::asset('storage/'.$reporter->image) }}" alt="{{ $reporter->name }}" class="img-fluid">
+									<img src="{{ URL::asset('storage/' . $reporter->image) }}" alt="{{ $reporter->name }}"
+										class="img-fluid">
 								@endif
 							</div>
 							<div class="team-con">
@@ -55,11 +52,11 @@
 							</div>
 						</div>
 					</div>
-					@endforeach
-				@endif
-		
-			</div>
+				@endforeach
+			@endif
+
 		</div>
-	</section>
-</main>
+	</div>
+
+</section>
 @include('front.footer')

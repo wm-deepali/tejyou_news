@@ -1,54 +1,7 @@
 @include('front.header')
-<!-- News Feed Area Start Here -->
-<section class="bg-accent border-bottom add-top-margin">
-    <div class="container">
-        <div class="row no-gutters d-flex align-items-center">
-            <div class="col-lg-2 col-md-3 col-sm-4 col-5">
-                <div class="topic-box mt-4 mb-5">Top Stories</div>
-            </div>
-            <div class="col-lg-10 col-md-9 col-sm-8 col-7">
-                <div class="feeding-text-dark">
-                    <ol id="sample" class="ticker">
-                        <li>
-                            <a href="#">McDonell Kanye West highlights difficulties for celebritiesComplimentary decor
-                                and
-                                design advicewith Summit Park homes</a>
-                        </li>
-                        <li>
-                            <a href="#">Magnificent Image Of The New Hoover Dam Bridge Taking Shape</a>
-                        </li>
-                        <li>
-                            <a href="#">If Obama Had Governed Like This in 2017 He'd Be the Transformational.</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- News Feed Area End Here -->
-<!-- News Info List Area Start Here -->
-<section class="bg-body">
-    <div class="container">
-        <ul class="news-info-list text-center--sm">
-            <li>
-                <i class="fa fa-map-marker" aria-hidden="true"></i>Australia
-            </li>
-            <li>
-                <i class="fa fa-calendar" aria-hidden="true"></i><span id="current_date"></span>
-            </li>
-            <li>
-                <i class="fa fa-clock-o" aria-hidden="true"></i>Last Update 11.30 am
-            </li>
-            <li>
-                <i class="fa fa-cloud" aria-hidden="true"></i>29&#8451; Sydney, Australia
-            </li>
-        </ul>
-    </div>
-</section>
-<!-- News Info List Area End Here -->
-<!-- Breadcrumb Area Start Here -->
-<section class="breadcrumbs-area" style="background-image: url('img/banner/breadcrumbs-banner.jpg');">
+
+<section class="breadcrumbs-area"
+    style="background-image: url('{{asset('website') }}/img/banner/breadcrumbs-banner.jpg');">
     <div class="container">
         <div class="breadcrumbs-content">
             <h1>Contact With Us</h1>
@@ -70,12 +23,10 @@
                 <div class="topic-border color-cod-gray mb-30">
                     <div class="topic-box-lg color-cod-gray">About Us</div>
                 </div>
-                <h2 class="title-semibold-dark size-xl">Our Customer Support Representatives Are Ready To Help You 24/7,
-                    365 Days a Year!</h2>
-                <p class="size-lg mb-40">Esimply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                    been the industry's
-                    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                    scrambled it to make a type specimen book.</p>
+                <div class="about-us">
+                    {!! $aboutus->content1 ?? Null !!}
+                    {!! $aboutus->content2 ?? Null !!}
+                </div>
                 <div class="google-map-area mb-50">
                     <div id="googleMap" style="width:100%; height:400px;"></div>
                 </div>
@@ -84,50 +35,61 @@
                 </div>
                 <ul class="address-info">
                     <li>
-                        <i class="fa fa-map-marker" aria-hidden="true"></i>29 Street, Melbourne City, Australia # 34
-                        Road, House #10.
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>{!! $aboutus->address ?? 'N/A' !!}
                     </li>
                     <li>
-                        <i class="fa fa-phone" aria-hidden="true"></i>+ 9850678910
+                        <i class="fa fa-phone" aria-hidden="true"></i>{{ $aboutus->contact1 ?? 'N/A' }}
                     </li>
                     <li>
-                        <i class="fa fa-envelope-o" aria-hidden="true"></i>infonewsedge.com
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>tejyugnews@gmail.com
                     </li>
                     <li>
-                        <i class="fa fa-fax" aria-hidden="true"></i>+ 9850678910
+                        <i class="fa fa-fax" aria-hidden="true"></i>{{ $aboutus->contact2 ?? 'N/A' }}
                     </li>
                 </ul>
                 <div class="topic-border color-cod-gray mb-30">
                     <div class="topic-box-lg color-cod-gray">Send Us Message</div>
                 </div>
-                <form id="contact-form" class="contact-form">
+                <form id="contact-us-form" class="contact-form">
                     <fieldset>
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <input type="text" placeholder="Name" class="form-control" name="name"
-                                        id="form-subject" data-error="Name field is required" required="">
-                                    <div class="help-block with-errors"></div>
+                                        id="form-name" required>
+                                    <div class="text-danger" id="name-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <input type="text" name="contact" placeholder="Mobile Number" class="form-control"
+                                        id="form-contact" required pattern="^\d{10,15}$" title="Enter valid number">
+                                    <div class="text-danger" id="contact-err"></div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <input type="email" placeholder="Your E-mail" class="form-control" name="email"
-                                        id="form-email" data-error="Email field is required" required="">
-                                    <div class="help-block with-errors"></div>
+                                        id="form-email" required>
+                                    <div class="text-danger" id="email-err"></div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <textarea placeholder="Message" class="textarea form-control" name="message"
-                                        id="form-message" rows="7" cols="20" data-error="Message field is required"
-                                        required=""></textarea>
-                                    <div class="help-block with-errors"></div>
+                                        id="form-message" rows="7" required></textarea>
+                                    <div class="text-danger" id="message-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                    <div class="text-danger" id="recaptcha-err"></div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-6 col-sm-12">
                                 <div class="form-group mb-none">
-                                    <button type="submit" class="btn-ftg-ptp-56 disabled">Send Message</button>
+                                    <button type="submit" class="btn-ftg-ptp-56 contact-us-btn">Send Message</button>
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-6 col-sm-12">
@@ -136,7 +98,6 @@
                         </div>
                     </fieldset>
                 </form>
-
             </div>
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
                 <div class="sidebar-box">
@@ -177,7 +138,7 @@
                 <div class="sidebar-box">
                     <div class="ne-banner-layout1 text-center">
                         <a href="#">
-                            <img src="img/banner/banner3.jpg" alt="ad" class="img-fluid">
+                            <img src="{{asset('website') }}/img/banner/banner3.jpg" alt="ad" class="img-fluid">
                         </a>
                     </div>
                 </div>
@@ -186,23 +147,93 @@
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
                     </div>
                     <div class="newsletter-area bg-primary">
-                        <h2 class="title-medium-light size-xl pl-30 pr-30">Subscribe to our mailing list to get the new
-                            updates!</h2>
-                        <img src="img/banner/newsletter.png" alt="newsletter" class="img-fluid m-auto mb-15">
+                        <h2 class="title-medium-light size-xl pl-30 pr-30">
+                            Subscribe to our mailing list to get the new updates!
+                        </h2>
+                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
+                            class="img-fluid m-auto mb-15">
                         <p>Subscribe our newsletter to stay updated</p>
-                        <div class="input-group stylish-input-group">
-                            <input type="text" placeholder="Enter your mail" class="form-control">
+
+                        @if(session('success'))
+                            <div class="alert alert-success text-center">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('add-subscriber') }}" method="POST"
+                            class="input-group stylish-input-group">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your mail" class="form-control"
+                                required>
                             <span class="input-group-addon">
-                                <button type="submit">
-                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                </button>
+                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
                             </span>
-                        </div>
+                        </form>
+
+                        @error('email')
+                            <span class="text-danger d-block text-center">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Contact Page Area End Here -->
+
 @include('front.footer')
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(document).ready(function () {
+        $(document).on("click", ".contact-us-btn", function (event) {
+            event.preventDefault();
+
+            // Clear previous errors
+            $('#name-err, #email-err, #contact-err, #message-err, #recaptcha-err').html('');
+
+            // Frontend validation
+            let valid = true;
+            let name = $('#form-name').val().trim();
+            let email = $('#form-email').val().trim();
+            let contact = $('#form-contact').val().trim();
+            let message = $('#form-message').val().trim();
+            let recaptcha = grecaptcha.getResponse();
+
+            if (name.length < 3) { $('#name-err').html('Name must be at least 3 characters'); valid = false; }
+            if (!/^\S+@\S+\.\S+$/.test(email)) { $('#email-err').html('Enter valid email'); valid = false; }
+            if (!/^\d{10,15}$/.test(contact)) { $('#contact-err').html('Enter valid contact number'); valid = false; }
+            if (message.length < 10) { $('#message-err').html('Message must be at least 10 characters'); valid = false; }
+            if (recaptcha.length === 0) { $('#recaptcha-err').html('Please verify reCAPTCHA'); valid = false; }
+
+            if (!valid) return;
+
+            // AJAX call
+            $.ajax({
+                url: "{{ url('add-contact-us') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: $('#contact-us-form').serialize(),
+                success: function (result) {
+                    if (result.msgCode === '200') {
+                        toastr.success(result.msgText);
+                        $('#contact-us-form')[0].reset();
+                        grecaptcha.reset();
+                    } else if (result.msgCode === '401') {
+                        $.each(result.errors, function (key, value) {
+                            $('#' + key + '-err').html(value[0]);
+                        });
+                    } else {
+                        toastr.error('Error: ' + result.msgText);
+                    }
+                },
+                error: function (error) {
+                    toastr.error('Error: ' + error.statusText);
+                }
+            });
+        });
+    });
+
+</script>

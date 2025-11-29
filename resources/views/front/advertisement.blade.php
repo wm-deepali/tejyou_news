@@ -1,6 +1,21 @@
 @include('front.header')
 
-<section class="advtisment">
+<!-- Breadcrumb Area Start Here -->
+<section class="breadcrumbs-area" style="background-image: url('{{ asset('website/img/banner/breadcrumbs-banner.jpg') }}');">
+    <div class="container">
+        <div class="breadcrumbs-content">
+            <h1>Advertisement With Us</h1>
+            <ul>
+                <li>
+                    <a href="{{ url('/') }}">Home</a> -
+                </li>
+                <li>Advertisement With Us</li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End Here -->
+<section class="bg-body section-space-less30">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
@@ -77,4 +92,4 @@
 		</div>
 	</div>
 </section>
-@include('front.footer-two')
+@include('front.footer')

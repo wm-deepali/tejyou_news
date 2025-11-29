@@ -29,8 +29,8 @@ class ReporterController extends Controller
     public function index()
     {
         $this->authorize('is-admin');
-        $user=User::where('role','reporter')->get();
-        return view('admin.manage-reporter')->with('users',$user);
+        $user = User::where('role', 'reporter')->get();
+        return view('admin.manage-reporter')->with('users', $user);
     }
 
     /**
@@ -41,10 +41,10 @@ class ReporterController extends Controller
     public function create()
     {
         $this->authorize('is-admin');
-        $states=State::where('country_id','101')->get();
+        $states = State::where('country_id', '101')->get();
         return response()->json([
             "msgCode" => "200",
-            "html" => view('admin.ajax.add-reporter')->with('states',$states)->render(),
+            "html" => view('admin.ajax.add-reporter')->with('states', $states)->render(),
         ]);
     }
 
@@ -56,7 +56,7 @@ class ReporterController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'image' => 'required|image|max:1024',
@@ -69,28 +69,28 @@ class ReporterController extends Controller
         ]);
         if ($validator->passes()) {
             try {
-                $data=array(
-                    'name'=>$request->name,
-                    'image'=>$request->image->store('users'),
-                    'email'=>$request->email,
-                    'contact'=>$request->contact,
-                    'password'=>Hash::make($request->password),
-                    'state_id'=>$request->state,
-                    'city_id'=>$request->city,
-                    'address'=>$request->address,
+                $data = array(
+                    'name' => $request->name,
+                    'image' => $request->image->store('users'),
+                    'email' => $request->email,
+                    'contact' => $request->contact,
+                    'password' => Hash::make($request->password),
+                    'state_id' => $request->state,
+                    'city_id' => $request->city,
+                    'address' => $request->address,
                     'role' => 'reporter',
                     'permission' => Null,
                     'status' => 'pending'
                 );
-                if($request->hasFile('cv')){
-                    $data['cv']=$request->cv->store('users');
+                if ($request->hasFile('cv')) {
+                    $data['cv'] = $request->cv->store('users');
                 }
-                $user=User::create($data);
+                $user = User::create($data);
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Reporter Created',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -98,8 +98,8 @@ class ReporterController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -123,26 +123,24 @@ class ReporterController extends Controller
      */
     public function edit($id)
     {
-        try{
+        try {
             $this->authorize('is-admin');
-            $user=User::where('id',$id)->where('role','reporter')->firstOrFail();
-            $states=State::where('country_id','101')->get();
-            $cities=City::where('state_id',$user->state_id)->get();
+            $user = User::where('id', $id)->where('role', 'reporter')->firstOrFail();
+            $states = State::where('country_id', '101')->get();
+            $cities = City::where('state_id', $user->state_id)->get();
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.edit-reporter')->with('user',$user)->with('states',$states)->with('cities',$cities)->render(),
+                "html" => view('admin.ajax.edit-reporter')->with('user', $user)->with('states', $states)->with('cities', $cities)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -160,37 +158,37 @@ class ReporterController extends Controller
             'name' => 'required|max:255',
             'image' => 'nullable|image',
             'cv' => 'nullable|mimes:pdf,xls,doc,docx',
-            "email"=>["required",Rule::unique('users')->ignore($id),"email"],
-            "contact"=>["required",Rule::unique('users')->ignore($id),"digits:10"],
+            "email" => ["required", Rule::unique('users')->ignore($id), "email"],
+            "contact" => ["required", Rule::unique('users')->ignore($id), "digits:10"],
             'state' => 'required|integer',
             'city' => 'required|integer',
             'address' => 'required',
         ]);
         if ($validator->passes()) {
             try {
-                $user=User::where('id',$id)->where('role','reporter')->firstOrFail();
-                $data=array(
-                    'name'=>$request->name,
-                    'email'=>$request->email,
-                    'contact'=>$request->contact,
-                    'state_id'=>$request->state,
-                    'city_id'=>$request->city,
-                    'address'=>$request->address,
+                $user = User::where('id', $id)->where('role', 'reporter')->firstOrFail();
+                $data = array(
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'contact' => $request->contact,
+                    'state_id' => $request->state,
+                    'city_id' => $request->city,
+                    'address' => $request->address,
                 );
-                if($request->hasFile('image')){
+                if ($request->hasFile('image')) {
                     $data['image'] = $request->image->store('users');
                     Storage::delete($user->image);
                 }
-                if($request->hasFile('cv')){
+                if ($request->hasFile('cv')) {
                     $data['cv'] = $request->cv->store('users');
                     Storage::delete($user->cv);
                 }
-                User::where('id',$id)->update($data);
+                User::where('id', $id)->update($data);
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Reporter Updated',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -198,8 +196,8 @@ class ReporterController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -212,28 +210,26 @@ class ReporterController extends Controller
      */
     public function destroy($id)
     {
-        try{
-            $user=User::where('id',$id)->where('role','reporter')->firstOrFail();
-            User::where('id',$id)->delete();
+        try {
+            $user = User::where('id', $id)->where('role', 'reporter')->firstOrFail();
+            User::where('id', $id)->delete();
             Storage::delete($user->image);
-            Post::where('user_id',$id)->update([
-                'user_id'=>Auth::user()->id,
-                ]);
+            Post::where('user_id', $id)->update([
+                'user_id' => Auth::user()->id,
+            ]);
             return response()->json([
                 'msgCode' => '200',
                 'msgText' => 'Reporter Deleted',
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -241,10 +237,10 @@ class ReporterController extends Controller
     public function approve($id)
     {
         try {
-            $user=User::where('id',$id)->where('role','reporter')->firstOrFail();
+            $user = User::where('id', $id)->where('role', 'reporter')->firstOrFail();
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.approve-reporter')->with('user',$user)->render(),
+                "html" => view('admin.ajax.approve-reporter')->with('user', $user)->render(),
             ]);
             // $updatedstatus='approved';
             // $user_number='RP'.str_pad($user->id, 3, "0", STR_PAD_LEFT);
@@ -258,12 +254,12 @@ class ReporterController extends Controller
             //     'status' => $updatedstatus,
             //     'user_number' => $user_number,
             // ]);
-        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => $ex->getMessage(),
@@ -271,18 +267,18 @@ class ReporterController extends Controller
         }
     }
 
-    public function approvesubmit(Request $request,$id)
+    public function approvesubmit(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'password' => 'required|confirmed'
         ]);
         if ($validator->passes()) {
             try {
-                $user=User::where('id',$id)->where('role','reporter')->firstOrFail();
-                $updatedstatus='approved';
-                $user_number='RP'.str_pad($user->id, 3, "0", STR_PAD_LEFT);
-                User::where('id',$id)->update([
-                    'status'=>$updatedstatus,
+                $user = User::where('id', $id)->where('role', 'reporter')->firstOrFail();
+                $updatedstatus = 'approved';
+                $user_number = 'RP' . str_pad($user->id, 3, "0", STR_PAD_LEFT);
+                User::where('id', $id)->update([
+                    'status' => $updatedstatus,
                     'user_number' => $user_number,
                 ]);
                 return response()->json([
@@ -291,12 +287,12 @@ class ReporterController extends Controller
                     'status' => $updatedstatus,
                     'user_number' => $user_number,
                 ]);
-            } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => 'Data Not found by id#' . $id,
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -304,56 +300,54 @@ class ReporterController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
 
     public function editpassword($id)
     {
-        try{
-            $user=User::where('id',$id)->where('role','reporter')->firstOrFail();
+        try {
+            $user = User::where('id', $id)->where('role', 'reporter')->firstOrFail();
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.change-password-reporter')->with('user',$user)->render(),
+                "html" => view('admin.ajax.change-password-reporter')->with('user', $user)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
 
-    public function updatepassword(Request $request,$id)
+    public function updatepassword(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'password' => 'required|confirmed'
         ]);
         if ($validator->passes()) {
             try {
-                User::where('id',$id)->where('role','reporter')->firstOrFail();
-                User::where('id',$id)->update([
-                    'password'=>Hash::make($request->password),
+                User::where('id', $id)->where('role', 'reporter')->firstOrFail();
+                User::where('id', $id)->update([
+                    'password' => Hash::make($request->password),
                 ]);
                 return response()->json([
                     'msgCode' => '200',
                     'msgText' => 'Password updated',
                 ]);
-            } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => 'Data Not found by id#' . $id,
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 return response()->json([
                     'msgCode' => '400',
                     'msgText' => $ex->getMessage(),
@@ -361,8 +355,8 @@ class ReporterController extends Controller
             }
         } else {
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
