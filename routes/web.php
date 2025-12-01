@@ -174,6 +174,9 @@ Route::post('update-ad-setting', 'AdsettingController@updateadsetting')->name('u
 Route::get('fetchsubcategories/{id}', 'PostController@fetchsubcategories');
 Route::post('generate-report', 'PostController@generatereport')->name('generate-report');
 
+Route::get('archive', 'FrontController@archive')->name('archive');
+Route::get('/reporters', 'FrontController@reporters')->name('reporters');
+Route::get('/reporters/{id}', 'FrontController@reportersPosts')->name('reporter.posts');
 Route::get('/', 'FrontController@index')->name('homecategory');
 Route::get('/search', 'FrontController@search')->name('search');
 Route::get('/{slug}/detail', 'FrontController@newsDetail')->name('post.show');

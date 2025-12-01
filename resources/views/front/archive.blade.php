@@ -1,62 +1,43 @@
 @include('front.header')
-<!-- News Feed Area Start Here -->
-<section class="bg-accent border-bottom add-top-margin">
-    <div class="container">
-        <div class="row no-gutters d-flex align-items-center">
-            <div class="col-lg-2 col-md-3 col-sm-4 col-5">
-                <div class="topic-box mt-4 mb-5">Top Stories</div>
-            </div>
-            <div class="col-lg-10 col-md-9 col-sm-8 col-7">
-                <div class="feeding-text-dark">
-                    <ol id="sample" class="ticker">
-                        <li>
-                            <a href="#">McDonell Kanye West highlights difficulties for celebritiesComplimentary decor
-                                and
-                                design advicewith Summit Park homes</a>
-                        </li>
-                        <li>
-                            <a href="#">Magnificent Image Of The New Hoover Dam Bridge Taking Shape</a>
-                        </li>
-                        <li>
-                            <a href="#">If Obama Had Governed Like This in 2017 He'd Be the Transformational.</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- News Feed Area End Here -->
-<!-- News Info List Area Start Here -->
-<section class="bg-body">
-    <div class="container">
-        <ul class="news-info-list text-center--sm">
-            <li>
-                <i class="fa fa-map-marker" aria-hidden="true"></i>Australia
-            </li>
-            <li>
-                <i class="fa fa-calendar" aria-hidden="true"></i><span id="current_date"></span>
-            </li>
-            <li>
-                <i class="fa fa-clock-o" aria-hidden="true"></i>Last Update 11.30 am
-            </li>
-            <li>
-                <i class="fa fa-cloud" aria-hidden="true"></i>29&#8451; Sydney, Australia
-            </li>
-        </ul>
-    </div>
-</section>
-<!-- News Info List Area End Here -->
 <!-- Breadcrumb Area Start Here -->
 <section class="breadcrumbs-area" style="background-image: url('img/banner/breadcrumbs-banner.jpg');">
     <div class="container">
         <div class="breadcrumbs-content">
-            <h1>Yearly Archives</h1>
+
+            {{-- Dynamic Heading --}}
+            <h1>
+                @if($year && $month)
+                    {{ date("F", mktime(0, 0, 0, $month, 1)) }} {{ $year }} Archives
+                @elseif($year)
+                    {{ $year }} Archives
+                @else
+                    Archives
+                @endif
+            </h1>
+
+            {{-- Dynamic Breadcrumb --}}
             <ul>
                 <li>
-                    <a href="index.html">Home</a> -
+                    <a href="{{ route('home') }}">Home</a> -
                 </li>
-                <li>Arcvhives</li>
+
+                @if($year && $month)
+                    <li>
+                        <a href="{{ route('archive') }}">Archives</a> -
+                    </li>
+                    <li>
+                        {{ date("F", mktime(0, 0, 0, $month, 1)) }} {{ $year }}
+                    </li>
+
+                @elseif($year)
+                    <li>
+                        <a href="{{ route('archive') }}">Archives</a> -
+                    </li>
+                    <li>{{ $year }}</li>
+
+                @else
+                    <li>Archives</li>
+                @endif
             </ul>
         </div>
     </div>
@@ -67,65 +48,49 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-12">
-                <form id="archive-search" class="archive-search-box bg-accent item-shadow-1">
+                <form id="archive-search" action="{{ route('archive') }}" method="GET"
+                    class="archive-search-box bg-accent item-shadow-1">
                     <div class="row tab-space5">
                         <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                             <div class="form-group">
                                 <div class="ne-custom-select">
-                                    <select id="ne-year" class='select2'>
-                                        <option value="0">Select Year</option>
-                                        <option value="1">2000</option>
-                                        <option value="2">2001</option>
-                                        <option value="3">2002</option>
-                                        <option value="4">2003</option>
-                                        <option value="5">2004</option>
-                                        <option value="6">2005</option>
-                                        <option value="7">2006</option>
-                                        <option value="8">2007</option>
-                                        <option value="9">2008</option>
-                                        <option value="10">2009</option>
-                                        <option value="11">2010</option>
-                                        <option value="12">2011</option>
-                                        <option value="13">2012</option>
-                                        <option value="14">2013</option>
+                                    <select id="ne-year" name="year">
+                                        <option value="">Select Year</option>
+                                        @foreach($years as $y)
+                                            <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                        @endforeach
                                     </select>
+
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                             <div class="form-group">
                                 <div class="ne-custom-select">
-                                    <select id="ne-month" class='select2'>
-                                        <option value="0">Select Month</option>
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
+                                    <select id="ne-month" name="month">
+                                        <option value="">Select Month</option>
+                                        @foreach(range(1, 12) as $m)
+                                            <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                                                {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                                            </option>
+                                        @endforeach
                                     </select>
+
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                             <div class="form-group">
                                 <div class="ne-custom-select">
-                                    <select id="ne-categories" class='select2'>
-                                        <option value="0">Select Categories</option>
-                                        <option value="1">Sports</option>
-                                        <option value="2">Politics</option>
-                                        <option value="3">Tech</option>
-                                        <option value="4">Travel</option>
-                                        <option value="5">Fashion</option>
-                                        <option value="6">Business</option>
-                                        <option value="7">Food</option>
+                                    <select id="ne-categories" name="category">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $cat)
+                                            <option value="{{ $cat->id }}" {{ $selectedcategory == $cat->id ? 'selected' : '' }}>
+                                                {{ $cat->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
+
                                 </div>
                             </div>
                         </div>
@@ -135,236 +100,102 @@
                     </div>
                 </form>
                 <div class="row">
-                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                        <div class="media media-none--lg mb-30">
-                            <div class="position-relative width-40">
-                                <a href="single-news-1.html" class="img-opacity-hover img-overlay-70">
-                                    <img src="img/news/news140.jpg" alt="news" class="img-fluid">
-                                </a>
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Football</div>
+                    @forelse ($posts as $post)
+                        <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
+                            <div class="media media-none--lg mb-30">
+                                <div class="position-relative width-40">
+                                    <a href="{{ route('post.show', $post->slug) }}"
+                                        class="img-opacity-hover img-overlay-70">
+
+                                        @if($post->video)
+                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/news/news140.jpg') }}"
+                                                class="img-fluid">
+                                        @endif
+                                    </a>
+                                    <div class="topic-box-top-xs">
+                                        <div class="topic-box-sm color-cod-gray mb-20">{{ $post->category->name }}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="media-body p-mb-none-child media-margin30">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a href="single-news-1.html">Adams</a>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>March 22, 2017
-                                        </li>
-                                    </ul>
+                                <div class="media-body p-mb-none-child media-margin30">
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li><span>by</span> {{ $post->user->name ?? 'Admin' }}</li>
+                                            <li><i class="fa fa-calendar"></i>{{ $post->created_at->format('F d, Y') }}</li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-semibold-dark size-lg mb-15">
+                                        <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
+                                    </h3>
+                                    <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
                                 </div>
-                                <h3 class="title-semibold-dark size-lg mb-15">
-                                    <a href="single-news-1.html">Erik Jones has day he won’t soon forget as Denny backup
-                                        at Bristol</a>
-                                </h3>
-                                <p>Separated they live in the coast of the Semantics, a large language ocean. A
-                                    river named Duden flows by their place and ...
-                                </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                        <div class="media media-none--lg mb-30">
-                            <div class="position-relative width-40">
-                                <a href="single-news-1.html" class="img-opacity-hover img-overlay-70">
-                                    <img src="img/news/news141.jpg" alt="news" class="img-fluid">
-                                </a>
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Adventure</div>
-                                </div>
-                            </div>
-                            <div class="media-body p-mb-none-child media-margin30">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a href="single-news-1.html">Adams</a>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>March 22, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-semibold-dark size-lg mb-15">
-                                    <a href="single-news-1.html">Erik Jones has day he won’t soon forget as Denny backup
-                                        at Bristol</a>
-                                </h3>
-                                <p>Separated they live in the coast of the Semantics, a large language ocean. A
-                                    river named Duden flows by their place and ...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                        <div class="media media-none--lg mb-30">
-                            <div class="position-relative width-40">
-                                <a href="single-news-1.html" class="img-opacity-hover img-overlay-70">
-                                    <img src="img/news/news142.jpg" alt="news" class="img-fluid">
-                                </a>
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Food</div>
-                                </div>
-                            </div>
-                            <div class="media-body p-mb-none-child media-margin30">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a href="single-news-1.html">Adams</a>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>March 22, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-semibold-dark size-lg mb-15">
-                                    <a href="single-news-1.html">Erik Jones has day he won’t soon forget as Denny backup
-                                        at Bristol</a>
-                                </h3>
-                                <p>Separated they live in the coast of the Semantics, a large language ocean. A
-                                    river named Duden flows by their place and ...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                        <div class="media media-none--lg mb-30">
-                            <div class="position-relative width-40">
-                                <a href="single-news-1.html" class="img-opacity-hover img-overlay-70">
-                                    <img src="img/news/news143.jpg" alt="news" class="img-fluid">
-                                </a>
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Race</div>
-                                </div>
-                            </div>
-                            <div class="media-body p-mb-none-child media-margin30">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a href="single-news-1.html">Adams</a>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>March 22, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-semibold-dark size-lg mb-15">
-                                    <a href="single-news-1.html">Erik Jones has day he won’t soon forget as Denny backup
-                                        at Bristol</a>
-                                </h3>
-                                <p>Separated they live in the coast of the Semantics, a large language ocean. A
-                                    river named Duden flows by their place and ...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                        <div class="media media-none--lg mb-30">
-                            <div class="position-relative width-40">
-                                <a href="single-news-1.html" class="img-opacity-hover img-overlay-70">
-                                    <img src="img/news/news144.jpg" alt="news" class="img-fluid">
-                                </a>
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">Corporate</div>
-                                </div>
-                            </div>
-                            <div class="media-body p-mb-none-child media-margin30">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a href="single-news-1.html">Adams</a>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>March 22, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-semibold-dark size-lg mb-15">
-                                    <a href="single-news-1.html">Erik Jones has day he won’t soon forget as Denny backup
-                                        at Bristol</a>
-                                </h3>
-                                <p>Separated they live in the coast of the Semantics, a large language ocean. A
-                                    river named Duden flows by their place and ...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                        <div class="media media-none--lg mb-30">
-                            <div class="position-relative width-40">
-                                <a href="single-news-1.html" class="img-opacity-hover img-overlay-70">
-                                    <img src="img/news/news145.jpg" alt="news" class="img-fluid">
-                                </a>
-                                <div class="topic-box-top-xs">
-                                    <div class="topic-box-sm color-cod-gray mb-20">People</div>
-                                </div>
-                            </div>
-                            <div class="media-body p-mb-none-child media-margin30">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a href="single-news-1.html">Adams</a>
-                                        </li>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>March 22, 2017
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-semibold-dark size-lg mb-15">
-                                    <a href="single-news-1.html">Erik Jones has day he won’t soon forget as Denny backup
-                                        at Bristol</a>
-                                </h3>
-                                <p>Separated they live in the coast of the Semantics, a large language ocean. A
-                                    river named Duden flows by their place and ...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    @empty
+                        <p>No posts found.</p>
+                    @endforelse
+
                 </div>
+                @php
+                    $start = max($posts->currentPage() - 2, 1);
+                    $end = min($posts->currentPage() + 2, $posts->lastPage());
+                @endphp
+
                 <div class="row mt-20-r mb-30">
-                    <div class="col-sm-6 col-12">
+                    <div class="col-sm-8 col-12">
                         <div class="pagination-btn-wrapper text-center--xs mb15--xs">
                             <ul>
-                                <li class="active">
-                                    <a href="#">1</a>
-                                </li>
-                                <li>
-                                    <a href="#">2</a>
-                                </li>
-                                <li>
-                                    <a href="#">3</a>
-                                </li>
-                                <li>
-                                    <a href="#">4</a>
-                                </li>
+                                {{-- Previous --}}
+                                @if ($posts->onFirstPage() == false)
+                                    <li>
+                                        <a href="{{ $posts->previousPageUrl() }}">&laquo;</a>
+                                    </li>
+                                @endif
+
+                                {{-- First page + ellipsis --}}
+                                @if ($start > 1)
+                                    <li><a href="{{ $posts->url(1) }}">1</a></li>
+                                    @if ($start > 2)
+                                        <li><span>...</span></li>
+                                    @endif
+                                @endif
+
+                                {{-- Pages around current page --}}
+                                @for ($i = $start; $i <= $end; $i++)
+                                    <li class="{{ $posts->currentPage() == $i ? 'active' : '' }}">
+                                        <a href="{{ $posts->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+
+                                {{-- Last page + ellipsis --}}
+                                @if ($end < $posts->lastPage())
+                                    @if ($end < $posts->lastPage() - 1)
+                                        <li><span>...</span></li>
+                                    @endif
+                                    <li><a href="{{ $posts->url($posts->lastPage()) }}">{{ $posts->lastPage() }}</a></li>
+                                @endif
+
+                                {{-- Next --}}
+                                @if ($posts->hasMorePages())
+                                    <li>
+                                        <a href="{{ $posts->nextPageUrl() }}">&raquo;</a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-12">
+
+                    <div class="col-sm-4 col-12">
                         <div class="pagination-result text-right pt-10 text-center--xs">
-                            <p class="mb-none">Page 1 of 4</p>
+                            <p class="mb-none">
+                                Page {{ $posts->currentPage() }} of {{ $posts->lastPage() }}
+                            </p>
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
                 <div class="sidebar-box">
@@ -372,39 +203,21 @@
                         <div class="topic-box-lg color-cod-gray">Archives</div>
                     </div>
                     <ul class="archive-list">
-                        <li>
-                            <a href="#">April 2017 (12)</a>
-                        </li>
-                        <li>
-                            <a href="#">March 2017 (4)</a>
-                        </li>
-                        <li>
-                            <a href="#">February 2017 (11)</a>
-                        </li>
-                        <li>
-                            <a href="#">April 2015 (79)</a>
-                        </li>
-                        <li>
-                            <a href="#">March 2015 (5)</a>
-                        </li>
-                        <li>
-                            <a href="#">February 2015 (7)</a>
-                        </li>
-                        <li>
-                            <a href="#">January 2015 (41)</a>
-                        </li>
-                        <li>
-                            <a href="#">May 2014 (1)</a>
-                        </li>
-                        <li>
-                            <a href="#">January 2014 (1)</a>
-                        </li>
+                        @foreach ($archiveList as $arc)
+                            <li>
+                                <a href="{{ route('archive', ['year' => $arc->year, 'month' => $arc->month]) }}">
+                                    {{ date("F", mktime(0, 0, 0, $arc->month, 1)) }} {{ $arc->year }}
+                                    ({{ $arc->total }})
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
+
                 </div>
                 <div class="sidebar-box">
                     <div class="ne-banner-layout1 text-center">
                         <a href="#">
-                            <img src="img/banner/banner3.jpg" alt="ad" class="img-fluid">
+                            <img src="{{ asset('website') }}/img/banner/banner3.jpg" alt="ad" class="img-fluid">
                         </a>
                     </div>
                 </div>
@@ -413,18 +226,30 @@
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
                     </div>
                     <div class="newsletter-area bg-primary">
-                        <h2 class="title-medium-light size-xl pl-30 pr-30">Subscribe to our mailing list to get the new
-                            updates!</h2>
-                        <img src="img/banner/newsletter.png" alt="newsletter" class="img-fluid m-auto mb-15">
+                        <h2 class="title-medium-light size-xl pl-30 pr-30">
+                            Subscribe to our mailing list to get the new updates!
+                        </h2>
+                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
+                            class="img-fluid m-auto mb-15">
                         <p>Subscribe our newsletter to stay updated</p>
-                        <div class="input-group stylish-input-group">
-                            <input type="text" placeholder="Enter your mail" class="form-control">
+
+                        @if(session('success'))
+                            <div class="alert alert-success text-center">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('add-subscriber') }}" method="POST"
+                            class="input-group stylish-input-group">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your mail" class="form-control"
+                                required>
                             <span class="input-group-addon">
-                                <button type="submit">
-                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                </button>
+                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
                             </span>
-                        </div>
+                        </form>
+
+                        @error('email')
+                            <span class="text-danger d-block text-center">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>

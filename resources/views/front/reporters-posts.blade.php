@@ -1,117 +1,65 @@
 @include('front.header')
-<style>
-    .subcategories-wrapper {
-        margin: 20px 0;
-    }
-
-    .subcategory-tabs li {
-        display: inline-block;
-    }
-
-    .subcategory-tabs .tab-link {
-        display: inline-block;
-        padding: 8px 18px;
-        border-radius: 50px;
-        background: #f1f1f1;
-        color: #333;
-        font-weight: 500;
-        text-decoration: none;
-        transition: 0.3s;
-        font-size: 14px;
-    }
-
-    .subcategory-tabs .tab-link:hover {
-        background: #007bff;
-        color: #fff;
-    }
-
-    .subcategory-tabs .tab-link.active {
-        background: #007bff;
-        color: #fff;
-    }
-</style>
-
 <!-- Breadcrumb Area Start Here -->
-<section class="breadcrumbs-area" style="background-image: url('img/banner/breadcrumbs-banner.jpg');">
+<section class="breadcrumbs-area" style="background-image: url('{{ asset('img/banner/breadcrumbs-banner.jpg') }}');">
     <div class="container">
         <div class="breadcrumbs-content">
-            <h1>{{ $category->name }}</h1>
+            <h1>{{ $reporter->name }}'s Posts</h1>
             <ul>
                 <li>
-                    <a href="{{ url('/') }}">Home</a> -
+                    <a href="{{ route('home') }}">Home</a> -
                 </li>
-                <li>{{ $category->name }}</li>
+                <li>{{ $reporter->name }}'s Posts</li>
             </ul>
         </div>
     </div>
 </section>
 
-<!-- Subcategory Filter Tabs -->
-@if($category->subcategories->count() > 0)
-    <div class="subcategories-wrapper text-center">
-        <ul class="subcategory-tabs d-inline-flex flex-wrap justify-content-center list-unstyled p-0 m-0">
-            <li class="mx-1 mb-1">
-                <a href="{{ route('category.posts', $category->slug) }}"
-                    class="tab-link {{ empty(request('subcategory')) ? 'active' : '' }}">
-                    All
-                </a>
-            </li>
-            @foreach($category->subcategories as $sub)
-                <li class="mx-1 mb-1">
-                    <a href="{{ route('category.posts', [$category->slug, $sub->slug]) }}"
-                        class="tab-link {{ request('subcategory') == $sub->slug ? 'active' : '' }}">
-                        {{ $sub->name }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
 <!-- Breadcrumb Area End Here -->
-<!-- Post Style 1 Page Area Start Here -->
+<!-- Author Post Page Area Start Here -->
 <section class="bg-body section-space-less30">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-12">
+                <div class="bg-accent p-35-r mb-50 item-shadow-1">
+                    <div class="media media-none-xs">
+                        <img src="{{ $reporter->image ? asset('storage/' . $reporter->image) : asset('img/author.jpg') }}"
+                            alt="{{ $reporter->name }}" class="img-fluid rounded-circle" style="width: 200px;">
+                        <div class="media-body pt-10 media-margin30">
+                            <h3 class="size-lg mb-5">{{ $reporter->name }}</h3>
+                            <div class="post-by mb-5">By Admin</div>
+                            <p class="mb-15">{{ $reporter->bio ?? 'No bio available' }}</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     @forelse($posts as $post)
-                        <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12">
-                            <div class="media media-none--lg mb-30">
-                                <div class="position-relative width-40">
-                                    <a href="{{ route('post.show', $post->slug) }}"
-                                        class="img-opacity-hover img-overlay-70">
-                                        <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
-                                            alt="{{ $post->title }}" class="img-fluid">
+                        <div class="col-sm-6 col-12">
+                            <div class="mb-30">
+                                <div class="position-relative mb-20">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
+                                        <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('img/news/news132.jpg') }}"
+                                            alt="{{ $post->title }}" class="img-fluid width-100">
                                     </a>
                                     <div class="topic-box-top-xs">
-                                        <div class="topic-box-sm color-cod-gray mb-20">{{ $category->name }}</div>
+                                        <div class="topic-box-sm color-cod-gray mb-20">{{ $post->category->name ?? '' }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="media-body p-mb-none-child media-margin30">
-                                    <div class="post-date-dark">
-                                        <ul>
-                                            <li>
-                                                <span>by</span>
-                                                <a href="{{ route('reporter.posts', $post->user->id) }}">{{ $post->user->name ?? 'Admin' }}</a>
-                                            </li>
-                                            <li>
-                                                <span><i
-                                                        class="fa fa-calendar"></i></span>{{ $post->created_at->format('M d, Y') }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <h3 class="title-semibold-dark size-lg mb-15">
-                                        <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
-                                    </h3>
-                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($post->content), 150) }}</p>
+                                <div class="post-date-dark">
+                                    <ul>
+                                        <li>
+                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                            {{ $post->created_at->format('F d, Y') }}
+                                        </li>
+                                    </ul>
                                 </div>
+                                <h3 class="title-medium-dark size-lg mb-none">
+                                    <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
+                                </h3>
                             </div>
                         </div>
                     @empty
-                        <div class="col-12 text-center">
-                            <p class="text-muted mb-0">No posts found in this category.</p>
-                        </div>
+                        <p>No posts found for this reporter.</p>
                     @endforelse
                 </div>
 
@@ -151,7 +99,8 @@
                                     @if ($end < $posts->lastPage() - 1)
                                         <li><span>...</span></li>
                                     @endif
-                                    <li><a href="{{ $posts->url($posts->lastPage()) }}">{{ $posts->lastPage() }}</a></li>
+                                    <li><a href="{{ $posts->url($posts->lastPage()) }}">{{ $posts->lastPage() }}</a>
+                                    </li>
                                 @endif
 
                                 {{-- Next --}}
@@ -172,7 +121,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
                 <div class="sidebar-box">
@@ -262,6 +210,5 @@
         </div>
     </div>
 </section>
-<!-- Post Style 1 Page Area End Here -->
-<!-- Footer Area Start Here -->
+<!-- Author Post Page Area End Here -->
 @include('front.footer')

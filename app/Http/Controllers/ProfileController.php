@@ -20,42 +20,50 @@ class ProfileController extends Controller
 
     public function edit()
     {
-        $user = User::where('id',Auth::user()->id)->firstOrFail();
-        $states=State::where('country_id','101')->get();
-        $cities=City::where('state_id',$user->state_id)->get();
-        return view('admin.manage-profile')->with('user',$user)->with('states',$states)->with('cities',$cities);
+        $user = User::where('id', Auth::user()->id)->firstOrFail();
+        $states = State::where('country_id', '101')->get();
+        $cities = City::where('state_id', $user->state_id)->get();
+        return view('admin.manage-profile')->with('user', $user)->with('states', $states)->with('cities', $cities);
     }
+
 
     public function update(Request $request)
     {
         $request->validate([
             'name' => 'required|max:255',
             'image' => 'nullable|image',
-            "email"=>["required",Rule::unique('users')->ignore(Auth::user()->id),"email"],
-            "contact"=>["required",Rule::unique('users')->ignore(Auth::user()->id),"digits:10"],
-            "state"=> "required|integer",
-            "city"=> "required|integer",
-            "address"=> "required",
+            'email' => ["required", Rule::unique('users')->ignore(Auth::user()->id), "email"],
+            'contact' => ["required", Rule::unique('users')->ignore(Auth::user()->id), "digits:10"],
+            'state' => "required|integer",
+            'city' => "required|integer",
+            'address' => "required",
+            'bio' => "nullable|string|max:1000", // new field
         ]);
-        try{
-            $user = User::where('id',Auth::user()->id)->firstOrFail();
-            $data=array(
-                'name'=>$request->name,
-                'email'=>$request->email,
-                'contact'=>$request->contact,
-                'state_id'=>$request->state,
-                'city_id'=>$request->city,
-                'address'=>$request->address,
-            );
-            if($request->hasFile('image')){
-                $data['image'] = $request->image->store('reporters');
-                Storage::delete($user->image);
+
+        $user = User::where('id', Auth::user()->id)->firstOrFail();
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'contact' => $request->contact,
+            'state_id' => $request->state,
+            'city_id' => $request->city,
+            'address' => $request->address,
+            'bio' => $request->bio, // save bio
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->image->store('reporters', 'public');
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-            User::where('id',Auth::user()->id)->update($data);
-            return redirect(route('manage-profile'))->with('success','Update Successfull');
-        } catch (\Exception $ex) {
-            return redirect(route('manage-profile'))->with('error','Error Encountered '.$ex->getMessage());
         }
+
+        $user->update($data);
+
+        return redirect(route('manage-profile'))->with('success', 'Profile updated successfully!');
+
     }
 
     public function updatepassword(Request $request)
@@ -63,14 +71,14 @@ class ProfileController extends Controller
         $request->validate([
             'password' => 'required|confirmed',
         ]);
-        try{
-            User::where('id',Auth::user()->id)->firstOrFail();
-            User::where('id',Auth::user()->id)->update([
-                'password'=>Hash::make($request->password),
+        try {
+            User::where('id', Auth::user()->id)->firstOrFail();
+            User::where('id', Auth::user()->id)->update([
+                'password' => Hash::make($request->password),
             ]);
-            return redirect(route('manage-profile'))->with('success','Update Successfull');
+            return redirect(route('manage-profile'))->with('success', 'Update Successfull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-profile'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-profile'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 }

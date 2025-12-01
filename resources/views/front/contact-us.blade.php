@@ -1,151 +1,242 @@
 @include('front.header')
-<section class="">
-	<!-- <section class="contact-page-2">
-		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-lg-7">
-					<div class="contact-form-block">
-						<div class="section-title">
-							<h2>
-								Send Us a Message
-							</h2>
-							<p>Your email address will not be published. All the fields are required.</p>
-						</div>
-						<div class="contact-form-wrapper">
-							<form class="row" id="contact-us-form">
-								<div class="form-group col-12">
-									<input type="text" class="text-control" name="name" placeholder="Full Name">
-									<div class="text-danger" id="name-err"></div>
-								</div>
 
-								<div class="form-group col-12">
-									<input type="text" class="text-control" name="contact" placeholder="Mobile Number">
-									<div class="text-danger" id="contact-err"></div>
-								</div>
-
-								<div class="form-group col-12">
-									<input type="email" class="text-control" name="email" placeholder="Email Address">
-									<div class="text-danger" id="email-err"></div>
-								</div>
-
-								<div class="form-group col-12">
-									<textarea name="message" class="text-control" rows="4" cols="6" placeholder="Your Query"></textarea>
-									<div class="text-danger" id="message-err"></div>
-								</div>
-
-								<div class="col-12 text-center">
-									<button class="btn btn-primary contact-us-btn" type="button">SUBMIT</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-5">
-					<div class="contact-info-wrapper">
-						<div class="contact-info-inner">
-							<h2>Contact Information</h2>
-							<div class="contact-info">
-								<address class="address">
-									{!! $aboutus->address ?? Null !!}
-									<h3>We're Available 24/ 7. Call Now.</h3>
-									<div class="call-contact">
-										<a class="tel" href="tel:{{ $aboutus->contact1 }}"><i class="fas fa-phone"></i>{{ $aboutus->contact1 }}</a>
-										<a class="tel" href="tel:{{ $aboutus->contact1 }}"><i class="fas fa-phone"></i>{{ $aboutus->contact2 }}</a>
-									</div>
-								</address>
-
-								<div class="contact-social">
-									<div class="social-title">Follow Us</div>
-									<ul class="social-share">
-										<li><a href="{{ $headersetting->facebook ?? '#' }}"><i class="fab fa-facebook-f"></i></a></li>
-										<li><a href="{{ $headersetting->twitter ?? '#' }}"><i class="fab fa-twitter"></i></a></li>
-										<li><a href="{{ $headersetting->youtube ?? '#' }}"><i class="fab fa-youtube"></i></a></li>
-										<li><a href="{{ $headersetting->instagram ?? '#' }}"><i class="fab fa-instagram"></i></a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section> -->
-
-	<div class="contact-us pt-4">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="">
-						<h4 class="mb-0 bg-dark text-white px-4 py-2">Contact Us</h4>
-						<div class="card-body" style="background:lightgray">
-							<div class="mb-3">
-								<h5 class="">DB Corp Limited (Digital Business)</h5>
-								<p class="mb-2" style="font-size: 20px;">FC 10/11, Sector 16A, Film City, Noida 201301 NCR</p>
-							</div>
-							<div class="">
-								<iframe src="{{ $aboutus->map ?? Null }}" width="100%" height="auto" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
-							</div>
-						</div>
-						<div class="pt-4 text-center">
-							<h5 class="">For advertising on Dainik Bhaskar Network sites(s)<a href="{{ url('/advertisement') }}"> Click Here</a></h5>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="breadcrumbs-area"
+    style="background-image: url('{{asset('website') }}/img/banner/breadcrumbs-banner.jpg');">
+    <div class="container">
+        <div class="breadcrumbs-content">
+            <h1>Contact With Us</h1>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a> -
+                </li>
+                <li>Contact</li>
+            </ul>
+        </div>
+    </div>
 </section>
-@include('front.footer-two')
+<!-- Breadcrumb Area End Here -->
+<!-- Contact Page Area Start Here -->
+<section class="bg-body section-space-less30">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12 mb-30">
+                <div class="topic-border color-cod-gray mb-30">
+                    <div class="topic-box-lg color-cod-gray">About Us</div>
+                </div>
+                <div class="about-us">
+                    {!! $aboutus->content1 ?? Null !!}
+                    {!! $aboutus->content2 ?? Null !!}
+                </div>
+                <div class="google-map-area mb-50">
+                    <iframe src="{{ $aboutus->map }}" width="100%" height="400" style="border:0;" allowfullscreen=""
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+
+                <div class="topic-border color-cod-gray mb-30">
+                    <div class="topic-box-lg color-cod-gray">Location Info</div>
+                </div>
+                <ul class="address-info">
+                    <li>
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>{!! $aboutus->address ?? 'N/A' !!}
+                    </li>
+                    <li>
+                        <i class="fa fa-phone" aria-hidden="true"></i>{{ $aboutus->contact1 ?? 'N/A' }}
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>{{ $aboutus->email ?? 'N/A' }}
+                    </li>
+                    <li>
+                        <i class="fa fa-fax" aria-hidden="true"></i>{{ $aboutus->contact2 ?? 'N/A' }}
+                    </li>
+                </ul>
+                <div class="topic-border color-cod-gray mb-30">
+                    <div class="topic-box-lg color-cod-gray">Send Us Message</div>
+                </div>
+                <form id="contact-us-form" class="contact-form">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <input type="text" placeholder="Name" class="form-control" name="name"
+                                        id="form-name" required>
+                                    <div class="text-danger" id="name-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <input type="text" name="contact" placeholder="Mobile Number" class="form-control"
+                                        id="form-contact" required pattern="^\d{10,15}$" title="Enter valid number">
+                                    <div class="text-danger" id="contact-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <input type="email" placeholder="Your E-mail" class="form-control" name="email"
+                                        id="form-email" required>
+                                    <div class="text-danger" id="email-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea placeholder="Message" class="textarea form-control" name="message"
+                                        id="form-message" rows="7" required></textarea>
+                                    <div class="text-danger" id="message-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                    <div class="text-danger" id="recaptcha-err"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-sm-12">
+                                <div class="form-group mb-none">
+                                    <button type="submit" class="btn-ftg-ptp-56 contact-us-btn">Send Message</button>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-6 col-sm-12">
+                                <div class="form-response"></div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-30">
+                        <div class="topic-box-lg color-cod-gray">Stay Connected</div>
+                    </div>
+                    <ul class="stay-connected overflow-hidden">
+                        <li class="facebook">
+                            <a href="#">
+                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                                <div class="connection-quantity">50.2 k</div>
+                                <p>Fans</p>
+                            </a>
+                        </li>
+                        <li class="twitter">
+                            <a href="#">
+                                <i class="fa fa-twitter" aria-hidden="true"></i>
+                                <div class="connection-quantity">10.3 k</div>
+                                <p>Followers</p>
+                            </a>
+                        </li>
+                        <li class="linkedin">
+                            <a href="#">
+                                <i class="fa fa-linkedin" aria-hidden="true"></i>
+                                <div class="connection-quantity">25.4 k</div>
+                                <p>Fans</p>
+                            </a>
+                        </li>
+                        <li class="rss">
+                            <a href="#">
+                                <i class="fa fa-rss" aria-hidden="true"></i>
+                                <div class="connection-quantity">20.8 k</div>
+                                <p>Subscriber</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-box">
+                    <div class="ne-banner-layout1 text-center">
+                        <a href="#">
+                            <img src="{{asset('website') }}/img/banner/banner3.jpg" alt="ad" class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-30">
+                        <div class="topic-box-lg color-cod-gray">Newsletter</div>
+                    </div>
+                    <div class="newsletter-area bg-primary">
+                        <h2 class="title-medium-light size-xl pl-30 pr-30">
+                            Subscribe to our mailing list to get the new updates!
+                        </h2>
+                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
+                            class="img-fluid m-auto mb-15">
+                        <p>Subscribe our newsletter to stay updated</p>
+
+                        @if(session('success'))
+                            <div class="alert alert-success text-center">{{ session('success') }}</div>
+                        @endif
+
+                        <form action="{{ route('add-subscriber') }}" method="POST"
+                            class="input-group stylish-input-group">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your mail" class="form-control"
+                                required>
+                            <span class="input-group-addon">
+                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                            </span>
+                        </form>
+
+                        @error('email')
+                            <span class="text-danger d-block text-center">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@include('front.footer')
 
 <script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
-	$( document ).ajaxStart(function() {
-		$("#loader").modal('show');
-	});
-	$( document ). ajaxComplete(function() {
-		$("#loader").modal('hide');
-	});
-	$(document).ready(function(){
-	$(document).on("click",".contact-us-btn",function(event){
-		$('#name-err').html('');
-        $('#email-err').html('');
-        $('#contact-err').html('');
-        $('#message-err').html('');
-        $.ajax({
-            url:"{{ URL::to('add-contact-us') }}",
-            type:'POST',
-            dataType:'json',
-            data:$('#contact-us-form').serialize(),
-            success:function(result){
-                if(result.msgCode === '200') {
-									toastr.success(result.msgText);
-									location.reload();
-                } else if (result.msgCode === '401') {
-                    if(result.errors.name) {
-											$('#name-err').html(result.errors.name[0]);
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(document).ready(function () {
+        $(document).on("click", ".contact-us-btn", function (event) {
+            event.preventDefault();
+
+            // Clear previous errors
+            $('#name-err, #email-err, #contact-err, #message-err, #recaptcha-err').html('');
+
+            // Frontend validation
+            let valid = true;
+            let name = $('#form-name').val().trim();
+            let email = $('#form-email').val().trim();
+            let contact = $('#form-contact').val().trim();
+            let message = $('#form-message').val().trim();
+            let recaptcha = grecaptcha.getResponse();
+
+            if (name.length < 3) { $('#name-err').html('Name must be at least 3 characters'); valid = false; }
+            if (!/^\S+@\S+\.\S+$/.test(email)) { $('#email-err').html('Enter valid email'); valid = false; }
+            if (!/^\d{10,15}$/.test(contact)) { $('#contact-err').html('Enter valid contact number'); valid = false; }
+            if (message.length < 10) { $('#message-err').html('Message must be at least 10 characters'); valid = false; }
+            if (recaptcha.length === 0) { $('#recaptcha-err').html('Please verify reCAPTCHA'); valid = false; }
+
+            if (!valid) return;
+
+            // AJAX call
+            $.ajax({
+                url: "{{ url('add-contact-us') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: $('#contact-us-form').serialize(),
+                success: function (result) {
+                    if (result.msgCode === '200') {
+                        toastr.success(result.msgText);
+                        $('#contact-us-form')[0].reset();
+                        grecaptcha.reset();
+                    } else if (result.msgCode === '401') {
+                        $.each(result.errors, function (key, value) {
+                            $('#' + key + '-err').html(value[0]);
+                        });
+                    } else {
+                        toastr.error('Error: ' + result.msgText);
                     }
-                    if(result.errors.email) {
-											$('#email-err').html(result.errors.email[0]);
-                    }
-                    if(result.errors.contact) {
-											$('#contact-err').html(result.errors.contact[0]);
-                    }
-                    if(result.errors.message) {
-											$('#message-err').html(result.errors.message[0]);
-                    }
-                } else {
-									toastr.error('error encountered '+result.msgText);
+                },
+                error: function (error) {
+                    toastr.error('Error: ' + error.statusText);
                 }
-            },
-            error:function(error){
-							toastr.error('error encountered '+error.statusText);
-            }
+            });
         });
-		});
-	});
+    });
+
 </script>

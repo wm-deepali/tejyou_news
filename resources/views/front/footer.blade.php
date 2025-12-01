@@ -206,7 +206,7 @@
 				</div>
 			</li>
 			<li>
-				<a href="#"><i class="fa fa-user" aria-hidden="true"></i>Our Reporters</a>
+				<a href="{{ route('reporters') }}"><i class="fa fa-user" aria-hidden="true"></i>Our Reporters</a>
 			</li>
 			<li>
 				<a href="{{ route('about-us') }}"><i class="fa fa-user" aria-hidden="true"></i>About Us</a>
@@ -218,11 +218,11 @@
 				<a href="{{ url('/advertisement') }}"><i class="fa fa-archive" aria-hidden="true"></i>Advertise with Us</a>
 			</li>
 			<li>
-				<a href="archive.html"><i class="fa fa-archive" aria-hidden="true"></i>Archive</a>
+				<a href="{{ route('archive') }}"><i class="fa fa-archive" aria-hidden="true"></i>Archive</a>
 			</li>
-			<li>
+			<!-- <li>
 				<a href="archive.html"><i class="fa fa-archive" aria-hidden="true"></i>Gallery</a>
-			</li>
+			</li> -->
 			<li>
 				<a href="{{ route('terms-of-use') }}"><i class="fa fa-archive" aria-hidden="true"></i>Terms & Conditions</a>
 			</li>

@@ -20,7 +20,7 @@ class WebsitesettingController extends Controller
     {
         $this->authorize('is-admin');
         $aboutus = Aboutus::first();
-        return view('admin.manage-about-us')->with('aboutus',$aboutus);
+        return view('admin.manage-about-us')->with('aboutus', $aboutus);
     }
 
     public function updateaboutus(Request $request)
@@ -31,28 +31,33 @@ class WebsitesettingController extends Controller
             "address" => 'required',
             "contact1" => 'required|digits:10',
             "contact2" => 'nullable|digits:10',
+            "email" => 'required|email',
             "map" => 'required',
         ]);
+
         try {
-            Aboutus::updateOrCreate(['id'=>1],[
-                'content1'=>$request->content1,
-                'content2'=>$request->content2,
-                'address'=>$request->address,
-                'contact1'=>$request->contact1,
-                'contact2'=>$request->contact2,
-                'map'=>$request->map,
+            Aboutus::updateOrCreate(['id' => 1], [
+                'content1' => $request->content1,
+                'content2' => $request->content2,
+                'address' => $request->address,
+                'contact1' => $request->contact1,
+                'contact2' => $request->contact2,
+                'email' => $request->email,   // ✅ added
+                'map' => $request->map,
             ]);
-            return redirect(route('edit-about-us'))->with('success','Update Successfull');
+
+            return redirect(route('edit-about-us'))->with('success', 'Update Successful');
         } catch (\Exception $ex) {
-            return redirect(route('edit-about-us'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('edit-about-us'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
+
 
     public function editprivacypolicy()
     {
         $this->authorize('is-admin');
         $privacypolicy = Privacypolicy::first();
-        return view('admin.manage-privacy-policy')->with('privacypolicy',$privacypolicy);
+        return view('admin.manage-privacy-policy')->with('privacypolicy', $privacypolicy);
     }
 
     public function updateprivacypolicy(Request $request)
@@ -61,12 +66,12 @@ class WebsitesettingController extends Controller
             "content" => 'required',
         ]);
         try {
-            Privacypolicy::updateOrCreate(['id'=>1],[
-                'content'=>$request->content,
+            Privacypolicy::updateOrCreate(['id' => 1], [
+                'content' => $request->content,
             ]);
-            return redirect(route('edit-privacy-policy'))->with('success','Update Successfull');
+            return redirect(route('edit-privacy-policy'))->with('success', 'Update Successfull');
         } catch (\Exception $ex) {
-            return redirect(route('edit-privacy-policy'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('edit-privacy-policy'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 
@@ -74,7 +79,7 @@ class WebsitesettingController extends Controller
     {
         $this->authorize('is-admin');
         $cookiepolicy = Cookiepolicy::first();
-        return view('admin.manage-cookie-policy')->with('cookiepolicy',$cookiepolicy);
+        return view('admin.manage-cookie-policy')->with('cookiepolicy', $cookiepolicy);
     }
 
     public function updatecookiepolicy(Request $request)
@@ -83,12 +88,12 @@ class WebsitesettingController extends Controller
             "content" => 'required',
         ]);
         try {
-            Cookiepolicy::updateOrCreate(['id'=>1],[
-                'content'=>$request->content,
+            Cookiepolicy::updateOrCreate(['id' => 1], [
+                'content' => $request->content,
             ]);
-            return redirect(route('edit-cookie-policy'))->with('success','Update Successfull');
+            return redirect(route('edit-cookie-policy'))->with('success', 'Update Successfull');
         } catch (\Exception $ex) {
-            return redirect(route('edit-cookie-policy'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('edit-cookie-policy'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 
@@ -96,7 +101,7 @@ class WebsitesettingController extends Controller
     {
         $this->authorize('is-admin');
         $termsofuse = Termsofuse::first();
-        return view('admin.manage-terms-of-use')->with('termsofuse',$termsofuse);
+        return view('admin.manage-terms-of-use')->with('termsofuse', $termsofuse);
     }
 
     public function updatetermsofuse(Request $request)
@@ -105,12 +110,12 @@ class WebsitesettingController extends Controller
             "content" => 'required',
         ]);
         try {
-            Termsofuse::updateOrCreate(['id'=>1],[
-                'content'=>$request->content,
+            Termsofuse::updateOrCreate(['id' => 1], [
+                'content' => $request->content,
             ]);
-            return redirect(route('edit-terms-of-use'))->with('success','Update Successfull');
+            return redirect(route('edit-terms-of-use'))->with('success', 'Update Successfull');
         } catch (\Exception $ex) {
-            return redirect(route('edit-terms-of-use'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('edit-terms-of-use'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 
@@ -118,16 +123,16 @@ class WebsitesettingController extends Controller
     {
         $this->authorize('is-admin');
         $contactuses = Contactus::all();
-        return view('admin.manage-contact-us')->with('contactuses',$contactuses);
+        return view('admin.manage-contact-us')->with('contactuses', $contactuses);
     }
 
     public function deletecontactus($id)
     {
         try {
-            Contactus::where('id',$id)->delete();
-            return redirect(route('manage-contact-us'))->with('success','Delete Successfull');
+            Contactus::where('id', $id)->delete();
+            return redirect(route('manage-contact-us'))->with('success', 'Delete Successfull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-contact-us'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-contact-us'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 }

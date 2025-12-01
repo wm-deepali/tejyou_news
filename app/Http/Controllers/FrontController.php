@@ -422,6 +422,74 @@ class FrontController extends Controller
 
         }
     }
+
+    public function archive(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+        $selectedcategory = $request->category;
+
+        $posts = Post::with('category')
+            ->when($year, function ($q) use ($year) {
+                $q->whereYear('created_at', $year);
+            })
+            ->when($month, function ($q) use ($month) {
+                $q->whereMonth('created_at', $month);
+            })
+            ->when($selectedcategory, function ($q) use ($selectedcategory) {
+                $q->whereHas('categories', function ($catQuery) use ($selectedcategory) {
+                    $catQuery->where('category_id', $selectedcategory);
+                });
+            })
+            ->paginate(10);
+
+        // Dropdown Years
+        $years = Post::selectRaw('YEAR(created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        // Categories list dropdown
+        $categories = Category::orderBy('name')->get();
+
+        // Archive Sidebar (year + month)
+        $archiveList = Post::selectRaw('YEAR(created_at) AS year, MONTH(created_at) AS month, COUNT(*) AS total')
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
+
+        return view('front.archive', compact(
+            'posts',
+            'years',
+            'categories',
+            'archiveList',
+            'year',
+            'month',
+            'selectedcategory'
+        ));
+    }
+
+
+    public function reporters()
+    {
+        $reporters = User::where('role', 'reporter')
+            ->orderBy('name')
+            ->paginate(10);
+
+        return view('front.our-reporters', compact('reporters'));
+    }
+
+    // Show a specific reporter's posts
+    public function reportersPosts($id)
+    {
+        $reporter = User::findOrFail($id);
+        $posts = $reporter->approvedposts()->latest()->paginate(6);
+
+        return view('front.reporters-posts', compact('reporter', 'posts'));
+    }
+
+
     public function postdetails($posturl)
     {
         try {
@@ -682,7 +750,7 @@ class FrontController extends Controller
 
         $aboutus = Aboutus::first();
         // dd($aboutus->toArray());
-        return view('front.contact')
+        return view('front.contact-us')
             ->with('aboutus', $aboutus);
     }
 

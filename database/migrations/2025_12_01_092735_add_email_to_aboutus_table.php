@@ -8,21 +8,20 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('subscribers', function (Blueprint $table) {
-            $table->id();
-            $table->string('email')->unique();
-            $table->timestamps();
+        Schema::table('aboutuses', function (Blueprint $table) {
+            $table->string('email')->nullable();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscribers');
+        Schema::table('aboutuses', function (Blueprint $table) {
+            $table->dropColumn('email');
+        });
     }
 };

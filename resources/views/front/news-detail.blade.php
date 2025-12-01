@@ -46,7 +46,7 @@
 
                     <ul class="post-info-dark mb-30">
                         <li>
-                            <a href="#">
+                            <a href="{{ route('reporter.posts', $post->user->id) }}">
                                 <span>By</span> {{ $post->user->name ?? 'Admin' }}
                             </a>
                         </li>

@@ -21,7 +21,7 @@
                                 <ul>
                                     <li>
                                         <span>by</span>
-                                        <a href="#">{{ $main->user->name ?? 'Admin' }}</a>
+                                        <a href="{{ route('reporter.posts', $main->user->id) }}">{{ $main->user->name ?? 'Admin' }}</a>
                                     </li>
                                     <li>
                                         <span><i class="fa fa-calendar"></i></span>
@@ -112,7 +112,7 @@
                                                     <ul>
                                                         <li>
                                                             <span>by</span>
-                                                            <a href="#">{{ $mainPost->user->name ?? 'Admin' }}</a>
+                                                            <a href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a>
                                                         </li>
                                                         <li>
                                                             <span><i class="fa fa-calendar"></i></span>
@@ -326,7 +326,7 @@
                                     <ul>
                                         <li>
                                             <span>by</span>
-                                            <a href="#">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                            <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                         </li>
                                         <li>
                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -383,7 +383,7 @@
                                     <ul>
                                         <li>
                                             <span>by</span>
-                                            <a href="#">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                            <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                         </li>
                                         <li>
                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -439,7 +439,7 @@
                                     <ul>
                                         <li>
                                             <span>by</span>
-                                            <a href="#">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                            <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                         </li>
                                         <li>
                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -528,7 +528,7 @@
                                             <ul>
                                                 <li>
                                                     <span>by</span>
-                                                    <a href="#">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                                    <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                                 </li>
                                                 <li>
                                                     <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -623,7 +623,7 @@
                                                     <ul>
                                                         <li>
                                                             <span>by</span>
-                                                            <a href="#">{{ $post->user->name ?? 'Admin' }}</a>
+                                                            <a href="{{ route('reporter.posts', $post->user->id) }}">{{ $post->user->name ?? 'Admin' }}</a>
                                                         </li>
                                                         <li>
                                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
