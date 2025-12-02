@@ -42,10 +42,14 @@ class FrontController extends Controller
         // 1️⃣ Recent posts
         $recentNews = Post::with('category', 'user')
             ->where('status', 'published')
-            ->whereNotNull('image')
+            ->where(function ($query) {
+                $query->whereNotNull('image')
+                    ->orWhereNotNull('video');
+            })
             ->latest()
             ->take(4)
             ->get();
+
 
         // 4️⃣ Get 4 subcategories of 'rajya'
         $rajyaCategory = Category::where('slug', 'rajya')
@@ -59,7 +63,10 @@ class FrontController extends Controller
         // For each subcategory, fetch latest 5 posts with images
         foreach ($subcategories as $subcategory) {
             $subcategory->posts = $subcategory->posts()
-                ->whereNotNull('image')
+                ->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
                 ->latest()
                 ->take(5)
                 ->get();
@@ -73,11 +80,21 @@ class FrontController extends Controller
         // 3️⃣ Another random category for "other section" (posts only)
         $videshCategory = Category::with([
             'posts' => function ($q) {
-                $q->whereNotNull('image')->latest()->take(6);
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                    ->latest()
+                    ->take(6);
             }
         ])
             ->where('slug', 'videsh')
-            ->whereHas('posts')
+            ->whereHas('posts', function ($q) {
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                });
+            })
             ->first();
 
         // 4️⃣ Video posts
@@ -92,32 +109,61 @@ class FrontController extends Controller
         // 5 Another random category for "other section" (posts only)
         $khelCategory = Category::with([
             'posts' => function ($q) {
-                $q->whereNotNull('image')->latest()->take(4);
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                    ->latest()
+                    ->take(4);
             }
         ])
             ->where('slug', 'khel')
-            ->whereHas('posts')
+            ->whereHas('posts', function ($q) {
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                });
+            })
             ->first();
 
-        // 6 Another random category for "other section" (posts only)
         $rajneetiCategory = Category::with([
             'posts' => function ($q) {
-                $q->whereNotNull('image')->latest()->take(4);
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                    ->latest()
+                    ->take(4);
             }
         ])
             ->where('slug', 'rajneeti')
-            ->whereHas('posts')
+            ->whereHas('posts', function ($q) {
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                });
+            })
             ->first();
 
-        // 7 Another random category for "other section" (posts only)
         $crimeCategory = Category::with([
             'posts' => function ($q) {
-                $q->whereNotNull('image')->latest()->take(4);
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                    ->latest()
+                    ->take(4);
             }
         ])
             ->where('slug', 'crime')
-            ->whereHas('posts')
+            ->whereHas('posts', function ($q) {
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                });
+            })
             ->first();
+
 
         $otherCategorySlugs = ['manoranjan', 'sahataya', 'desh', 'accident'];
 
@@ -126,7 +172,14 @@ class FrontController extends Controller
             ->get();
 
         foreach ($otherCategories as $category) {
-            $category->posts = $category->posts()->whereNotNull('image')->latest()->take(7)->get();
+            $category->posts = $category->posts()
+                ->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                ->latest()
+                ->take(7)
+                ->get();
         }
 
         $moreCategorySlugs = ['health', 'technology', 'taza-khabar', 'tapa-naya', 'breaking-news'];
@@ -135,28 +188,33 @@ class FrontController extends Controller
             ->get();
 
         foreach ($moreCategories as $category) {
-            $category->posts = $category->posts()->whereNotNull('image')->latest()->take(4)->get();
+            $category->posts = $category->posts()
+                ->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                ->latest()
+                ->take(4)
+                ->get();
         }
 
-        $categoryBoxes = Post::whereNotNull('image')
-            ->where('status', 'published')
+        $categoryBoxes = Post::where('status', 'published')
+            ->where(function ($query) {
+                $query->whereNotNull('image')
+                    ->orWhereNotNull('video');
+            })
             ->inRandomOrder()
             ->take(6)
             ->get();
 
 
         $today = now()->toDateString();
-        $uppersidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'uppersidebar300x250')->where('status', 'active')->get();
-        $middlesidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'middlesidebar300x250')->where('status', 'active')->get();
-        $lowersidebar300x250 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'lowersidebar300x250')->where('status', 'active')->get();
-        $uppersidebar300x600 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'uppersidebar300x600')->where('status', 'active')->get();
-        $middlesidebar300x600 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'middlesidebar300x600')->where('status', 'active')->get();
-        $lowersidebar300x600 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'lowersidebar300x600')->where('status', 'active')->get();
-        $upperbanner728x90 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'upperbanner728x90')->where('status', 'active')->get();
-        $middlebanner728x90 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'middlebanner728x90')->where('status', 'active')->get();
-        $lowerbanner728x90 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'lowerbanner728x90')->where('status', 'active')->get();
-        $lowestbanner728x90 = Ad::whereDate('startdate', '<=', $today)->whereDate('enddate', '>=', $today)->where('page', 'homepage')->where('position', 'lowestbanner728x90')->where('status', 'active')->get();
-        $adsetting = Adsetting::first();
+        $ads = Ad::where('page', 'homepage')
+            ->where('status', 'active')
+            ->where('startdate', '<=', $today)
+            ->where('enddate', '>=', $today)
+            ->get();
+        // dd($ads->toArray());
 
         return view('front.index', compact(
             'recentNews',
@@ -168,7 +226,8 @@ class FrontController extends Controller
             'crimeCategory',
             'otherCategories',
             'moreCategories',
-            'categoryBoxes'
+            'categoryBoxes',
+            'ads'
         ));
     }
 
@@ -211,22 +270,40 @@ class FrontController extends Controller
             ->limit(5)
             ->get();
 
-        return view('front.news-detail', compact('post', 'randomPosts', 'prevPost', 'nextPost', 'mostViewedPosts'));
+        $today = now()->toDateString();
+        // Upper Sidebar 300x600
+        $uppersidebar300x250 = Ad::where('page', 'postpage')
+            ->where('status', 'active')
+            ->where('position', 'uppersidebar300x250')
+            ->where('startdate', '<=', $today)
+            ->where('enddate', '>=', $today)
+            ->first();
+
+        // Lower Sidebar 300x250
+        $lowersidebar300x250 = Ad::where('page', 'postpage')
+            ->where('status', 'active')
+            ->where('position', 'lowersidebar300x250')
+            ->where('startdate', '<=', $today)
+            ->where('enddate', '>=', $today)
+            ->first();
+
+        return view('front.news-detail', compact('post', 'randomPosts', 'prevPost', 'nextPost', 'mostViewedPosts', 'uppersidebar300x250', 'lowersidebar300x250'));
     }
 
 
     // Category posts 
     public function categoryPosts($categoryurl, $subcategorySlug = null)
     {
-        // Get category along with subcategories
+        $today = date('Y-m-d');
+
+        // Get category with subcategories
         $category = Category::with('subcategories')->where('slug', $categoryurl)->firstOrFail();
 
-        // Start query for posts in this category
+        // Posts
         $posts = Post::whereHas('categories', function ($query) use ($category) {
             $query->where('category_id', $category->id);
         });
 
-        // Filter by subcategory if requested
         if ($subcategorySlug !== null) {
             $sub_category = Subcategory::where('slug', $subcategorySlug)->firstOrFail();
             $posts->whereHas('subcategories', function ($query) use ($sub_category) {
@@ -234,11 +311,48 @@ class FrontController extends Controller
             });
         }
 
-        // Finalize query
-        $posts = $posts->where('status', 'published')->latest()->paginate(10)->withQueryString();
+        $posts = $posts->where('status', 'published')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('front.category-news', compact('category', 'posts', 'subcategorySlug'));
+        /* ---------------------------
+            FETCH CATEGORY-SPECIFIC ADS
+           --------------------------- */
+
+        // Upper Sidebar 300x600
+        $sidebar300x600 = Ad::where('page', 'categorypage')
+            ->where('status', 'active')
+            ->where('position', 'sidebar300x600')
+            ->where('startdate', '<=', $today)
+            ->where('enddate', '>=', $today)
+            ->whereHas('categories', function ($q) use ($category) {
+                $q->where('category_id', $category->id);
+            })
+            ->first();
+
+        // Lower Sidebar 300x250
+        $sidebar300x250 = Ad::where('page', 'categorypage')
+            ->where('status', 'active')
+            ->where('position', 'sidebar300x250')
+            ->where('startdate', '<=', $today)
+            ->where('enddate', '>=', $today)
+            ->whereHas('categories', function ($q) use ($category) {
+                $q->where('category_id', $category->id);
+            })
+            ->first();
+        return view(
+            'front.category-news',
+            compact(
+                'category',
+                'posts',
+                'subcategorySlug',
+                'uppersidebar300x600',
+                'lowersidebar300x250'
+            )
+        );
     }
+
 
     public function divideArrayIntoGroups($array, $groupSize)
     {

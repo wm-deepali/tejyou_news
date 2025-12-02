@@ -37,8 +37,13 @@
                             <div class="mb-30">
                                 <div class="position-relative mb-20">
                                     <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                        <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('img/news/news132.jpg') }}"
-                                            alt="{{ $post->title }}" class="img-fluid width-100">
+                                        @if($post->video)
+                                            <img class="img-fluid width-100" data-videoid="{{$post->video}}"
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/news/news132.jpg') }}"
+                                                alt="{{ $post->title }}" class="img-fluid width-100">
+                                        @endif
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">{{ $post->category->name ?? '' }}

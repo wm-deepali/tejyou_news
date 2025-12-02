@@ -52,17 +52,18 @@
         <ul class="subcategory-tabs d-inline-flex flex-wrap justify-content-center list-unstyled p-0 m-0">
             <li class="mx-1 mb-1">
                 <a href="{{ route('category.posts', $category->slug) }}"
-                    class="tab-link {{ empty(request('subcategory')) ? 'active' : '' }}">
+                    class="tab-link {{ empty(request()->route('subcategoryurl')) ? 'active' : '' }}">
                     All
                 </a>
             </li>
             @foreach($category->subcategories as $sub)
                 <li class="mx-1 mb-1">
                     <a href="{{ route('category.posts', [$category->slug, $sub->slug]) }}"
-                        class="tab-link {{ request('subcategory') == $sub->slug ? 'active' : '' }}">
+                        class="tab-link {{ request()->route('subcategoryurl') == $sub->slug ? 'active' : '' }}">
                         {{ $sub->name }}
                     </a>
                 </li>
+
             @endforeach
         </ul>
     </div>
@@ -81,8 +82,14 @@
                                 <div class="position-relative width-40">
                                     <a href="{{ route('post.show', $post->slug) }}"
                                         class="img-opacity-hover img-overlay-70">
-                                        <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
-                                            alt="{{ $post->title }}" class="img-fluid">
+                                        @if($post->video)
+                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('front/images/default-news.png') }}"
+                                                alt="{{ $post->title }}" class="img-fluid">
+                                        @endif
+
                                     </a>
                                     <div class="topic-box-top-xs">
                                         <div class="topic-box-sm color-cod-gray mb-20">{{ $category->name }}</div>
@@ -93,7 +100,8 @@
                                         <ul>
                                             <li>
                                                 <span>by</span>
-                                                <a href="{{ route('reporter.posts', $post->user->id) }}">{{ $post->user->name ?? 'Admin' }}</a>
+                                                <a
+                                                    href="{{ route('reporter.posts', $post->user->id) }}">{{ $post->user->name ?? 'Admin' }}</a>
                                             </li>
                                             <li>
                                                 <span><i
@@ -210,13 +218,20 @@
                         </li>
                     </ul>
                 </div>
-                <div class="sidebar-box">
-                    <div class="ne-banner-layout1 text-center">
-                        <a href="#">
-                            <img src="{{ asset('website') }}/img/banner/banner3.jpg" alt="ad" class="img-fluid">
-                        </a>
+                @if($sidebar300x600)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+                            @if($sidebar300x600->type === 'google' && $sidebar300x600->code)
+                                {!! $sidebar300x600->code !!}
+                            @else
+                                <a href="{{ $sidebar300x600->link ?? '#' }}">
+                                    <img src="{{ asset('storage/' . $sidebar300x600->image) }}" class="img-fluid" alt="AD">
+                                </a>
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @endif
+
                 <div class="sidebar-box">
                     <div class="topic-border color-cod-gray mb-30">
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
@@ -258,6 +273,20 @@
                         @endforeach
                     </ul>
                 </div>
+                @if($sidebar300x250)
+                    <div class="sidebar-box mt-3">
+                        <div class="ne-banner-layout1 text-center">
+                            @if($sidebar300x250->type === 'google' && $sidebar300x250->code)
+                                {!! $sidebar300x250->code !!}
+                            @else
+                                <a href="{{ $sidebar300x250->link ?? '#' }}">
+                                    <img src="{{asset('storage/' . $sidebar300x250->image) }}" class="img-fluid" alt="AD">
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>

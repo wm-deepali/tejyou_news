@@ -576,7 +576,7 @@ $(document).ready(function(){
 			$html='<option value="">Select Position</option><option value="sidebar300x250">Sidebar (300x250)</option><option value="sidebar300x600">Sidebar (300x600)</option>';
 			$('.categoryDiv').show();
 		} else if(page=='postpage') {
-			$html='<option value="">Select Position</option><option value="uppersidebar300x250">Upper Sidebar (300x250)</option><option value="lowersidebar300x250">Lower Sidebar (300x250)</option><option value="sidebar300x600">Sidebar (300x600)</option>';
+			$html='<option value="">Select Position</option><option value="uppersidebar300x250">Upper Sidebar (300x250)</option><option value="lowersidebar300x250">Lower Sidebar (300x250)</option>';
 			$('.categoryDiv').hide();
 		} else {
 			$html='';

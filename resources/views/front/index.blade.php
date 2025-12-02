@@ -10,8 +10,13 @@
                 @php $main = $recentNews->first(); @endphp
                 @if($main)
                     <div class="img-overlay-70 img-scale-animate mb-2 img-ban">
-                        <img src="{{ asset('storage/' . $main->image) }}" alt="news" class="img-fluid width-100">
-
+                        @if($main->video)
+                            <img class="img-fluid width-100" data-videoid="{{$main->video}}" alt="{{ $main->title }}"
+                                src="https://img.youtube.com/vi/{{$main->video}}/0.jpg" />
+                        @else
+                            <img src="{{ asset('storage/' . $main->image) }}" alt="{{ $main->title }}"
+                                class="img-fluid width-100">
+                        @endif
                         <div class="mask-content-lg">
                             <div class="topic-box-sm color-cinnabar mb-20">
                                 {{ $main->category->name ?? 'News' }}
@@ -21,7 +26,8 @@
                                 <ul>
                                     <li>
                                         <span>by</span>
-                                        <a href="{{ route('reporter.posts', $main->user->id) }}">{{ $main->user->name ?? 'Admin' }}</a>
+                                        <a
+                                            href="{{ route('reporter.posts', $main->user->id) }}">{{ $main->user->name ?? 'Admin' }}</a>
                                     </li>
                                     <li>
                                         <span><i class="fa fa-calendar"></i></span>
@@ -60,8 +66,13 @@
                                     </h{{ $loop->first ? 2 : 3 }}>
                                 </div>
 
-                                <img src="{{ asset('storage/' . $news->image) }}" alt="news" class="img-fluid width-100"
-                                    style="height:100%;">
+                                @if($news->video)
+                                    <img class="img-fluid width-100" data-videoid="{{$news->video}}"
+                                        src="https://img.youtube.com/vi/{{$news->video}}/0.jpg" />
+                                @else
+                                    <img src="{{ asset('storage/' . $news->image) }}" alt="{{ $news->title }}"
+                                        class="img-fluid width-100" style="height:100%;">
+                                @endif
                             </div>
                         </div>
                     @endforeach
@@ -103,8 +114,13 @@
                                     @if($mainPost)
                                         <div class="img-overlay-70 img-scale-animate mb-30">
                                             <a href="{{ route('post.show', $mainPost->slug) }}">
-                                                <img src="{{ asset('storage/' . $mainPost->image) }}"
-                                                    alt="{{ $mainPost->title }}" class="img-fluid width-100">
+                                                @if($mainPost->video)
+                                                    <img class="img-fluid width-100" data-videoid="{{$mainPost->video}}"
+                                                        src="https://img.youtube.com/vi/{{$mainPost->video}}/0.jpg" />
+                                                @else
+                                                    <img src="{{ asset('storage/' . $mainPost->image) }}"
+                                                        alt="{{ $mainPost->title }}" class="img-fluid width-100">
+                                                @endif
                                             </a>
                                             <div class="mask-content-lg">
                                                 <div class="topic-box-sm color-cinnabar mb-20">{{ $subcategory->name }}</div>
@@ -112,7 +128,8 @@
                                                     <ul>
                                                         <li>
                                                             <span>by</span>
-                                                            <a href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a>
+                                                            <a
+                                                                href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a>
                                                         </li>
                                                         <li>
                                                             <span><i class="fa fa-calendar"></i></span>
@@ -134,8 +151,14 @@
                                         <div class="media mb-30">
                                             <a class="width38-lg width40-md img-opacity-hover"
                                                 href="{{ route('post.show', $post->slug) }}">
-                                                <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                                    class="img-fluid" style="width: 132px; height: 95px;">
+                                                @if($post->video)
+                                                    <img class="img-fluid" style="width: 132px; height: 95px;"
+                                                        data-videoid="{{$post->video}}"
+                                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                                @else
+                                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                                        class="img-fluid" style="width: 132px; height: 95px;">
+                                                @endif
                                             </a>
                                             <div class="media-body">
                                                 <div class="post-date-dark">
@@ -157,6 +180,38 @@
                         @endforeach
                     </div>
                 </div>
+                @php
+                    $upperBanner = collect($ads)->firstWhere('position', 'upperbanner728x90');
+                @endphp
+
+                @if($upperBanner)
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="ne-banner-layout1 mb-20-r text-center">
+
+                                {{-- If ad type is Google (AdSense code) --}}
+                                @if($upperBanner['type'] === 'google' && !empty($upperBanner['code']))
+                                    {!! $upperBanner['code'] !!}
+
+                                    {{-- If ad has an uploaded image --}}
+                                @elseif(!empty($upperBanner['image']))
+                                    <a href="{{ $upperBanner['link'] ?? '#' }}" target="_blank">
+                                        <img src="{{asset('storage/' . $upperBanner['image']) }}" alt="{{ $upperBanner['title'] }}"
+                                            class="img-fluid">
+                                    </a>
+
+                                    {{-- Fallback dummy image --}}
+                                @else
+                                    <a href="#">
+                                        <img src="{{ asset('website/img/banner/banner2.jpg') }}" class="img-fluid" />
+                                    </a>
+                                @endif
+
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 @if($videshCategory)
                     <div class="row tab-space1 mb-25">
                         <div class="col-12">
@@ -180,8 +235,13 @@
                                             <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                         </h3>
                                     </div>
-                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                        class="img-fluid width-100">
+                                    @if($post->video)
+                                        <img class="img-fluid width-100" data-videoid="{{$post->video}}"
+                                            src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                    @else
+                                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                            class="img-fluid width-100">
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -217,14 +277,37 @@
                         </li>
                     </ul>
                 </div>
-                <div class="sidebar-box">
-                    <div class="ne-banner-layout1 text-center">
-                        <a href="#">
-                            <img src="https://tejyug.com/public/front/images/bombay-high-court_1702451223.jpg" alt="ad"
-                                class="img-fluid">
-                        </a>
+                @php
+                    $upperSidebar = collect($ads)->firstWhere('position', 'uppersidebar300x600');
+                @endphp
+
+                @if($upperSidebar)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+
+                            {{-- Google Ad Code --}}
+                            @if($upperSidebar['type'] === 'google' && !empty($upperSidebar['code']))
+                                {!! $upperSidebar['code'] !!}
+
+                                {{-- Image Ad --}}
+                            @elseif(!empty($upperSidebar['image']))
+                                <a href="{{ $upperSidebar['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $upperSidebar['image']) }}" alt="{{ $upperSidebar['title'] }}"
+                                        class="img-fluid">
+                                </a>
+
+                                {{-- Default fallback --}}
+                            @else
+                                <a href="#">
+                                    <img src="https://tejyug.com/public/front/images/bombay-high-court_1702451223.jpg" alt="ad"
+                                        class="img-fluid">
+                                </a>
+                            @endif
+
+                        </div>
                     </div>
-                </div>
+                @endif
+
                 <div class="sidebar-box">
                     <div class="topic-border color-scampi mb-5">
                         <div class="topic-box-lg color-scampi">Recent News</div>
@@ -234,8 +317,13 @@
                             <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                 <div class="mt-25">
                                     <a href="{{ route('post.show', $news->slug) }}" class="img-opacity-hover">
-                                        <img src="{{ asset('storage/' . $news->image) }}" alt="{{ $news->title }}"
-                                            class="img-fluid mb-10 width-100">
+                                        @if($news->video)
+                                            <img class="img-fluid mb-10 width-100" data-videoid="{{$news->video}}"
+                                                src="https://img.youtube.com/vi/{{$news->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ asset('storage/' . $news->image) }}" alt="{{ $news->title }}"
+                                                class="img-fluid mb-10 width-100">
+                                        @endif
                                     </a>
                                     <h3 class="title-medium-dark size-md mb-none">
                                         <a href="{{ route('post.show', $news->slug) }}">{{ $news->title }}</a>
@@ -248,15 +336,7 @@
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="ne-banner-layout1 mt-20-r text-center">
-                    <a href="#">
-                        <img src="{{ asset('website') }}/img/banner/banner2.jpg" alt="ad" class="img-fluid">
-                    </a>
-                </div>
-            </div>
-        </div>
+
     </div>
 </section>
 <!-- Top Story Area End Here -->
@@ -300,6 +380,38 @@
                 </div>
             @endforeach
         </div>
+        @php
+            $middleBanner = collect($ads)->firstWhere('position', 'middlebanner728x90');
+        @endphp
+
+        @if($middleBanner)
+            <div class="row">
+                <div class="col-12">
+                    <div class="ne-banner-layout1 mt-20-r text-center">
+
+                        {{-- Google AdSense Code --}}
+                        @if($middleBanner['type'] === 'google' && !empty($middleBanner['code']))
+                            {!! $middleBanner['code'] !!}
+
+                            {{-- Image Ad --}}
+                        @elseif(!empty($middleBanner['image']))
+                            <a href="{{ $middleBanner['link'] ?? '#' }}" target="_blank">
+                                <img src="{{asset('storage/' . $middleBanner['image']) }}" alt="{{ $middleBanner['title'] }}"
+                                    class="img-fluid">
+                            </a>
+
+                            {{-- Default fallback --}}
+                        @else
+                            <a href="#">
+                                <img src="{{ asset('website/img/banner/banner2.jpg') }}" alt="ad" class="img-fluid">
+                            </a>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
 </section>
 
@@ -326,7 +438,8 @@
                                     <ul>
                                         <li>
                                             <span>by</span>
-                                            <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                            <a
+                                                href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                         </li>
                                         <li>
                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -338,14 +451,25 @@
                                     <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('storage/' . $firstPost->image) }}" alt="news" class="img-fluid width-100">
+                            @if($firstPost->video)
+                                <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                    src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                            @else
+                                <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                    class="img-fluid width-100">
+                            @endif
                         </div>
                     @endif
 
                     @foreach($khelCategory->posts->slice(1) as $post)
                         <div class="media mb-30">
                             <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                <img src="{{ asset('storage/' . $post->image) }}" alt="news" class="img-fluid">
+                                @if($post->video)
+                                    <img class="img-fluid" data-videoid="{{$post->video}}"
+                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                @else
+                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
+                                @endif
                             </a>
                             <div class="media-body">
                                 <div class="post-date-dark">
@@ -383,7 +507,8 @@
                                     <ul>
                                         <li>
                                             <span>by</span>
-                                            <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                            <a
+                                                href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                         </li>
                                         <li>
                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -395,14 +520,25 @@
                                     <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('storage/' . $firstPost->image) }}" alt="news" class="img-fluid width-100">
+                            @if($firstPost->video)
+                                <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                    src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                            @else
+                                <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                    class="img-fluid width-100">
+                            @endif
                         </div>
                     @endif
 
                     @foreach($rajneetiCategory->posts->slice(1) as $post)
                         <div class="media mb-30">
                             <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                <img src="{{ asset('storage/' . $post->image) }}" alt="news" class="img-fluid">
+                                @if($post->video)
+                                    <img class="img-fluid" data-videoid="{{$post->video}}"
+                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                @else
+                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
+                                @endif
                             </a>
                             <div class="media-body">
                                 <div class="post-date-dark">
@@ -439,7 +575,8 @@
                                     <ul>
                                         <li>
                                             <span>by</span>
-                                            <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                            <a
+                                                href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                         </li>
                                         <li>
                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -451,14 +588,25 @@
                                     <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
                                 </h3>
                             </div>
-                            <img src="{{ asset('storage/' . $firstPost->image) }}" alt="news" class="img-fluid width-100">
+                            @if($firstPost->video)
+                                <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                    src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                            @else
+                                <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                    class="img-fluid width-100">
+                            @endif
                         </div>
                     @endif
 
                     @foreach($crimeCategory->posts->slice(1) as $post)
                         <div class="media mb-30">
                             <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                <img src="{{ asset('storage/' . $post->image) }}" alt="news" class="img-fluid">
+                                @if($post->video)
+                                    <img class="img-fluid" data-videoid="{{$post->video}}"
+                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                @else
+                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
+                                @endif
                             </a>
                             <div class="media-body">
                                 <div class="post-date-dark">
@@ -478,15 +626,7 @@
                 </div>
             @endif
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="ne-banner-layout1 mb-50 mt-20-r text-center">
-                    <a href="#">
-                        <img src="{{ asset('website') }}/img/banner/banner2.jpg" alt="ad" class="img-fluid">
-                    </a>
-                </div>
-            </div>
-        </div>
+
         <div class="ne-isotope">
             <div class="row">
                 <div class="col-12">
@@ -518,8 +658,13 @@
                         @if($firstPost)
                             <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
                                 <div class="img-overlay-70 img-scale-animate mb-30">
-                                    <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
-                                        class="img-fluid width-100">
+                                    @if($firstPost->video)
+                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                                    @else
+                                        <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                            class="img-fluid width-100">
+                                    @endif
                                     <div class="topic-box-top-lg">
                                         <div class="topic-box-sm color-cod-gray mb-20">{{ $category->name }}</div>
                                     </div>
@@ -528,7 +673,8 @@
                                             <ul>
                                                 <li>
                                                     <span>by</span>
-                                                    <a href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                                    <a
+                                                        href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
                                                 </li>
                                                 <li>
                                                     <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -550,8 +696,13 @@
                                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-4 col-6">
                                         <div class="mb-25 position-relative">
                                             <a class="img-opacity-hover" href="{{ url('post/' . $post->slug) }}">
-                                                <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                                    class="img-fluid width-100 mb-15">
+                                                @if($post->video)
+                                                    <img class="img-fluid width-100 mb-15" data-videoid="{{$post->video}}"
+                                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                                @else
+                                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                                        class="img-fluid width-100 mb-15">
+                                                @endif
                                             </a>
                                             <div class="topic-box-top-xs">
                                                 <div class="topic-box-sm color-cod-gray mb-20">{{ $category->name }}</div>
@@ -576,6 +727,38 @@
                 @endforeach
             </div>
         </div>
+
+        @php
+            $lowerBanner = collect($ads)->firstWhere('position', 'lowerbanner728x90');
+        @endphp
+
+        @if($lowerBanner)
+            <div class="row">
+                <div class="col-12">
+                    <div class="ne-banner-layout1 mb-50 mt-20-r text-center">
+
+                        {{-- Google AdSense Code --}}
+                        @if($lowerBanner['type'] === 'google' && !empty($lowerBanner['code']))
+                            {!! $lowerBanner['code'] !!}
+
+                            {{-- Image Ad --}}
+                        @elseif(!empty($lowerBanner['image']))
+                            <a href="{{ $lowerBanner['link'] ?? '#' }}" target="_blank">
+                                <img src="{{asset('storage/' . $lowerBanner['image']) }}" alt="{{ $lowerBanner['title'] }}"
+                                    class="img-fluid">
+                            </a>
+
+                            {{-- Default fallback --}}
+                        @else
+                            <a href="#">
+                                <img src="{{ asset('website/img/banner/banner2.jpg') }}" alt="ad" class="img-fluid">
+                            </a>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+        @endif
 
     </div>
 </section>
@@ -611,8 +794,13 @@
                                         <div class="media media-none--lg mb-30">
                                             <div class="position-relative width-40">
                                                 <a href="{{ route('post.show', $post->slug) }}" class="img-opacity-hover">
-                                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                                        class="img-fluid">
+                                                    @if($post->video)
+                                                        <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                            src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                                    @else
+                                                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                                            class="img-fluid">
+                                                    @endif
                                                 </a>
                                                 <div class="topic-box-top-xs">
                                                     <div class="topic-box-sm color-cinnabar mb-20">{{ $category->name }}</div>
@@ -623,7 +811,8 @@
                                                     <ul>
                                                         <li>
                                                             <span>by</span>
-                                                            <a href="{{ route('reporter.posts', $post->user->id) }}">{{ $post->user->name ?? 'Admin' }}</a>
+                                                            <a
+                                                                href="{{ route('reporter.posts', $post->user->id) }}">{{ $post->user->name ?? 'Admin' }}</a>
                                                         </li>
                                                         <li>
                                                             <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -646,13 +835,36 @@
             </div>
 
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
-                <div class="sidebar-box">
-                    <div class="ne-banner-layout1 text-center">
-                        <a href="#">
-                            <img src="{{ asset('website') }}/img/banner/banner6.jpg" alt="ad" class="img-fluid">
-                        </a>
+                @php
+                    $lowerSidebar = collect($ads)->firstWhere('position', 'lowersidebar300x250');
+                @endphp
+
+                @if($lowerSidebar)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+
+                            {{-- Google Ad Code --}}
+                            @if($lowerSidebar['type'] === 'google' && !empty($lowerSidebar['code']))
+                                {!! $lowerSidebar['code'] !!}
+
+                                {{-- Image Ad --}}
+                            @elseif(!empty($lowerSidebar['image']))
+                                <a href="{{ $lowerSidebar['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $lowerSidebar['image']) }}" alt="{{ $lowerSidebar['title'] }}"
+                                        class="img-fluid">
+                                </a>
+
+                                {{-- Default fallback --}}
+                            @else
+                                <a href="#">
+                                    <img src="{{ asset('website/img/banner/banner6.jpg') }}" alt="ad" class="img-fluid">
+                            </a> 
+                            @endif
+
+                        </div>
                     </div>
-                </div>
+                @endif
+
                 <div class="sidebar-box">
                     <div class="topic-border color-cod-gray mb-30">
                         <div class="topic-box-lg color-cod-gray">Newsletter</div>
@@ -669,7 +881,8 @@
                             <div class="alert alert-success">{{ session('success') }}</div>
                         @endif
 
-                        <form action="{{ route('add-subscriber') }}" method="POST" class="input-group stylish-input-group">
+                        <form action="{{ route('add-subscriber') }}" method="POST"
+                            class="input-group stylish-input-group">
                             @csrf
                             <input type="email" name="email" placeholder="Enter your email" class="form-control"
                                 required>
@@ -690,16 +903,20 @@
 </section>
 <!-- More News Area End Here -->
 <!-- Category Area Start Here -->
-<section class="bg-body section-space-less2">
+<section class="bg-body section-space-less30">
     <div class="container">
+
         <div class="row tab-space1">
             @foreach($categoryBoxes as $post)
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                     <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
-
-                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                            class="img-fluid width-100">
-
+                        @if($post->video)
+                            <img class="img-fluid width-100" alt="{{ $post->title }}" data-videoid="{{$post->video}}"
+                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height: 200px;" />
+                        @else
+                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                class="img-fluid width-100" style="height: 200px;">
+                        @endif
                         <div class="content p-30-r">
 
                             <div class="ctg-title-xs">
@@ -728,6 +945,38 @@
                 </div>
             @endforeach
         </div>
+        @php
+            $lowestBanner = collect($ads)->firstWhere('position', 'lowestbanner728x90');
+        @endphp
+
+        @if($lowestBanner)
+            <div class="row">
+                <div class="col-12">
+                    <div class="ne-banner-layout1 mt-20-r text-center">
+
+                        {{-- Google AdSense Code --}}
+                        @if($lowestBanner['type'] === 'google' && !empty($lowestBanner['code']))
+                            {!! $lowestBanner['code'] !!}
+
+                            {{-- Image Ad --}}
+                        @elseif(!empty($lowestBanner['image']))
+                            <a href="{{ $lowestBanner['link'] ?? '#' }}" target="_blank">
+                                <img src="{{asset('storage/' . $lowestBanner['image']) }}" alt="{{ $lowestBanner['title'] }}"
+                                    class="img-fluid">
+                            </a>
+
+                            {{-- Default fallback --}}
+                        @else
+                            <a href="#">
+                                <img src="{{ asset('website/img/banner/banner2.jpg') }}" alt="ad" class="img-fluid">
+                            </a>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
 </section>
 

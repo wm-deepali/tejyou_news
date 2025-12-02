@@ -326,6 +326,17 @@
                 </div>
             </div>
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
+                {{-- Upper Sidebar Ad 300x250 --}}
+                @if($uppersidebar300x250)
+                    <div class="sidebar-box mb-30">
+                        <div class="ne-banner-layout1 text-center">
+                            <a href="{{ $uppersidebar300x250->url ?? '#' }}" target="_blank">
+                                <img src="{{ asset('storage/' . $uppersidebar300x250->image) }}" alt="ad" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="sidebar-box">
                     <div class="topic-border color-cod-gray mb-30">
                         <div class="topic-box-lg color-cod-gray">Stay Connected</div>
@@ -353,13 +364,21 @@
                         </li>
                     </ul>
                 </div>
-                <div class="sidebar-box">
-                    <div class="ne-banner-layout1 text-center">
-                        <a href="#">
-                            <img src="{{ asset('website') }}/img/banner/banner3.jpg" alt="ad" class="img-fluid">
-                        </a>
+
+
+
+                {{-- Lower Sidebar Ad 300x250 --}}
+                @if($lowersidebar300x250)
+                    <div class="sidebar-box mb-30">
+                        <div class="ne-banner-layout1 text-center">
+                            <a href="{{ $lowersidebar300x250->url ?? '#' }}" target="_blank">
+                                <img src="{{ asset('storage/' . $lowersidebar300x250->image) }}" alt="ad" class="img-fluid">
+                            </a>
+                        </div>
                     </div>
-                </div>
+                @endif
+
+
                 <div class="sidebar-box">
                     <div class="topic-border color-cod-gray mb-5">
                         <div class="topic-box-lg color-cod-gray">Recent News</div>
@@ -373,7 +392,7 @@
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('post.show', $r->id) }}"
+                                    <a href="{{ route('post.show', $r->slug) }}"
                                         class="mb-10 display-block img-opacity-hover">
                                         @if($r->video)
                                             <img class="img-fluid m-auto width-100" data-videoid="{{$r->video}}"
@@ -385,7 +404,7 @@
                                     </a>
 
                                     <h3 class="title-medium-dark size-md mb-none">
-                                        <a href="{{ route('post.show', $r->id) }}">{{ Str::limit($r->title, 60) }}</a>
+                                        <a href="{{ route('post.show', $r->slug) }}">{{ Str::limit($r->title, 60) }}</a>
                                     </h3>
                                 </div>
                             </div>
@@ -426,56 +445,55 @@
                 <div class="topic-border color-cod-gray mb-25">
                     <div class="topic-box-lg color-cod-gray">Tags</div>
                 </div>
-                <ul class="sidebar-tags">
+                <ul class="sidebar-box">
                     @foreach($post->tags as $tag)
                         <li>
                             <a href="{{ route('search', ['tag' => $tag->slug]) }}">#{{ $tag->name ?? 'Tag' }}</a>
                         </li>
                     @endforeach
                 </ul>
-            </div>
-
-            <div class="sidebar-box">
-                <div class="topic-border color-cod-gray mb-30">
-                    <div class="topic-box-lg color-cod-gray">Most Viewed</div>
-                </div>
-
-                @foreach($mostViewedPosts as $mPost)
-                    <div class="position-relative mb30-list bg-body">
-                        <div class="topic-box-top-xs">
-                            <div class="topic-box-sm color-cod-gray mb-20">
-                                {{ $mPost->category->name ?? 'General' }}
-                            </div>
-                        </div>
-                        <div class="media">
-                            <a class="img-opacity-hover" href="{{ route('post.show', $mPost->slug) }}">
-                                @if($mPost->video)
-                                    <img class="img-fluid" data-videoid="{{$mPost->video}}"
-                                        src="https://img.youtube.com/vi/{{$mPost->video}}/0.jpg" />
-                                @else
-                                    <img src="{{ $mPost->image ? asset('storage/' . $mPost->image) : asset('website/img/news/news177.jpg') }}"
-                                        alt="{{ $mPost->title }}" class="img-fluid">
-                                @endif
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span>
-                                                <i class="fa fa-calendar" aria-hidden="true"></i>
-                                            </span>{{ $mPost->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark mb-none">
-                                    <a href="{{ route('post.show', $mPost->slug) }}">
-                                        {{ Str::limit($mPost->title, 50) }}
-                                    </a>
-                                </h3>
-                            </div>
-                        </div>
+                <div class="sidebar-box">
+                    <div class="topic-border color-cod-gray mb-30">
+                        <div class="topic-box-lg color-cod-gray">Most Viewed</div>
                     </div>
-                @endforeach
+
+                    @foreach($mostViewedPosts as $mPost)
+                        <div class="position-relative mb30-list bg-body">
+                            <div class="topic-box-top-xs">
+                                <div class="topic-box-sm color-cod-gray mb-20">
+                                    {{ $mPost->category->name ?? 'General' }}
+                                </div>
+                            </div>
+                            <div class="media">
+                                <a class="img-opacity-hover" href="{{ route('post.show', $mPost->slug) }}">
+                                    @if($mPost->video)
+                                        <img class="img-fluid" data-videoid="{{$mPost->video}}"
+                                            src="https://img.youtube.com/vi/{{$mPost->video}}/0.jpg" />
+                                    @else
+                                        <img src="{{ $mPost->image ? asset('storage/' . $mPost->image) : asset('website/img/news/news177.jpg') }}"
+                                            alt="{{ $mPost->title }}" class="img-fluid">
+                                    @endif
+                                </a>
+                                <div class="media-body">
+                                    <div class="post-date-dark">
+                                        <ul>
+                                            <li>
+                                                <span>
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                </span>{{ $mPost->created_at->format('F d, Y') }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h3 class="title-medium-dark mb-none">
+                                        <a href="{{ route('post.show', $mPost->slug) }}">
+                                            {{ Str::limit($mPost->title, 50) }}
+                                        </a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
 
         </div>

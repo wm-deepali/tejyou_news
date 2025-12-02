@@ -28,12 +28,12 @@ class AdController extends Controller
      */
     public function index()
     {
-        $ads=Ad::all();
-        $category=Category::where('status','active')->first();
-        $post = Post::whereHas('categories', function (Builder $query) use($category) {
-            $query->where('category_id',$category->id);
-        })->where('status','published')->orderBy('id', 'desc')->first();
-        return view('admin.manage-ads')->with('ads',$ads)->with('category',$category)->with('post',$post);
+        $ads = Ad::all();
+        $category = Category::where('status', 'active')->first();
+        $post = Post::whereHas('categories', function (Builder $query) use ($category) {
+            $query->where('category_id', $category->id);
+        })->where('status', 'published')->orderBy('id', 'desc')->first();
+        return view('admin.manage-ads')->with('ads', $ads)->with('category', $category)->with('post', $post);
     }
 
     /**
@@ -43,9 +43,9 @@ class AdController extends Controller
      */
     public function create()
     {
-        $states=State::where('country_id','101')->get();
-        $categories=Category::all();
-        return view('admin.add-ads')->with('states',$states)->with('categories',$categories);
+        $states = State::where('country_id', '101')->get();
+        $categories = Category::all();
+        return view('admin.add-ads')->with('states', $states)->with('categories', $categories);
     }
 
     /**
@@ -57,7 +57,7 @@ class AdController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title'=>'required',
+            'title' => 'required',
             'type' => 'required',
             'page' => 'required',
             'position' => 'required',
@@ -89,84 +89,84 @@ class AdController extends Controller
             'state' => 'required_if:type,custom',
             'city' => 'required_if:type,custom',
             'pincode' => 'required_if:type,custom',
-            'category'=>'required_if:page,categorypage',
+            'category' => 'required_if:page,categorypage',
         ]);
-        $validator->after(function($validator) use($request){
-            if(isset($request->startdate) && isset($request->enddate)){
-                $setting=Adsetting::first();
-                $ad=Ad::where('page',$request->page)->where('position',$request->position)->whereDate('enddate','>=',$request->startdate)->whereDate('startdate','<=',$request->enddate)->count();
-                if($request->page=='homepage'){
-                    if($request->position=='uppersidebar300x250'){
-                        if($ad >= $setting->homepageuppersidebar300x250number){
+        $validator->after(function ($validator) use ($request) {
+            if (isset($request->startdate) && isset($request->enddate)) {
+                $setting = Adsetting::first();
+                $ad = Ad::where('page', $request->page)->where('position', $request->position)->whereDate('enddate', '>=', $request->startdate)->whereDate('startdate', '<=', $request->enddate)->count();
+                if ($request->page == 'homepage') {
+                    if ($request->position == 'uppersidebar300x250') {
+                        if ($ad >= $setting->homepageuppersidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='middlesidebar300x250'){
-                        if($ad >= $setting->homepagemiddlesidebar300x250number){
+                    } elseif ($request->position == 'middlesidebar300x250') {
+                        if ($ad >= $setting->homepagemiddlesidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowersidebar300x250') {
-                        if($ad >= $setting->homepagelowersidebar300x250number){
+                    } elseif ($request->position == 'lowersidebar300x250') {
+                        if ($ad >= $setting->homepagelowersidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='uppersidebar300x600') {
-                        if($ad >= $setting->homepageuppersidebar300x600number){
+                    } elseif ($request->position == 'uppersidebar300x600') {
+                        if ($ad >= $setting->homepageuppersidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='middlesidebar300x600') {
-                        if($ad >= $setting->homepagemiddlesidebar300x600number){
+                    } elseif ($request->position == 'middlesidebar300x600') {
+                        if ($ad >= $setting->homepagemiddlesidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowersidebar300x600') {
-                        if($ad >= $setting->homepagelowersidebar300x600number){
+                    } elseif ($request->position == 'lowersidebar300x600') {
+                        if ($ad >= $setting->homepagelowersidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='upperbanner728x90') {
-                        if($ad >= $setting->homepageupperbanner728x90number){
+                    } elseif ($request->position == 'upperbanner728x90') {
+                        if ($ad >= $setting->homepageupperbanner728x90number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='middlebanner728x90') {
-                        if($ad >= $setting->homepagemiddlebanner728x90number){
+                    } elseif ($request->position == 'middlebanner728x90') {
+                        if ($ad >= $setting->homepagemiddlebanner728x90number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowerbanner728x90') {
-                        if($ad >= $setting->homepagelowerbanner728x90number){
-                            $validator->errors()->add('position', 'Ad limit reached');
-                            $validator->errors()->add('position', 'Ad limit reached');
-                        }
-                    }
-                } elseif($request->page=='categorypage') {
-                    if($request->position=='sidebar300x250'){
-                        if($ad >= $setting->categorypagesidebar300x250number){
-                            $validator->errors()->add('position', 'Ad limit reached');
-                            $validator->errors()->add('position', 'Ad limit reached');
-                        }
-                    } elseif($request->position=='sidebar300x600'){
-                        if($ad >= $setting->categorypagesidebar300x600number){
+                    } elseif ($request->position == 'lowerbanner728x90') {
+                        if ($ad >= $setting->homepagelowerbanner728x90number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
                     }
-                } elseif($request->page=='postpage') {
-                    if($request->position=='uppersidebar300x250'){
-                        if($ad >= $setting->postpageuppersidebar300x250number){
+                } elseif ($request->page == 'categorypage') {
+                    if ($request->position == 'sidebar300x250') {
+                        if ($ad >= $setting->categorypagesidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowersidebar300x250'){
-                        if($ad >= $setting->postpagelowersidebar300x250number){
+                    } elseif ($request->position == 'sidebar300x600') {
+                        if ($ad >= $setting->categorypagesidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='sidebar300x600'){
-                        if($ad >= $setting->postpagesidebar300x600number){
+                    }
+                } elseif ($request->page == 'postpage') {
+                    if ($request->position == 'uppersidebar300x250') {
+                        if ($ad >= $setting->postpageuppersidebar300x250number) {
+                            $validator->errors()->add('position', 'Ad limit reached');
+                            $validator->errors()->add('position', 'Ad limit reached');
+                        }
+                    } elseif ($request->position == 'lowersidebar300x250') {
+                        if ($ad >= $setting->postpagelowersidebar300x250number) {
+                            $validator->errors()->add('position', 'Ad limit reached');
+                            $validator->errors()->add('position', 'Ad limit reached');
+                        }
+                    } elseif ($request->position == 'sidebar300x600') {
+                        if ($ad >= $setting->postpagesidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
@@ -181,116 +181,118 @@ class AdController extends Controller
                 $validator->errors()->add('enddate', 'Required');
             }
         });
-        if($validator->passes()){
-            try{
+        if ($validator->passes()) {
+            try {
                 DB::beginTransaction();
-                $data=array(
-                    'title'=>$request->title,
-                    'type'=>$request->type,
-                    'page'=>$request->page,
-                    'position'=>$request->position,
-                    'startdate'=>$request->startdate,
-                    'enddate'=>$request->enddate,
-                    'transactionnumber'=>Str::uuid(),
-                    'paymentstatus'=>'success',
+                $data = array(
+                    'title' => $request->title,
+                    'type' => $request->type,
+                    'page' => $request->page,
+                    'position' => $request->position,
+                    'startdate' => $request->startdate,
+                    'enddate' => $request->enddate,
+                    'transactionnumber' => Str::uuid(),
+                    'paymentstatus' => 'success',
                 );
-                if($request->type=='custom') {
-                    $data['amount']=$request->amount;
-                    $data['paymentmethod']=$request->paymentmethod;
-                    $data['remark']=$request->remark;
-                    $data['name']=$request->name;
-                    $data['contact']=$request->contact;
-                    $data['email']=$request->email;
-                    $data['address']=$request->address;
-                    $data['state_id']=$request->state;
-                    $data['city_id']=$request->city;
-                    $data['pincode']=$request->pincode;
-                    $data['image']=$request->image->store('ads');
-                    $data['link']=$request->link;
-                    if($request->paymentmethod=='cash') {
-                        $data['collectedby']=$request->collectedby;
-                        $data['chequedate']=Null;
-                        $data['chequenumber']=Null;
-                        $data['bankname']=Null;
-                        $data['bankbranch']=Null;
-                        $data['utrnumber']=Null;
-                        $data['utrdate']=Null;
-                        $data['upiid']=Null;
-                        $data['upidate']=Null;
-                        $data['upireferencenumber']=Null;
-                        $data['wallet']=Null;
-                        $data['walletdate']=Null;
-                        $data['walletreferencenumber']=Null;
-                    } elseif($request->paymentmethod=='cheque') {
-                        $data['collectedby']=Null;
-                        $data['chequedate']=$request->chequedate;
-                        $data['chequenumber']=$request->chequenumber;
-                        $data['bankname']=$request->bankname;
-                        $data['bankbranch']=$request->bankbranch;
-                        $data['utrnumber']=Null;
-                        $data['utrdate']=Null;
-                        $data['upiid']=Null;
-                        $data['upidate']=Null;
-                        $data['upireferencenumber']=Null;
-                        $data['wallet']=Null;
-                        $data['walletdate']=Null;
-                        $data['walletreferencenumber']=Null;
-                    } elseif($request->paymentmethod=='netbanking') {
-                        $data['collectedby']=Null;
-                        $data['chequedate']=Null;
-                        $data['chequenumber']=Null;
-                        $data['bankname']=Null;
-                        $data['bankbranch']=Null;
-                        $data['utrnumber']=$request->utrnumber;
-                        $data['utrdate']=$request->utrdate;
-                        $data['upiid']=Null;
-                        $data['upidate']=Null;
-                        $data['upireferencenumber']=Null;
-                        $data['wallet']=Null;
-                        $data['walletdate']=Null;
-                        $data['walletreferencenumber']=Null;
-                    } elseif($request->paymentmethod=='upi') {
-                        $data['collectedby']=Null;
-                        $data['chequedate']=Null;
-                        $data['chequenumber']=Null;
-                        $data['bankname']=Null;
-                        $data['bankbranch']=Null;
-                        $data['utrnumber']=Null;
-                        $data['utrdate']=Null;
-                        $data['upiid']=$request->upiid;
-                        $data['upidate']=$request->upidate;
-                        $data['upireferencenumber']=$request->upireferencenumber;
-                        $data['wallet']=Null;
-                        $data['walletdate']=Null;
-                        $data['walletreferencenumber']=Null;
-                    } elseif($request->paymentmethod=='wallet') {
-                        $data['collectedby']=Null;
-                        $data['chequedate']=Null;
-                        $data['chequenumber']=Null;
-                        $data['bankname']=Null;
-                        $data['bankbranch']=Null;
-                        $data['utrnumber']=Null;
-                        $data['utrdate']=Null;
-                        $data['upiid']=Null;
-                        $data['upidate']=Null;
-                        $data['upireferencenumber']=Null;
-                        $data['wallet']=$request->wallet;
-                        $data['walletdate']=$request->walletdate;
-                        $data['walletreferencenumber']=$request->walletreferencenumber;
+                if ($request->type == 'custom') {
+                    $data['amount'] = $request->amount;
+                    $data['paymentmethod'] = $request->paymentmethod;
+                    $data['remark'] = $request->remark;
+                    $data['name'] = $request->name;
+                    $data['contact'] = $request->contact;
+                    $data['email'] = $request->email;
+                    $data['address'] = $request->address;
+                    $data['state_id'] = $request->state;
+                    $data['city_id'] = $request->city;
+                    $data['pincode'] = $request->pincode;
+                    if ($request->hasFile('image')) {
+                        $data['image'] = $request->file('image')->store('ads', 'public');
                     }
-                } elseif($request->type=='google') {
-                    $data['code']=$request->code;
+                    $data['link'] = $request->link;
+                    if ($request->paymentmethod == 'cash') {
+                        $data['collectedby'] = $request->collectedby;
+                        $data['chequedate'] = Null;
+                        $data['chequenumber'] = Null;
+                        $data['bankname'] = Null;
+                        $data['bankbranch'] = Null;
+                        $data['utrnumber'] = Null;
+                        $data['utrdate'] = Null;
+                        $data['upiid'] = Null;
+                        $data['upidate'] = Null;
+                        $data['upireferencenumber'] = Null;
+                        $data['wallet'] = Null;
+                        $data['walletdate'] = Null;
+                        $data['walletreferencenumber'] = Null;
+                    } elseif ($request->paymentmethod == 'cheque') {
+                        $data['collectedby'] = Null;
+                        $data['chequedate'] = $request->chequedate;
+                        $data['chequenumber'] = $request->chequenumber;
+                        $data['bankname'] = $request->bankname;
+                        $data['bankbranch'] = $request->bankbranch;
+                        $data['utrnumber'] = Null;
+                        $data['utrdate'] = Null;
+                        $data['upiid'] = Null;
+                        $data['upidate'] = Null;
+                        $data['upireferencenumber'] = Null;
+                        $data['wallet'] = Null;
+                        $data['walletdate'] = Null;
+                        $data['walletreferencenumber'] = Null;
+                    } elseif ($request->paymentmethod == 'netbanking') {
+                        $data['collectedby'] = Null;
+                        $data['chequedate'] = Null;
+                        $data['chequenumber'] = Null;
+                        $data['bankname'] = Null;
+                        $data['bankbranch'] = Null;
+                        $data['utrnumber'] = $request->utrnumber;
+                        $data['utrdate'] = $request->utrdate;
+                        $data['upiid'] = Null;
+                        $data['upidate'] = Null;
+                        $data['upireferencenumber'] = Null;
+                        $data['wallet'] = Null;
+                        $data['walletdate'] = Null;
+                        $data['walletreferencenumber'] = Null;
+                    } elseif ($request->paymentmethod == 'upi') {
+                        $data['collectedby'] = Null;
+                        $data['chequedate'] = Null;
+                        $data['chequenumber'] = Null;
+                        $data['bankname'] = Null;
+                        $data['bankbranch'] = Null;
+                        $data['utrnumber'] = Null;
+                        $data['utrdate'] = Null;
+                        $data['upiid'] = $request->upiid;
+                        $data['upidate'] = $request->upidate;
+                        $data['upireferencenumber'] = $request->upireferencenumber;
+                        $data['wallet'] = Null;
+                        $data['walletdate'] = Null;
+                        $data['walletreferencenumber'] = Null;
+                    } elseif ($request->paymentmethod == 'wallet') {
+                        $data['collectedby'] = Null;
+                        $data['chequedate'] = Null;
+                        $data['chequenumber'] = Null;
+                        $data['bankname'] = Null;
+                        $data['bankbranch'] = Null;
+                        $data['utrnumber'] = Null;
+                        $data['utrdate'] = Null;
+                        $data['upiid'] = Null;
+                        $data['upidate'] = Null;
+                        $data['upireferencenumber'] = Null;
+                        $data['wallet'] = $request->wallet;
+                        $data['walletdate'] = $request->walletdate;
+                        $data['walletreferencenumber'] = $request->walletreferencenumber;
+                    }
+                } elseif ($request->type == 'google') {
+                    $data['code'] = $request->code;
                 }
-                $today=now()->toDateString();
-                if($request->startdate<=$today){
-                    $data['status']='active';
+                $today = now()->toDateString();
+                if ($request->startdate <= $today) {
+                    $data['status'] = 'active';
                 }
-                $ad=Ad::create($data);
-                if($request->page=='categorypage'){
-                    foreach(explode(',',$request->category) as $category_id){
+                $ad = Ad::create($data);
+                if ($request->page == 'categorypage') {
+                    foreach (explode(',', $request->category) as $category_id) {
                         Adcategory::create([
-                            'ad_id'=>$ad->id,
-                            'category_id'=>$category_id,
+                            'ad_id' => $ad->id,
+                            'category_id' => $category_id,
                         ]);
                     }
                 }
@@ -299,7 +301,7 @@ class AdController extends Controller
                     'msgCode' => '200',
                     'msgText' => 'Ad Added',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 DB::rollback();
                 return response()->json([
                     'msgCode' => '400',
@@ -309,8 +311,8 @@ class AdController extends Controller
         } else {
             DB::rollback();
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -334,12 +336,12 @@ class AdController extends Controller
      */
     public function edit($id)
     {
-        try{
-            $ad=Ad::findOrFail($id);
-            $states=State::where('country_id','101')->get();
-            $cities=City::where('state_id',$ad->state_id)->get();
-            $categories=Category::all();
-            return view('admin.edit-ad')->with('ad',$ad)->with('states',$states)->with('cities',$cities)->with('categories',$categories);
+        try {
+            $ad = Ad::findOrFail($id);
+            $states = State::where('country_id', '101')->get();
+            $cities = City::where('state_id', $ad->state_id)->get();
+            $categories = Category::all();
+            return view('admin.edit-ad')->with('ad', $ad)->with('states', $states)->with('cities', $cities)->with('categories', $categories);
         } catch (\Exception $ex) {
 
         }
@@ -355,7 +357,7 @@ class AdController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'title'=>'required',
+            'title' => 'required',
             'type' => 'required',
             'page' => 'required',
             'position' => 'required',
@@ -374,82 +376,82 @@ class AdController extends Controller
             'pincode' => 'required_if:type,custom',
             'category' => 'required_if:page,categorypage',
         ]);
-        $validator->after(function($validator) use($request,$id){
-            if(isset($request->startdate) && isset($request->enddate)){
-                $setting=Adsetting::first();
-                $ad=Ad::where('page',$request->page)->where('position',$request->position)->whereDate('enddate','>=',$request->startdate)->whereDate('startdate','<=',$request->enddate)->where('id','!=',$id)->first();
-                if($request->page=='homepage'){
-                    if($request->position=='uppersidebar300x250'){
-                        if($ad >= $setting->homepageuppersidebar300x250number){
+        $validator->after(function ($validator) use ($request, $id) {
+            if (isset($request->startdate) && isset($request->enddate)) {
+                $setting = Adsetting::first();
+                $ad = Ad::where('page', $request->page)->where('position', $request->position)->whereDate('enddate', '>=', $request->startdate)->whereDate('startdate', '<=', $request->enddate)->where('id', '!=', $id)->first();
+                if ($request->page == 'homepage') {
+                    if ($request->position == 'uppersidebar300x250') {
+                        if ($ad >= $setting->homepageuppersidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='middlesidebar300x250'){
-                        if($ad >= $setting->homepagemiddlesidebar300x250number){
+                    } elseif ($request->position == 'middlesidebar300x250') {
+                        if ($ad >= $setting->homepagemiddlesidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowersidebar300x250') {
-                        if($ad >= $setting->homepagelowersidebar300x250number){
+                    } elseif ($request->position == 'lowersidebar300x250') {
+                        if ($ad >= $setting->homepagelowersidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='uppersidebar300x600') {
-                        if($ad >= $setting->homepageuppersidebar300x600number){
+                    } elseif ($request->position == 'uppersidebar300x600') {
+                        if ($ad >= $setting->homepageuppersidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='middlesidebar300x600') {
-                        if($ad >= $setting->homepagemiddlesidebar300x600number){
+                    } elseif ($request->position == 'middlesidebar300x600') {
+                        if ($ad >= $setting->homepagemiddlesidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowersidebar300x600') {
-                        if($ad >= $setting->homepagelowersidebar300x600number){
+                    } elseif ($request->position == 'lowersidebar300x600') {
+                        if ($ad >= $setting->homepagelowersidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='upperbanner728x90') {
-                        if($ad >= $setting->homepageupperbanner728x90number){
+                    } elseif ($request->position == 'upperbanner728x90') {
+                        if ($ad >= $setting->homepageupperbanner728x90number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='middlebanner728x90') {
-                        if($ad >= $setting->homepagemiddlebanner728x90number){
+                    } elseif ($request->position == 'middlebanner728x90') {
+                        if ($ad >= $setting->homepagemiddlebanner728x90number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowerbanner728x90') {
-                        if($ad >= $setting->homepagelowerbanner728x90number){
-                            $validator->errors()->add('position', 'Ad limit reached');
-                            $validator->errors()->add('position', 'Ad limit reached');
-                        }
-                    }
-                } elseif($request->page=='categorypage') {
-                    if($request->position=='sidebar300x250'){
-                        if($ad >= $setting->categorypagesidebar300x250number){
-                            $validator->errors()->add('position', 'Ad limit reached');
-                            $validator->errors()->add('position', 'Ad limit reached');
-                        }
-                    } elseif($request->position=='sidebar300x600'){
-                        if($ad >= $setting->categorypagesidebar300x600number){
+                    } elseif ($request->position == 'lowerbanner728x90') {
+                        if ($ad >= $setting->homepagelowerbanner728x90number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
                     }
-                } elseif($request->page=='postpage') {
-                    if($request->position=='uppersidebar300x250'){
-                        if($ad >= $setting->postpageuppersidebar300x250number){
+                } elseif ($request->page == 'categorypage') {
+                    if ($request->position == 'sidebar300x250') {
+                        if ($ad >= $setting->categorypagesidebar300x250number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='lowersidebar300x250'){
-                        if($ad >= $setting->postpagelowersidebar300x250number){
+                    } elseif ($request->position == 'sidebar300x600') {
+                        if ($ad >= $setting->categorypagesidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
-                    } elseif($request->position=='sidebar300x600'){
-                        if($ad >= $setting->postpagesidebar300x600number){
+                    }
+                } elseif ($request->page == 'postpage') {
+                    if ($request->position == 'uppersidebar300x250') {
+                        if ($ad >= $setting->postpageuppersidebar300x250number) {
+                            $validator->errors()->add('position', 'Ad limit reached');
+                            $validator->errors()->add('position', 'Ad limit reached');
+                        }
+                    } elseif ($request->position == 'lowersidebar300x250') {
+                        if ($ad >= $setting->postpagelowersidebar300x250number) {
+                            $validator->errors()->add('position', 'Ad limit reached');
+                            $validator->errors()->add('position', 'Ad limit reached');
+                        }
+                    } elseif ($request->position == 'sidebar300x600') {
+                        if ($ad >= $setting->postpagesidebar300x600number) {
                             $validator->errors()->add('position', 'Ad limit reached');
                             $validator->errors()->add('position', 'Ad limit reached');
                         }
@@ -464,46 +466,47 @@ class AdController extends Controller
                 $validator->errors()->add('enddate', 'Required');
             }
         });
-        if($validator->passes()){
-            try{
+        if ($validator->passes()) {
+            try {
                 DB::beginTransaction();
-                $data=array(
-                    'title'=>$request->title,
-                    'type'=>$request->type,
-                    'page'=>$request->page,
-                    'position'=>$request->position,
-                    'startdate'=>$request->startdate,
-                    'enddate'=>$request->enddate,
+                $data = array(
+                    'title' => $request->title,
+                    'type' => $request->type,
+                    'page' => $request->page,
+                    'position' => $request->position,
+                    'startdate' => $request->startdate,
+                    'enddate' => $request->enddate,
                 );
-                if($request->type=='custom') {
-                    if($request->hasFile('image')){
-                        $data['image']=$request->image->store('ads');
+                if ($request->type == 'custom') {
+                    if ($request->hasFile('image')) {
+                        $data['image'] = $request->file('image')->store('ads', 'public');
                     }
-                    $data['link']=$request->link;
-                    $data['amount']=$request->amount;
-                    $data['name']=$request->name;
-                    $data['contact']=$request->contact;
-                    $data['email']=$request->email;
-                    $data['address']=$request->address;
-                    $data['state_id']=$request->state;
-                    $data['city_id']=$request->city;
-                    $data['pincode']=$request->pincode;
-                } elseif($request->type=='google') {
-                    $data['code']=$request->code;
+
+                    $data['link'] = $request->link;
+                    $data['amount'] = $request->amount;
+                    $data['name'] = $request->name;
+                    $data['contact'] = $request->contact;
+                    $data['email'] = $request->email;
+                    $data['address'] = $request->address;
+                    $data['state_id'] = $request->state;
+                    $data['city_id'] = $request->city;
+                    $data['pincode'] = $request->pincode;
+                } elseif ($request->type == 'google') {
+                    $data['code'] = $request->code;
                 }
-                $today=now()->toDateString();
-                if($request->startdate<=$today){
-                    $data['status']='active';
+                $today = now()->toDateString();
+                if ($request->startdate <= $today) {
+                    $data['status'] = 'active';
                 } else {
-                    $data['status']='block';
+                    $data['status'] = 'block';
                 }
-                Ad::where('id',$id)->update($data);
-                Adcategory::where('ad_id',$id)->delete();
-                if($request->page=='categorypage'){
-                    foreach(explode(',',$request->category) as $category_id){
+                Ad::where('id', $id)->update($data);
+                Adcategory::where('ad_id', $id)->delete();
+                if ($request->page == 'categorypage') {
+                    foreach (explode(',', $request->category) as $category_id) {
                         Adcategory::create([
-                            'ad_id'=>$id,
-                            'category_id'=>$category_id,
+                            'ad_id' => $id,
+                            'category_id' => $category_id,
                         ]);
                     }
                 }
@@ -512,7 +515,7 @@ class AdController extends Controller
                     'msgCode' => '200',
                     'msgText' => 'Ad Updated',
                 ]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 DB::rollback();
                 return response()->json([
                     'msgCode' => '400',
@@ -522,8 +525,8 @@ class AdController extends Controller
         } else {
             DB::rollback();
             return response()->json([
-                'msgCode'=>'401',
-                'errors'=>$validator->errors(),
+                'msgCode' => '401',
+                'errors' => $validator->errors(),
             ]);
         }
     }
@@ -538,54 +541,50 @@ class AdController extends Controller
     {
         try {
             Ad::findOrFail($id);
-            Ad::where('id',$id)->delete();
-            return redirect(route('manage-ad.index'))->with('success','Delete SuccessFull');
+            Ad::where('id', $id)->delete();
+            return redirect(route('manage-ad.index'))->with('success', 'Delete SuccessFull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-ad.index'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-ad.index'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 
     public function viewclientdetail($id)
     {
-        try{
-            $ad=Ad::findOrFail($id);
+        try {
+            $ad = Ad::findOrFail($id);
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.client-detail')->with('ad',$ad)->render(),
+                "html" => view('admin.ajax.client-detail')->with('ad', $ad)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
     public function viewpaymentdetail($id)
     {
-        try{
-            $ad=Ad::findOrFail($id);
+        try {
+            $ad = Ad::findOrFail($id);
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.payment-detail')->with('ad',$ad)->render(),
+                "html" => view('admin.ajax.payment-detail')->with('ad', $ad)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -594,12 +593,12 @@ class AdController extends Controller
     {
         try {
             Ad::findOrFail($id);
-            Ad::where('id',$id)->update([
-                'status'=>'block',
+            Ad::where('id', $id)->update([
+                'status' => 'block',
             ]);
-            return redirect(route('manage-ad.index'))->with('success','Update SuccessFull');
+            return redirect(route('manage-ad.index'))->with('success', 'Update SuccessFull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-ad.index'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-ad.index'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 }
