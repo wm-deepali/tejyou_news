@@ -23,6 +23,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exports\PostsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class PostController extends Controller
 {
@@ -134,17 +135,32 @@ class PostController extends Controller
                 ];
 
                 if ($request->hasFile('image')) {
-                    $data['image'] = $request->image->store('posts');
+
+                    $file = $request->file('image');
+                    $filename = $file->hashName(); // unique name
+                    $path = storage_path('app/public/posts/' . $filename);
+
+                    // Resize
+                    Image::make($file)
+                        ->resize(600, 600, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        })
+                        ->save($path);
+
+                    // Optimize
+                    $optimizerChain = OptimizerChainFactory::create();
+                    $optimizerChain->optimize($path);
+
+                    // Save path and imagetag
+                    $data['image'] = 'posts/' . $filename;
                     $data['imagetag'] = $request->imagetag;
-                    $imagehash = $request->image->hashName();
-                    $path = storage_path('app/public/posts/' . $imagehash);
-                    Image::make($request->image)->resize(600, 600, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    })->save($path);
+
                 } elseif ($request->filled('imagename')) {
                     $data['image'] = $request->imagename;
                 }
+
+
 
                 if (Auth::user()->role == 'admin') {
                     $data['status'] = 'published';
@@ -330,23 +346,35 @@ class PostController extends Controller
 
             $data['breaking_news'] = $request->breaking_news === 'yes' ? 'yes' : 'no';
 
-            // Handle image upload or selection
             if ($request->hasFile('image')) {
-                $data['image'] = $request->image->store('posts');
-
-                if ($post->image && Storage::exists($post->image)) {
-                    Storage::delete($post->image);
+                // Delete old image if exists
+                if ($post->image && Storage::exists('public/' . $post->image)) {
+                    Storage::delete('public/' . $post->image);
                 }
 
-                $imagehash = $request->image->hashName();
-                $path = storage_path('app/public/posts/' . $imagehash);
-                Image::make($request->image)->resize(600, 600, function ($constraint) {
+                // Get uploaded file
+                $file = $request->file('image');
+                $filename = $file->hashName(); // unique file name
+                $path = storage_path('app/public/posts/' . $filename);
+
+                // Resize and save
+                Image::make($file)->resize(600, 600, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })->save($path);
+
+                // Optimize
+                $optimizerChain = OptimizerChainFactory::create();
+                $optimizerChain->optimize($path);
+
+                // Save DB path
+                $data['image'] = 'posts/' . $filename;
+
             } elseif ($request->filled('imagename')) {
                 $data['image'] = $request->imagename;
             }
+
+
 
             $post->update($data);
 
@@ -631,17 +659,29 @@ class PostController extends Controller
                 ];
 
                 if ($request->hasFile('image')) {
-                    $data['image'] = $request->image->store('posts');
-                    $data['imagetag'] = $request->imagetag;
-                    $imagehash = $request->image->hashName();
-                    $path = storage_path('app/public/posts/' . $imagehash);
-                    Image::make($request->image)->resize(600, 600, function ($constraint) {
+                    $file = $request->file('image');
+                    $filename = $file->hashName(); // unique name
+                    $path = storage_path('app/public/posts/' . $filename);
+
+                    // Resize
+                    Image::make($file)->resize(600, 600, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     })->save($path);
+
+                    // Optimize
+                    $optimizerChain = OptimizerChainFactory::create();
+                    $optimizerChain->optimize($path);
+
+                    // Save path and imagetag
+                    $data['image'] = 'posts/' . $filename;
+                    $data['imagetag'] = $request->imagetag;
+
                 } elseif ($request->filled('imagename')) {
                     $data['image'] = $request->imagename;
                 }
+
+
 
                 $post = Post::create($data);
 
@@ -754,23 +794,33 @@ class PostController extends Controller
             ]);
             $data['status'] = 'draft';
 
-            // Handle image upload or selection
             if ($request->hasFile('image')) {
-                $data['image'] = $request->image->store('posts');
-
-                if ($post->image && Storage::exists($post->image)) {
-                    Storage::delete($post->image);
+                // Delete old image if exists
+                if ($post->image && Storage::exists('public/' . $post->image)) {
+                    Storage::delete('public/' . $post->image);
                 }
 
-                $imagehash = $request->image->hashName();
-                $path = storage_path('app/public/posts/' . $imagehash);
-                Image::make($request->image)->resize(600, 600, function ($constraint) {
+                $file = $request->file('image');
+                $filename = $file->hashName(); // unique name
+                $path = storage_path('app/public/posts/' . $filename);
+
+                // Resize
+                Image::make($file)->resize(600, 600, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })->save($path);
+
+                // Optimize
+                $optimizerChain = OptimizerChainFactory::create();
+                $optimizerChain->optimize($path);
+
+                // Save path in DB
+                $data['image'] = 'posts/' . $filename;
+
             } elseif ($request->filled('imagename')) {
                 $data['image'] = $request->imagename;
             }
+
 
             $post->update($data);
 
