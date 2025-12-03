@@ -214,8 +214,6 @@ class FrontController extends Controller
             ->where('startdate', '<=', $today)
             ->where('enddate', '>=', $today)
             ->get();
-        // dd($ads->toArray());
-
         return view('front.index', compact(
             'recentNews',
             'rajyaCategory',

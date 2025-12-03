@@ -4,7 +4,6 @@
 <section class="bg-accent">
     <div class="container">
         <div class="row tab-space1">
-
             {{-- BIG MAIN NEWS --}}
             <div class="col-lg-6 col-md-12 banner-img">
                 @php $main = $recentNews->first(); @endphp
@@ -45,7 +44,6 @@
                     </div>
                 @endif
             </div>
-
             {{-- RIGHT SIDE 3 NEWS --}}
             <div class="col-lg-6 col-md-12">
                 <div class="row tab-space1">
@@ -79,11 +77,9 @@
 
                 </div>
             </div>
-
         </div>
     </div>
 </section>
-
 <!-- Top Story Area Start Here -->
 <section class="bg-body section-space-default">
     <div class="container">
@@ -196,8 +192,8 @@
                                     {{-- If ad has an uploaded image --}}
                                 @elseif(!empty($upperBanner['image']))
                                     <a href="{{ $upperBanner['link'] ?? '#' }}" target="_blank">
-                                        <img src="{{asset('storage/' . $upperBanner['image']) }}" alt="{{ $upperBanner['title'] }}"
-                                            class="img-fluid">
+                                        <img src="{{asset('storage/' . $upperBanner['image']) }}"
+                                            alt="{{ $upperBanner['title'] }}" class="img-fluid">
                                     </a>
 
                                     {{-- Fallback dummy image --}}
@@ -278,22 +274,23 @@
                     </ul>
                 </div>
                 @php
-                    $upperSidebar = collect($ads)->firstWhere('position', 'uppersidebar300x600');
+                    $uppersidebar300x600 = collect($ads)->firstWhere('position', 'uppersidebar300x600');
+                    $uppersidebar300x250 = collect($ads)->firstWhere('position', 'uppersidebar300x250');
                 @endphp
 
-                @if($upperSidebar)
+                @if($uppersidebar300x600)
                     <div class="sidebar-box">
                         <div class="ne-banner-layout1 text-center">
 
                             {{-- Google Ad Code --}}
-                            @if($upperSidebar['type'] === 'google' && !empty($upperSidebar['code']))
-                                {!! $upperSidebar['code'] !!}
+                            @if($uppersidebar300x600['type'] === 'google' && !empty($uppersidebar300x600['code']))
+                                {!! $uppersidebar300x600['code'] !!}
 
                                 {{-- Image Ad --}}
-                            @elseif(!empty($upperSidebar['image']))
-                                <a href="{{ $upperSidebar['link'] ?? '#' }}" target="_blank">
-                                    <img src="{{asset('storage/' . $upperSidebar['image']) }}" alt="{{ $upperSidebar['title'] }}"
-                                        class="img-fluid">
+                            @elseif(!empty($uppersidebar300x600['image']))
+                                <a href="{{ $uppersidebar300x600['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $uppersidebar300x600['image']) }}"
+                                        alt="{{ $uppersidebar300x600['title'] }}" class="img-fluid">
                                 </a>
 
                                 {{-- Default fallback --}}
@@ -301,6 +298,32 @@
                                 <a href="#">
                                     <img src="https://tejyug.com/public/front/images/bombay-high-court_1702451223.jpg" alt="ad"
                                         class="img-fluid">
+                                </a>
+                            @endif
+
+                        </div>
+                    </div>
+                @endif
+
+                @if($uppersidebar300x250)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+
+                            {{-- Google Ad Code --}}
+                            @if($uppersidebar300x250['type'] === 'google' && !empty($uppersidebar300x250['code']))
+                                {!! $uppersidebar300x250['code'] !!}
+
+                                {{-- Image Ad --}}
+                            @elseif(!empty($uppersidebar300x250['image']))
+                                <a href="{{ $uppersidebar300x250['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $uppersidebar300x250['image']) }}"
+                                        alt="{{ $uppersidebar300x250['title'] }}" class="img-fluid">
+                                </a>
+
+                                {{-- Default fallback --}}
+                            @else
+                                <a href="#">
+                                    <img src="{{ asset('website/img/banner/banner6.jpg') }}" alt="ad" class="img-fluid">
                                 </a>
                             @endif
 
@@ -339,7 +362,6 @@
 
     </div>
 </section>
-<!-- Top Story Area End Here -->
 <!-- Video Area Start Here -->
 @php
     $colors = ['color-pomegranate', 'color-persian-green', 'color-web-orange'];
@@ -414,217 +436,283 @@
 
     </div>
 </section>
-
-
-<!-- Video Area End Here -->
 <!-- Latest News Area Start Here -->
 <section class="bg-body section-space-less30">
     <div class="container">
         <div class="row">
-            @if($khelCategory)
-                <div class="col-lg-4 col-md-12">
-                    <div class="topic-border color-cutty-sark mb-30 width-100">
-                        <div class="topic-box-lg color-cutty-sark">{{ $khelCategory->name }}</div>
-                    </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row tab-space2">
 
-                    @php
-                        $firstPost = $khelCategory->posts->first();
-                    @endphp
-
-                    @if($firstPost)
-                        <div class="img-overlay-70 img-scale-animate mb-30">
-                            <div class="mask-content-sm">
-                                <div class="post-date-light">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a
-                                                href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
-                                        </li>
-                                        <li>
-                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                            {{ $firstPost->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-light">
-                                    <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
-                                </h3>
+                    @if($khelCategory)
+                        <div class="col-lg-4 col-md-12">
+                            <div class="topic-border color-cutty-sark mb-30 width-100">
+                                <div class="topic-box-lg color-cutty-sark">{{ $khelCategory->name }}</div>
                             </div>
-                            @if($firstPost->video)
-                                <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
-                                    src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
-                            @else
-                                <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
-                                    class="img-fluid width-100">
+
+                            @php
+                                $firstPost = $khelCategory->posts->first();
+                            @endphp
+
+                            @if($firstPost)
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <div class="mask-content-sm">
+                                        <div class="post-date-light">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a
+                                                        href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                                    {{ $firstPost->created_at->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-light">
+                                            <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
+                                        </h3>
+                                    </div>
+                                    @if($firstPost->video)
+                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                                    @else
+                                        <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                            class="img-fluid width-100">
+                                    @endif
+                                </div>
                             @endif
+
+                            @foreach($khelCategory->posts->slice(1) as $post)
+                                <div class="media mb-30">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
+                                        @if($post->video)
+                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                                class="img-fluid">
+                                        @endif
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                                    {{ $post->created_at->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endif
 
-                    @foreach($khelCategory->posts->slice(1) as $post)
-                        <div class="media mb-30">
-                            <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                @if($post->video)
-                                    <img class="img-fluid" data-videoid="{{$post->video}}"
-                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
-                                @else
-                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
-                                @endif
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                            {{ $post->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
-                                </h3>
+
+                    @if($rajneetiCategory)
+                        <div class="col-lg-4 col-md-12">
+                            <div class="topic-border color-pomegranate mb-30 width-100">
+                                <div class="topic-box-lg color-pomegranate">{{ $rajneetiCategory->name }}</div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
 
+                            @php
+                                $firstPost = $rajneetiCategory->posts->first();
+                            @endphp
 
-            @if($rajneetiCategory)
-                <div class="col-lg-4 col-md-12">
-                    <div class="topic-border color-pomegranate mb-30 width-100">
-                        <div class="topic-box-lg color-pomegranate">{{ $rajneetiCategory->name }}</div>
-                    </div>
-
-                    @php
-                        $firstPost = $rajneetiCategory->posts->first();
-                    @endphp
-
-                    @if($firstPost)
-                        <div class="img-overlay-70 img-scale-animate mb-30">
-                            <div class="mask-content-sm">
-                                <div class="post-date-light">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a
-                                                href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
-                                        </li>
-                                        <li>
-                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                            {{ $firstPost->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
+                            @if($firstPost)
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <div class="mask-content-sm">
+                                        <div class="post-date-light">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a
+                                                        href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                                    {{ $firstPost->created_at->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-light">
+                                            <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
+                                        </h3>
+                                    </div>
+                                    @if($firstPost->video)
+                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                                    @else
+                                        <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                            class="img-fluid width-100">
+                                    @endif
                                 </div>
-                                <h3 class="title-medium-light">
-                                    <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
-                                </h3>
-                            </div>
-                            @if($firstPost->video)
-                                <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
-                                    src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
-                            @else
-                                <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
-                                    class="img-fluid width-100">
                             @endif
+
+                            @foreach($rajneetiCategory->posts->slice(1) as $post)
+                                <div class="media mb-30">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
+                                        @if($post->video)
+                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                                class="img-fluid">
+                                        @endif
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                                    {{ $post->created_at->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endif
 
-                    @foreach($rajneetiCategory->posts->slice(1) as $post)
-                        <div class="media mb-30">
-                            <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                @if($post->video)
-                                    <img class="img-fluid" data-videoid="{{$post->video}}"
-                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
-                                @else
-                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
-                                @endif
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                            {{ $post->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
-                                </h3>
+                    @if($crimeCategory)
+                        <div class="col-lg-4 col-md-12">
+                            <div class="topic-border color-web-orange mb-30 width-100">
+                                <div class="topic-box-lg color-web-orange">{{ $crimeCategory->name }}</div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
 
-            @if($crimeCategory)
-                <div class="col-lg-4 col-md-12">
-                    <div class="topic-border color-web-orange mb-30 width-100">
-                        <div class="topic-box-lg color-web-orange">{{ $crimeCategory->name }}</div>
-                    </div>
+                            @php
+                                $firstPost = $crimeCategory->posts->first();
+                            @endphp
 
-                    @php
-                        $firstPost = $crimeCategory->posts->first();
-                    @endphp
-
-                    @if($firstPost)
-                        <div class="img-overlay-70 img-scale-animate mb-30">
-                            <div class="mask-content-sm">
-                                <div class="post-date-light">
-                                    <ul>
-                                        <li>
-                                            <span>by</span>
-                                            <a
-                                                href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
-                                        </li>
-                                        <li>
-                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                            {{ $firstPost->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
+                            @if($firstPost)
+                                <div class="img-overlay-70 img-scale-animate mb-30">
+                                    <div class="mask-content-sm">
+                                        <div class="post-date-light">
+                                            <ul>
+                                                <li>
+                                                    <span>by</span>
+                                                    <a
+                                                        href="{{ route('reporter.posts', $firstPost->user->id) }}">{{ $firstPost->user->name ?? 'Admin' }}</a>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                                    {{ $firstPost->created_at->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-light">
+                                            <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
+                                        </h3>
+                                    </div>
+                                    @if($firstPost->video)
+                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
+                                    @else
+                                        <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
+                                            class="img-fluid width-100">
+                                    @endif
                                 </div>
-                                <h3 class="title-medium-light">
-                                    <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
-                                </h3>
-                            </div>
-                            @if($firstPost->video)
-                                <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
-                                    src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
-                            @else
-                                <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
-                                    class="img-fluid width-100">
                             @endif
+
+                            @foreach($crimeCategory->posts->slice(1) as $post)
+                                <div class="media mb-30">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
+                                        @if($post->video)
+                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
+                                        @else
+                                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                                class="img-fluid">
+                                        @endif
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="post-date-dark">
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                                    {{ $post->created_at->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <h3 class="title-medium-dark size-md mb-none">
+                                            <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endif
-
-                    @foreach($crimeCategory->posts->slice(1) as $post)
-                        <div class="media mb-30">
-                            <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
-                                @if($post->video)
-                                    <img class="img-fluid" data-videoid="{{$post->video}}"
-                                        src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
-                                @else
-                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
-                                @endif
-                            </a>
-                            <div class="media-body">
-                                <div class="post-date-dark">
-                                    <ul>
-                                        <li>
-                                            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                            {{ $post->created_at->format('F d, Y') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="title-medium-dark size-md mb-none">
-                                    <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
-                                </h3>
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
-            @endif
+            </div>
+
+            <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
+                @php
+                    $middleSidebar300x250 = collect($ads)->firstWhere('position', 'middleSidebar300x250');
+                    $middlesidebar300x600 = collect($ads)->firstWhere('position', 'middlesidebar300x600');
+                @endphp
+
+                @if($middlesidebar300x600)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+
+                            {{-- Google Ad Code --}}
+                            @if($middlesidebar300x600['type'] === 'google' && !empty($middlesidebar300x600['code']))
+                                {!! $middlesidebar300x600['code'] !!}
+
+                                {{-- Image Ad --}}
+                            @elseif(!empty($middlesidebar300x600['image']))
+                                <a href="{{ $middlesidebar300x600['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $middlesidebar300x600['image']) }}"
+                                        alt="{{ $middlesidebar300x600['title'] }}" class="img-fluid">
+                                </a>
+
+                                {{-- Default fallback --}}
+                            @else
+                                <a href="#">
+                                    <img src="https://tejyug.com/public/front/images/bombay-high-court_1702451223.jpg" alt="ad"
+                                        class="img-fluid">
+                                </a>
+                            @endif
+
+                        </div>
+                    </div>
+                @endif
+
+                @if($middleSidebar300x250)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+
+                            {{-- Google Ad Code --}}
+                            @if($middleSidebar300x250['type'] === 'google' && !empty($middleSidebar300x250['code']))
+                                {!! $middleSidebar300x250['code'] !!}
+
+                                {{-- Image Ad --}}
+                            @elseif(!empty($middleSidebar300x250['image']))
+                                <a href="{{ $middleSidebar300x250['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $middleSidebar300x250['image']) }}"
+                                        alt="{{ $middleSidebar300x250['title'] }}" class="img-fluid">
+                                </a>
+
+                                {{-- Default fallback --}}
+                            @else
+                                <a href="#">
+                                    <img src="{{ asset('website/img/banner/banner6.jpg') }}" alt="ad" class="img-fluid">
+                                </a>
+                            @endif
+
+                        </div>
+                    </div>
+                @endif
+
+            </div>
         </div>
 
         <div class="ne-isotope">
@@ -762,7 +850,6 @@
 
     </div>
 </section>
-<!-- Latest News Area End Here -->
 <!-- More News Area Start Here -->
 <section class="bg-accent section-space-less30">
     <div class="container">
@@ -836,29 +923,57 @@
 
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
                 @php
-                    $lowerSidebar = collect($ads)->firstWhere('position', 'lowersidebar300x250');
+                    $lowerSidebar300x250 = collect($ads)->firstWhere('position', 'lowersidebar300x250');
+                    $lowerSidebar300x600 = collect($ads)->firstWhere('position', 'lowerSidebar300x600');
                 @endphp
 
-                @if($lowerSidebar)
+                @if($lowerSidebar300x600)
                     <div class="sidebar-box">
                         <div class="ne-banner-layout1 text-center">
 
                             {{-- Google Ad Code --}}
-                            @if($lowerSidebar['type'] === 'google' && !empty($lowerSidebar['code']))
-                                {!! $lowerSidebar['code'] !!}
+                            @if($lowerSidebar300x600['type'] === 'google' && !empty($lowerSidebar300x600['code']))
+                                {!! $lowerSidebar300x600['code'] !!}
 
                                 {{-- Image Ad --}}
-                            @elseif(!empty($lowerSidebar['image']))
-                                <a href="{{ $lowerSidebar['link'] ?? '#' }}" target="_blank">
-                                    <img src="{{asset('storage/' . $lowerSidebar['image']) }}" alt="{{ $lowerSidebar['title'] }}"
+                            @elseif(!empty($lowerSidebar300x600['image']))
+                                <a href="{{ $lowerSidebar300x600['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $lowerSidebar300x600['image']) }}"
+                                        alt="{{ $lowerSidebar300x600['title'] }}" class="img-fluid">
+                                </a>
+
+                                {{-- Default fallback --}}
+                            @else
+                                <a href="#">
+                                    <img src="https://tejyug.com/public/front/images/bombay-high-court_1702451223.jpg" alt="ad"
                                         class="img-fluid">
+                                </a>
+                            @endif
+
+                        </div>
+                    </div>
+                @endif
+
+                @if($lowerSidebar300x250)
+                    <div class="sidebar-box">
+                        <div class="ne-banner-layout1 text-center">
+
+                            {{-- Google Ad Code --}}
+                            @if($lowerSidebar300x250['type'] === 'google' && !empty($lowerSidebar300x250['code']))
+                                {!! $lowerSidebar300x250['code'] !!}
+
+                                {{-- Image Ad --}}
+                            @elseif(!empty($lowerSidebar300x250['image']))
+                                <a href="{{ $lowerSidebar300x250['link'] ?? '#' }}" target="_blank">
+                                    <img src="{{asset('storage/' . $lowerSidebar300x250['image']) }}"
+                                        alt="{{ $lowerSidebar300x250['title'] }}" class="img-fluid">
                                 </a>
 
                                 {{-- Default fallback --}}
                             @else
                                 <a href="#">
                                     <img src="{{ asset('website/img/banner/banner6.jpg') }}" alt="ad" class="img-fluid">
-                            </a> 
+                                </a>
                             @endif
 
                         </div>
@@ -901,11 +1016,9 @@
         </div>
     </div>
 </section>
-<!-- More News Area End Here -->
 <!-- Category Area Start Here -->
 <section class="bg-body section-space-less30">
     <div class="container">
-
         <div class="row tab-space1">
             @foreach($categoryBoxes as $post)
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12">
@@ -928,7 +1041,6 @@
                                     {{ $post->title }}
                                 </a>
                             </h3>
-
                             <div class="post-date-light">
                                 <ul>
                                     <li>
@@ -948,35 +1060,29 @@
         @php
             $lowestBanner = collect($ads)->firstWhere('position', 'lowestbanner728x90');
         @endphp
-
         @if($lowestBanner)
             <div class="row">
                 <div class="col-12">
                     <div class="ne-banner-layout1 mt-20-r text-center">
-
                         {{-- Google AdSense Code --}}
                         @if($lowestBanner['type'] === 'google' && !empty($lowestBanner['code']))
                             {!! $lowestBanner['code'] !!}
-
                             {{-- Image Ad --}}
                         @elseif(!empty($lowestBanner['image']))
                             <a href="{{ $lowestBanner['link'] ?? '#' }}" target="_blank">
                                 <img src="{{asset('storage/' . $lowestBanner['image']) }}" alt="{{ $lowestBanner['title'] }}"
                                     class="img-fluid">
                             </a>
-
                             {{-- Default fallback --}}
                         @else
                             <a href="#">
                                 <img src="{{ asset('website/img/banner/banner2.jpg') }}" alt="ad" class="img-fluid">
                             </a>
                         @endif
-
                     </div>
                 </div>
             </div>
         @endif
-
     </div>
 </section>
 
