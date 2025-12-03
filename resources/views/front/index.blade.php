@@ -655,7 +655,7 @@
 
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
                 @php
-                    $middleSidebar300x250 = collect($ads)->firstWhere('position', 'middleSidebar300x250');
+                    $middleSidebar300x250 = collect($ads)->firstWhere('position', 'middlesidebar300x250');
                     $middlesidebar300x600 = collect($ads)->firstWhere('position', 'middlesidebar300x600');
                 @endphp
 
@@ -924,7 +924,7 @@
             <div class="ne-sidebar sidebar-break-md col-lg-4 col-md-12">
                 @php
                     $lowerSidebar300x250 = collect($ads)->firstWhere('position', 'lowersidebar300x250');
-                    $lowerSidebar300x600 = collect($ads)->firstWhere('position', 'lowerSidebar300x600');
+                    $lowerSidebar300x600 = collect($ads)->firstWhere('position', 'lowersidebar300x600');
                 @endphp
 
                 @if($lowerSidebar300x600)
