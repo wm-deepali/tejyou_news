@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Epaper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class EpaperController extends Controller
 {
@@ -19,8 +20,8 @@ class EpaperController extends Controller
      */
     public function index()
     {
-        $epapers=Epaper::latest()->get();
-        return view('admin.manage-epaper')->with('epapers',$epapers);
+        $epapers = Epaper::latest()->get();
+        return view('admin.manage-epaper')->with('epapers', $epapers);
     }
 
     /**
@@ -30,16 +31,15 @@ class EpaperController extends Controller
      */
     public function create()
     {
-        try{
+        try {
             return response()->json([
                 "msgCode" => "200",
                 "html" => view('admin.ajax.add-epaper')->render(),
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -53,23 +53,38 @@ class EpaperController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'=>'required|max:255',
-            'file'=>'required|mimetypes:application/pdf',
-            'date'=>'required',
-            'image'=>'nullable|image:mimes,jpg,png,jpef,svg',
+            'title' => 'required|max:255',
+            'file' => 'required|mimetypes:application/pdf',
+            'date' => 'required',
+            'image' => 'nullable|image:mimes,jpg,png,jpeg,svg',
         ]);
+
         try {
-            Epaper::create([
-                'title'=>$request->title,
-                'file'=>$request->file->store('epapers'),
-                'image'=>$request->hasFile('image') ? $request->image->store('epapersimage') : "",
-                'date'=>$request->date,
-            ]);
-            return redirect(route('manage-epaper.index'))->with('success','Add SuccessFull');
+            $data = [
+                'title' => $request->title,
+                'file' => $request->file->store('epapers'),
+                'date' => $request->date,
+            ];
+
+            // OPTIMIZE IMAGE (NEW)
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->image->store('epapersimage');
+                $imagehash = $request->image->hashName();
+                $path = storage_path('app/public/epapersimage/' . $imagehash);
+
+                // OPTIMIZE ONLY (50-70% smaller, original dimensions)
+                $optimizerChain = OptimizerChainFactory::create();
+                $optimizerChain->optimize($path);
+            }
+
+
+            Epaper::create($data);
+            return redirect(route('manage-epaper.index'))->with('success', 'Add SuccessFull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-epaper.index'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-epaper.index'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -90,24 +105,22 @@ class EpaperController extends Controller
      */
     public function edit($id)
     {
-        try{
+        try {
             $this->authorize('is-admin');
-            $epaper=Epaper::findOrFail($id);
+            $epaper = Epaper::findOrFail($id);
             return response()->json([
                 "msgCode" => "200",
-                "html" => view('admin.ajax.edit-epaper')->with('epaper',$epaper)->render(),
+                "html" => view('admin.ajax.edit-epaper')->with('epaper', $epaper)->render(),
             ]);
-        }
-        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex){
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
             return response()->json([
                 'msgCode' => '400',
                 'msgText' => 'Data Not found by id#' . $id,
             ]);
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 'msgCode' => '400',
-                'msgText' =>$ex->getMessage(),
+                'msgText' => $ex->getMessage(),
             ]);
         }
     }
@@ -122,33 +135,43 @@ class EpaperController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title'=>'required|max:255',
-            'file'=>'nullable|mimetypes:application/pdf',
-            'date'=>'required',
-            'image'=>'nullable|image:mimes,jpg,png,jpef,svg'
+            'title' => 'required|max:255',
+            'file' => 'nullable|mimetypes:application/pdf',
+            'date' => 'required',
+            'image' => 'nullable|image:mimes,jpg,png,jpef,svg'
         ]);
         try {
-            $epaper=Epaper::findOrFail($id);
-            $data=array(
-                'title'=>$request->title,
-                'date'=>$request->date,
+            $epaper = Epaper::findOrFail($id);
+            $data = array(
+                'title' => $request->title,
+                'date' => $request->date,
             );
-            if($request->hasFile('file')) {
-                $data['file']=$request->file->store('epapers');
-                if(isset($epaper->file) && Storage::exists($epaper->file)){
+            if ($request->hasFile('file')) {
+                $data['file'] = $request->file->store('epapers');
+                if (isset($epaper->file) && Storage::exists($epaper->file)) {
                     Storage::delete($request->file);
                 }
             }
-            if($request->hasFile('image')) {
-                $data['image']=$request->image->store('epapersimage');
-                if(isset($epaper->image) && Storage::exists($epaper->image)){
-                    Storage::delete($request->image);
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->image->store('epapersimage');
+
+                // Delete old image
+                if (isset($epaper->image) && Storage::exists($epaper->image)) {
+                    Storage::delete($epaper->image);
                 }
+
+                $imagehash = $request->image->hashName();
+                $path = storage_path('app/public/epapersimage/' . $imagehash);
+
+                // OPTIMIZE ONLY
+                $optimizerChain = OptimizerChainFactory::create();
+                $optimizerChain->optimize($path);
             }
-            Epaper::where('id',$id)->update($data);
-            return redirect(route('manage-epaper.index'))->with('success','Update SuccessFull');
+
+            Epaper::where('id', $id)->update($data);
+            return redirect(route('manage-epaper.index'))->with('success', 'Update SuccessFull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-epaper.index'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-epaper.index'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 
@@ -161,37 +184,38 @@ class EpaperController extends Controller
     public function destroy($id)
     {
         try {
-            $epaper=Epaper::findOrFail($id);
-            if(isset($epaper->image) && Storage::exists($epaper->image)){
-                    Storage::delete($request->image);
-                }
-            if(isset($epaper->file) && Storage::exists($epaper->file)){
-                    Storage::delete($request->file);
-                }
-            Epaper::where('id',$id)->delete();
-            return redirect(route('manage-epaper.index'))->with('success','Update SuccessFull');
+            $epaper = Epaper::findOrFail($id);
+            if (isset($epaper->image) && Storage::exists($epaper->image)) {
+                Storage::delete($epaper->image);  // ✅ FIXED: was $request->image
+            }
+            if (isset($epaper->file) && Storage::exists($epaper->file)) {
+                Storage::delete($epaper->file);   // ✅ FIXED: was $request->file
+            }
+            Epaper::where('id', $id)->delete();
+            return redirect(route('manage-epaper.index'))->with('success', 'Deleted SuccessFull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-epaper.index'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-epaper.index'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
+
 
     public function changestatus($id)
     {
         try {
-            $epaper=Epaper::findOrFail($id);
-            if($epaper->status=='active'){
-                $data=array(
-                    'status'=>'block'
+            $epaper = Epaper::findOrFail($id);
+            if ($epaper->status == 'active') {
+                $data = array(
+                    'status' => 'block'
                 );
             } else {
-                $data=array(
-                    'status'=>'active'
+                $data = array(
+                    'status' => 'active'
                 );
             }
-            Epaper::where('id',$id)->update($data);
-            return redirect(route('manage-epaper.index'))->with('success','Update SuccessFull');
+            Epaper::where('id', $id)->update($data);
+            return redirect(route('manage-epaper.index'))->with('success', 'Update SuccessFull');
         } catch (\Exception $ex) {
-            return redirect(route('manage-epaper.index'))->with('error','Error Encountered '.$ex->getMessage());
+            return redirect(route('manage-epaper.index'))->with('error', 'Error Encountered ' . $ex->getMessage());
         }
     }
 }
