@@ -108,7 +108,7 @@
                                         class="img-opacity-hover img-overlay-70">
 
                                         @if($post->video)
-                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                            <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
                                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                         @else
                                             <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/news/news140.jpg') }}"

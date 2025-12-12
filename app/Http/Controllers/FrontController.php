@@ -101,7 +101,7 @@ class FrontController extends Controller
         $videoPosts = Cache::remember('video_posts', 300, function () {
             return Post::where('status', 'published')
                 ->where('video', '!=', "")
-                ->latest('views')
+                ->latest()
                 ->take(3)
                 ->get();
         });
@@ -347,8 +347,8 @@ class FrontController extends Controller
                 'category',
                 'posts',
                 'subcategorySlug',
-                'uppersidebar300x600',
-                'lowersidebar300x250'
+                'sidebar300x600',
+                'sidebar300x250'
             )
         );
     }

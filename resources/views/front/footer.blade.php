@@ -241,6 +241,91 @@
 <!-- Offcanvas Menu End -->
 </div>
 <!-- Wrapper End -->
+
+<!-- start video Modal -->
+ <style>
+    /* Auto-resize container like YouTube embed */
+    .youtube-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.5%;
+        /* Default 16:9 */
+        height: 0;
+        overflow: hidden;
+    }
+
+    /* Allow YouTube to auto-adjust height internally */
+    .youtube-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .modal-header {
+        padding: 1rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-header .modal-title {
+        font-size: medium;
+    }
+
+    .modal-header .btn-close {
+        padding: .5rem;
+        margin: 0;
+    }
+</style>
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Video</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="youtube-container">
+                    <iframe id="videoFrame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // On thumbnail click → open modal with correct video
+        document.querySelectorAll(".video-thumb").forEach(item => {
+            item.addEventListener("click", function () {
+                let videoId = this.getAttribute("data-videoid");
+                let url = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
+
+                document.getElementById("videoFrame").src = url;
+
+                let videoModal = new bootstrap.Modal(document.getElementById("videoModal"));
+                videoModal.show();
+            });
+        });
+
+        // Stop video on modal close
+        document.getElementById("videoModal").addEventListener("hidden.bs.modal", function () {
+            document.getElementById("videoFrame").src = "";
+        });
+
+    });
+</script>
+<!-- end video Modal -->
+
 <!-- jquery-->
 <script src="{{ asset('website') }}/js/jquery-2.2.4.min.js" type="text/javascript"></script>
 <!-- Plugins js -->

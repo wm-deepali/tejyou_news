@@ -30,7 +30,7 @@
                 <div class="news-details-layout1">
                     <div class="position-relative mb-30">
                         @if($post->video)
-                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                            <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                         @else
                             <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/news/news177.jpg') }}"
@@ -395,7 +395,7 @@
                                     <a href="{{ route('post.show', $r->slug) }}"
                                         class="mb-10 display-block img-opacity-hover">
                                         @if($r->video)
-                                            <img class="img-fluid m-auto width-100" data-videoid="{{$r->video}}"
+                                            <img class="img-fluid m-auto width-100 video-thumb" data-videoid="{{$r->video}}"
                                                 src="https://img.youtube.com/vi/{{$r->video}}/0.jpg" />
                                         @else
                                             <img src="{{ $r->image ? asset('storage/' . $r->image) : asset('website/img/news/news177.jpg') }}"
@@ -467,7 +467,7 @@
                             <div class="media">
                                 <a class="img-opacity-hover" href="{{ route('post.show', $mPost->slug) }}">
                                     @if($mPost->video)
-                                        <img class="img-fluid" data-videoid="{{$mPost->video}}"
+                                        <img class="img-fluid video-thumb" data-videoid="{{$mPost->video}}"
                                             src="https://img.youtube.com/vi/{{$mPost->video}}/0.jpg" />
                                     @else
                                         <img src="{{ $mPost->image ? asset('storage/' . $mPost->image) : asset('website/img/news/news177.jpg') }}"

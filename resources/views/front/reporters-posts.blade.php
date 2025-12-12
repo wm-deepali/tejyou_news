@@ -38,7 +38,7 @@
                                 <div class="position-relative mb-20">
                                     <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
                                         @if($post->video)
-                                            <img class="img-fluid width-100" data-videoid="{{$post->video}}"
+                                            <img class="img-fluid width-100 video-thumb" data-videoid="{{$post->video}}"
                                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                         @else
                                             <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/news/news132.jpg') }}"

@@ -10,7 +10,7 @@
                 @if($main)
                     <div class="img-overlay-70 img-scale-animate mb-2 img-ban">
                         @if($main->video)
-                            <img class="img-fluid width-100" data-videoid="{{$main->video}}" alt="{{ $main->title }}"
+                            <img class="img-fluid width-100 video-thumb" data-videoid="{{$main->video}}" alt="{{ $main->title }}"
                                 src="https://img.youtube.com/vi/{{$main->video}}/0.jpg" />
                         @else
                             <img src="{{ asset('storage/' . $main->image) }}" alt="{{ $main->title }}"
@@ -65,7 +65,7 @@
                                 </div>
 
                                 @if($news->video)
-                                    <img class="img-fluid width-100" data-videoid="{{$news->video}}"
+                                    <img class="img-fluid width-100 video-thumb" data-videoid="{{$news->video}}"
                                         src="https://img.youtube.com/vi/{{$news->video}}/0.jpg" />
                                 @else
                                     <img src="{{ asset('storage/' . $news->image) }}" alt="{{ $news->title }}"
@@ -111,7 +111,7 @@
                                         <div class="img-overlay-70 img-scale-animate mb-30">
                                             <a href="{{ route('post.show', $mainPost->slug) }}">
                                                 @if($mainPost->video)
-                                                    <img class="img-fluid width-100" data-videoid="{{$mainPost->video}}"
+                                                    <img class="img-fluid width-100 video-thumb" data-videoid="{{$mainPost->video}}"
                                                         src="https://img.youtube.com/vi/{{$mainPost->video}}/0.jpg" />
                                                 @else
                                                     <img src="{{ asset('storage/' . $mainPost->image) }}"
@@ -148,7 +148,7 @@
                                             <a class="width38-lg width40-md img-opacity-hover"
                                                 href="{{ route('post.show', $post->slug) }}">
                                                 @if($post->video)
-                                                    <img class="img-fluid" style="width: 132px; height: 95px;"
+                                                    <img class="img-fluid video-thumb" style="width: 132px; height: 95px;"
                                                         data-videoid="{{$post->video}}"
                                                         src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                                 @else
@@ -231,8 +231,8 @@
                                             <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                         </h3>
                                     </div>
-                                    @if($post->video)
-                                        <img class="img-fluid width-100" data-videoid="{{$post->video}}"
+                                    @if($post->video) 
+                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{$post->video}}"
                                             src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                     @else
                                         <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -341,7 +341,7 @@
                                 <div class="mt-25">
                                     <a href="{{ route('post.show', $news->slug) }}" class="img-opacity-hover">
                                         @if($news->video)
-                                            <img class="img-fluid mb-10 width-100" data-videoid="{{$news->video}}"
+                                            <img class="img-fluid mb-10 width-100 video-thumb" data-videoid="{{$news->video}}"
                                                 src="https://img.youtube.com/vi/{{$news->video}}/0.jpg" />
                                         @else
                                             <img src="{{ asset('storage/' . $news->image) }}" alt="{{ $news->title }}"
@@ -386,7 +386,7 @@
                             @if($post->video)
                                 {{-- Embed YouTube or self-hosted video --}}
                                 <div class="img-fluid width-100">
-                                    <img class="embed-responsive-item youtube-video" data-videoid="{{$post->video}}"
+                                    <img class="embed-responsive-item youtube-video video-thumb" data-videoid="{{$post->video}}"
                                         src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" class="d-block w-100" />
                                 </div>
                             @endif
@@ -474,7 +474,7 @@
                                         </h3>
                                     </div>
                                     @if($firstPost->video)
-                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{$firstPost->video}}"
                                             src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
                                     @else
                                         <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
@@ -487,7 +487,7 @@
                                 <div class="media mb-30">
                                     <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
                                         @if($post->video)
-                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                            <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
                                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                         @else
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -544,7 +544,7 @@
                                         </h3>
                                     </div>
                                     @if($firstPost->video)
-                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{$firstPost->video}}"
                                             src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
                                     @else
                                         <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
@@ -557,7 +557,7 @@
                                 <div class="media mb-30">
                                     <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
                                         @if($post->video)
-                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                            <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
                                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                         @else
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -613,7 +613,7 @@
                                         </h3>
                                     </div>
                                     @if($firstPost->video)
-                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{$firstPost->video}}"
                                             src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
                                     @else
                                         <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
@@ -626,7 +626,7 @@
                                 <div class="media mb-30">
                                     <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}">
                                         @if($post->video)
-                                            <img class="img-fluid" data-videoid="{{$post->video}}"
+                                            <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
                                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                         @else
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -747,7 +747,7 @@
                             <div class="col-xl-4 col-lg-7 col-md-6 col-sm-12">
                                 <div class="img-overlay-70 img-scale-animate mb-30">
                                     @if($firstPost->video)
-                                        <img class="img-fluid width-100" data-videoid="{{$firstPost->video}}"
+                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{$firstPost->video}}"
                                             src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
                                     @else
                                         <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
@@ -785,7 +785,7 @@
                                         <div class="mb-25 position-relative">
                                             <a class="img-opacity-hover" href="{{ url('post/' . $post->slug) }}">
                                                 @if($post->video)
-                                                    <img class="img-fluid width-100 mb-15" data-videoid="{{$post->video}}"
+                                                    <img class="img-fluid width-100 mb-15 video-thumb" data-videoid="{{$post->video}}"
                                                         src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                                 @else
                                                     <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -882,7 +882,7 @@
                                             <div class="position-relative width-40">
                                                 <a href="{{ route('post.show', $post->slug) }}" class="img-opacity-hover">
                                                     @if($post->video)
-                                                        <img class="img-fluid" data-videoid="{{$post->video}}"
+                                                        <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
                                                             src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                                     @else
                                                         <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -1024,7 +1024,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                     <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
                         @if($post->video)
-                            <img class="img-fluid width-100" alt="{{ $post->title }}" data-videoid="{{$post->video}}"
+                            <img class="img-fluid width-100 video-thumb" alt="{{ $post->title }}" data-videoid="{{$post->video}}"
                                 src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height: 200px;" />
                         @else
                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
