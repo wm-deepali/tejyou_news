@@ -18,144 +18,346 @@
 		->get();
 
 @endphp
-<footer>
-	<div class="footer-area-top">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-4 col-md-6 col-sm-12">
-					<div class="footer-box">
-						<h2 class="title-bold-light title-bar-left text-uppercase">Most Viewed Posts</h2>
-						<ul class="most-view-post">
-							@foreach($mostViewedPosts as $post)
-								<li>
-									<div class="media">
-										<a href="{{ route('post.show', $post->slug) }}">
-											<img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"
+ @php
+            $headerCategoriesWithSub = App\Category::where('status', 'active')
+                ->where('showonheader', 'yes')
+                ->where('hassubcategory', 'yes')
+                ->with([
+                    'subcategories' => function ($q) {
+                        $q->where('showonheader', 'yes');
+                    }
+                ])
+                ->get();
+
+            $headercategorieswithoutsub = App\Category::where('status', 'active')
+                ->where('showonheader', 'yes')
+                ->where('hassubcategory', 'no')
+                ->orderBy('sequence', 'asc')
+                ->get();
+
+            $postMenuCategory = App\Category::where('status', 'active')
+                ->where('show_in_menu', 'yes')
+                ->with([
+                    'posts' => function ($q) {
+                        $q->orderBy('created_at', 'desc')
+                            ->take(4);
+                    }
+                ])
+                ->orderBy('sequence', 'asc')
+                ->get();
+
+            $breakingNewsPosts = App\Post::where('status', 'published')
+                ->where('breaking_news', 'yes')
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
+        @endphp
+<style>
+    /* LEFT OFFCANVAS */
+.left-sidebar{
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100vh;
+    background: #0b1c2d;
+    transition: 0.3s;
+    z-index: 10001;
+}
+
+.left-sidebar.active{
+    left: 0;
+}
+
+.left-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 10000;
+}
+
+.left-overlay.active{
+    opacity: 1;
+    visibility: visible;
+}
+
+
+</style>
+<footer class="tj-footer">
+
+    <!-- SECTION 1 : 4-Column Information -->
+        <div class="container">
+
+        <!-- MOST VIEWED SECTION -->
+        <div class="row mb-4 pb-3">
+            <div class="col-12">
+                <h4 class="text-uppercase fw-bold mb-3">MOST VIEWED</h4>
+            </div>
+
+            @foreach($mostViewedPosts as $post)
+            <div class="col-md-4 mb-3">
+                <a href="{{ route('post.show', $post->slug) }}" class="footer-card d-flex">
+                    <div class="footer-thumb">
+                        <img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"
 												alt="{{ $post->title }}" class="img-fluid" width="70px">
-										</a>
-										<div class="media-body">
-											<h3 class="title-medium-light size-md mb-10">
-												<a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
-											</h3>
-											<div class="post-date-light">
-												<ul>
-													<li>
-														<span>
-															<i class="fa fa-calendar" aria-hidden="true"></i>
-														</span>{{ $post->created_at->format('F d, Y') }}
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</li>
-							@endforeach
-
-							@if($mostViewedPosts->isEmpty())
-								<li>No posts available</li>
-							@endif
-						</ul>
-					</div>
-				</div>
-
-				<div class="col-xl-4 col-lg-3 col-md-6 col-sm-12">
-					<div class="footer-box">
-						<h2 class="title-bold-light title-bar-left text-uppercase">Popular Categories</h2>
-						<ul class="popular-categories">
-							@foreach($footerCategories as $category)
-								<li>
-									<a href="{{ route('category.posts', $category->slug) }}">
-										{{ $category->name }}
-										<span>{{ $category->posts()->count() }}</span>
-									</a>
-								</li>
-							@endforeach
-
-							@if($footerCategories->isEmpty())
-								<li>No categories available</li>
-							@endif
-						</ul>
-					</div>
-				</div>
+                    </div>
+                    <div class="footer-info ps-3 p-2" >
+                        <div class="footer-title" style="color:#fff;">
+                            {{ \Illuminate\Support\Str::limit($post->title, 60) }}
+                        </div>
+                        <span class="footer-date" style="color:#fff;">
+                            {{ $post->created_at->format('d M Y') }}
+                        </span>
+                    </div>
+                </a>
+            </div>
+            @endforeach
+        </div>
 
 
+        <!-- CATEGORIES -->
+        <div class=" mb-4 tj-bottom-social pb-3">
+            
 
-				<div class="col-xl-4 col-lg-5 col-md-12 col-sm-12">
-					<div class="footer-box">
-						<h2 class="title-bold-light title-bar-left text-uppercase">Post Gallery</h2>
-						<ul class="post-gallery shine-hover ">
-							@foreach($galleryPosts as $post)
-								<li>
-									<a href="{{ route('post.show', $post->slug) }}">
-										<figure>
-											<img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/footer/post-default.jpg') }}"
-												alt="{{ $post->title }}" class="img-fluid" style="height:70px;">
-										</figure>
-									</a>
-								</li>
-							@endforeach
+            @foreach($footerCategories as $category)
+            <div class="  mb-2" style="margin-right:24px;">
+                <a href="{{ route('category.posts', $category->slug) }}"
+                   class="btn btn-outline-secondary w-100 rounded-pill" style="font-size: 22px;
+    padding: 5px 15px;
+    margin-bottom: 15px;">
+                   {{ $category->name }}
+                </a>
+            </div>
+            @endforeach
+        </div>
 
-							@if($galleryPosts->isEmpty())
-								<li>No news available</li>
-							@endif
-						</ul>
-					</div>
-				</div>
+        <!-- COMPANY INFO & QUICK LINKS -->
+      
 
-			</div>
-		</div>
-	</div>
-	<div class="footer-area-bottom">
-		<div class="container">
-			<div class="row">
-				<div class="col-12 text-center">
-					<a href="index.html" class="footer-logo img-fluid">
-						<img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid"
-							width="100px">
-					</a>
-					<ul class="footer-social">
-						<li>
-							<a href="#" title="facebook">
-								<i class="fa fa-facebook" aria-hidden="true"></i>
-							</a>
-						</li>
-						<li>
-							<a href="#" title="twitter">
-								<i class="fa fa-twitter" aria-hidden="true"></i>
-							</a>
-						</li>
-						<li>
-							<a href="#" title="google-plus">
-								<i class="fa fa-google-plus" aria-hidden="true"></i>
-							</a>
-						</li>
-						<li>
-							<a href="#" title="linkedin">
-								<i class="fa fa-linkedin" aria-hidden="true"></i>
-							</a>
-						</li>
-						<li>
-							<a href="#" title="pinterest">
-								<i class="fa fa-pinterest" aria-hidden="true"></i>
-							</a>
-						</li>
-						<li>
-							<a href="#" title="rss">
-								<i class="fa fa-rss" aria-hidden="true"></i>
-							</a>
-						</li>
-						<li>
-							<a href="#" title="vimeo">
-								<i class="fa fa-vimeo" aria-hidden="true"></i>
-							</a>
-						</li>
-					</ul>
-					<p>© 2025 Tejyug Designed by Tejyug. All Rights Reserved</p>
-				</div>
-			</div>
-		</div>
-	</div>
+
+                                    
+                                    @foreach($postMenuCategory as $category)
+    <div class="tj-tags-row">
+        <strong>{{ $category->name }}:</strong>
+        <div class="tj-tags-list">
+             @forelse($category->posts as $post)
+             <a href="{{ route('post.show', $post->slug) }}">
+            <span>{{ \Illuminate\Support\Str::limit($post->title, 40) }}</span>
+            </a>
+             @empty
+                                                        <div class="mega-card">
+                                                            <h4>No posts available</h4>
+                                                        </div>
+                                                    @endforelse
+            
+        </div>
+    </div>
+    @endforeach
+    
+     @foreach($headerCategoriesWithSub as $category)
+    <div class="tj-tags-row">
+        <strong>{{ $category->name }}:</strong>
+        <div class="tj-tags-list">
+              @foreach($category->subcategories as $sub)
+             <a href="{{ route('post.show', $post->slug) }}">
+            <span>{{ $sub->name }}</span>
+            </a>
+              @endforeach
+            
+        </div>
+    </div>
+    @endforeach
+
+    <!-- SECTION 3: Latest -->
+   
+
+
+   
+
+
+    <!-- SECTION 5: App + Social -->
+    <div class="tj-bottom-social">
+        <div class="left">
+           
+         <div class="tj-nav-row">
+        <a href="#">Home</a>
+        
+        <a href="#">About Us</a>
+        
+       
+        <a href="#">Contact Us</a>
+        <a href="#">Adverties With Us</a>
+        <a href="#">Terms Of Use</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Cookies</a>
+    </div>
+        </div>
+
+        <div class="right">
+            FOLLOW US:
+            <i class="fa fa-whatsapp"></i>
+            <i class="fa fa-facebook"></i>
+            <i class="fa fa-twitter"></i>
+            <i class="fa fa-rss"></i>
+            <i class="fa fa-youtube"></i>
+        </div>
+    </div>
+       
+    </div>
+
+
+
+   
+
+
+    
+    <div class="tj-copy">
+        © Copyright Tej Yug News @ 2025 | Design & Developed By Web Mingo
+    </div>
+
 </footer>
+
+<!--<footer>-->
+<!--	<div class="footer-area-top">-->
+<!--		<div class="container">-->
+<!--			<div class="row">-->
+<!--				<div class="col-lg-4 col-md-6 col-sm-12">-->
+<!--					<div class="footer-box">-->
+<!--						<h2 class="title-bold-light title-bar-left text-uppercase">Most Viewed Posts</h2>-->
+<!--						<ul class="most-view-post">-->
+<!--							@foreach($mostViewedPosts as $post)-->
+<!--								<li>-->
+<!--									<div class="media">-->
+<!--										<a href="{{ route('post.show', $post->slug) }}">-->
+<!--											<img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"-->
+<!--												alt="{{ $post->title }}" class="img-fluid" width="70px">-->
+<!--										</a>-->
+<!--										<div class="media-body">-->
+<!--											<h3 class="title-medium-light size-md mb-10">-->
+<!--												<a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>-->
+<!--											</h3>-->
+<!--											<div class="post-date-light">-->
+<!--												<ul>-->
+<!--													<li>-->
+<!--														<span>-->
+<!--															<i class="fa fa-calendar" aria-hidden="true"></i>-->
+<!--														</span>{{ $post->created_at->format('F d, Y') }}-->
+<!--													</li>-->
+<!--												</ul>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--									</div>-->
+<!--								</li>-->
+<!--							@endforeach-->
+
+<!--							@if($mostViewedPosts->isEmpty())-->
+<!--								<li>No posts available</li>-->
+<!--							@endif-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+
+<!--				<div class="col-xl-4 col-lg-3 col-md-6 col-sm-12">-->
+<!--					<div class="footer-box">-->
+<!--						<h2 class="title-bold-light title-bar-left text-uppercase">Popular Categories</h2>-->
+<!--						<ul class="popular-categories">-->
+<!--							@foreach($footerCategories as $category)-->
+<!--								<li>-->
+<!--									<a href="{{ route('category.posts', $category->slug) }}">-->
+<!--										{{ $category->name }}-->
+<!--										<span>{{ $category->posts()->count() }}</span>-->
+<!--									</a>-->
+<!--								</li>-->
+<!--							@endforeach-->
+
+<!--							@if($footerCategories->isEmpty())-->
+<!--								<li>No categories available</li>-->
+<!--							@endif-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+
+
+
+<!--				<div class="col-xl-4 col-lg-5 col-md-12 col-sm-12">-->
+<!--					<div class="footer-box">-->
+<!--						<h2 class="title-bold-light title-bar-left text-uppercase">Post Gallery</h2>-->
+<!--						<ul class="post-gallery shine-hover ">-->
+<!--							@foreach($galleryPosts as $post)-->
+<!--								<li>-->
+<!--									<a href="{{ route('post.show', $post->slug) }}">-->
+<!--										<figure>-->
+<!--											<img src="{{ $post->image ? asset('storage/' . $post->image) : asset('website/img/footer/post-default.jpg') }}"-->
+<!--												alt="{{ $post->title }}" class="img-fluid" style="height:70px;">-->
+<!--										</figure>-->
+<!--									</a>-->
+<!--								</li>-->
+<!--							@endforeach-->
+
+<!--							@if($galleryPosts->isEmpty())-->
+<!--								<li>No news available</li>-->
+<!--							@endif-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
+<!--	<div class="footer-area-bottom">-->
+<!--		<div class="container">-->
+<!--			<div class="row">-->
+<!--				<div class="col-12 text-center">-->
+<!--					<a href="index.html" class="footer-logo img-fluid">-->
+<!--						<img src="{{ asset('website') }}/img/Tej-Yug-News-logo.png" alt="logo" class="img-fluid"-->
+<!--							width="100px">-->
+<!--					</a>-->
+<!--					<ul class="footer-social">-->
+<!--						<li>-->
+<!--							<a href="#" title="facebook">-->
+<!--								<i class="fa fa-facebook" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="#" title="twitter">-->
+<!--								<i class="fa fa-twitter" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="#" title="google-plus">-->
+<!--								<i class="fa fa-google-plus" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="#" title="linkedin">-->
+<!--								<i class="fa fa-linkedin" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="#" title="pinterest">-->
+<!--								<i class="fa fa-pinterest" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="#" title="rss">-->
+<!--								<i class="fa fa-rss" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="#" title="vimeo">-->
+<!--								<i class="fa fa-vimeo" aria-hidden="true"></i>-->
+<!--							</a>-->
+<!--						</li>-->
+<!--					</ul>-->
+<!--					<p>© 2025 Tejyug Designed by Tejyug. All Rights Reserved</p>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
+<!--</footer>-->
 <!-- Footer Area End Here -->
 <!-- Modal Start-->
 <div class="modal fade" id="myModal" role="dialog">
@@ -189,55 +391,11 @@
 </div>
 <!-- Modal End-->
 <!-- Offcanvas Menu Start -->
-<div id="offcanvas-body-wrapper" class="offcanvas-body-wrapper">
-	<div id="offcanvas-nav-close" class="offcanvas-nav-close offcanvas-menu-btn">
-		<a href="#" class="menu-times re-point">
-			<span></span>
-			<span></span>
-		</a>
-	</div>
-	<div class="offcanvas-main-body">
-		<ul id="accordion" class="offcanvas-nav panel-group" style="margin-bottom:40px;">
-			<li class="panel panel-default">
-				<div class="panel-heading">
-					<a aria-expanded="false" class="accordion-toggle collapsed" data-toggle="collapse"
-						data-parent="#accordion" href="{{ route('homecategory') }}">
-						<i class="fa fa-home" aria-hidden="true"></i>Home </a>
-				</div>
-			</li>
-			<li>
-				<a href="{{ route('reporters') }}"><i class="fa fa-user" aria-hidden="true"></i>Our Reporters</a>
-			</li>
-			<li>
-				<a href="{{ route('about-us') }}"><i class="fa fa-user" aria-hidden="true"></i>About Us</a>
-			</li>
-			<li>
-				<a href="{{ route('our-team') }}"><i class="fa fa-user" aria-hidden="true"></i>Our Team</a>
-			</li>
-			<li>
-				<a href="{{ url('/advertisement') }}"><i class="fa fa-archive" aria-hidden="true"></i>Advertise with Us</a>
-			</li>
-			<li>
-				<a href="{{ route('archive') }}"><i class="fa fa-archive" aria-hidden="true"></i>Archive</a>
-			</li>
-			<!-- <li>
-				<a href="archive.html"><i class="fa fa-archive" aria-hidden="true"></i>Gallery</a>
-			</li> -->
-			<li>
-				<a href="{{ route('terms-of-use') }}"><i class="fa fa-archive" aria-hidden="true"></i>Terms & Conditions</a>
-			</li>
-			<li>
-				<a href="{{ route('privacy-policy') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Privacy Policy</a>
-			</li>
-			<li>
-				<a href="{{ route('cookie-policy') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Cookies Policy</a>
-			</li>
-			<li>
-				<a href="{{ route('contact-us') }}"><i class="fa fa-phone" aria-hidden="true"></i>Contact Us</a>
-			</li>
-		</ul>
-	</div>
-</div>
+<!-- LEFT OFFCANVAS -->
+
+
+
+
 <!-- Offcanvas Menu End -->
 </div>
 <!-- Wrapper End -->
