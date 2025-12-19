@@ -165,6 +165,25 @@ class FrontController extends Controller
             ->first();
 
 
+        $technologyCategory = Category::with([
+            'posts' => function ($q) {
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                })
+                    ->latest()
+                    ->take(5);
+            }
+        ])
+            ->where('slug', 'technology')
+            ->whereHas('posts', function ($q) {
+                $q->where(function ($query) {
+                    $query->whereNotNull('image')
+                        ->orWhereNotNull('video');
+                });
+            })
+            ->first();
+
         $otherCategorySlugs = ['manoranjan', 'sahataya', 'desh', 'accident'];
 
         $otherCategories = Category::whereIn('slug', $otherCategorySlugs)
@@ -182,7 +201,7 @@ class FrontController extends Controller
                 ->get();
         }
 
-        $moreCategorySlugs = ['health', 'technology', 'taza-khabar', 'tapa-naya', 'breaking-news'];
+        $moreCategorySlugs = ['health', 'taza-khabar', 'tapa-naya', 'breaking-news'];
         $moreCategories = Category::whereIn('slug', $moreCategorySlugs)
             ->whereHas('posts')
             ->get();
@@ -224,6 +243,7 @@ class FrontController extends Controller
             'khelCategory',
             'rajneetiCategory',
             'crimeCategory',
+            'technologyCategory',
             'otherCategories',
             'moreCategories',
             'categoryBoxes',

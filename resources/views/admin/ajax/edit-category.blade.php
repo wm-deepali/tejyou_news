@@ -20,25 +20,19 @@
           </div>
           <div class="col-sm-6">
             <label class="label-control">Settings</label><br>
-
             <label>
-              <input type="checkbox" name="hassubcategory" value="yes" id="hassubcategory" @if (isset($category) && $category->hassubcategory == 'yes') checked @endif>
-              Has Sub Category
+              <input type="checkbox" name="showontopheader" value="yes" id="showontopheader" @if (isset($category) && $category->showontopheader == 'yes') checked @endif> Show on Top Header</label><br>
+            <label>
+              <input type="checkbox" name="showonheader" value="yes" id="showonheader" @if (isset($category) && $category->showonheader == 'yes') checked @endif> Show on Header
             </label><br>
-
             <label>
-              <input type="checkbox" name="showonheader" value="yes" id="showonheader" @if (isset($category) && $category->showonheader == 'yes') checked @endif>
-              Show on Header
+              <input type="checkbox" name="showonfooter" value="yes" id="showonfooter" @if (isset($category) && $category->showonfooter == 'yes') checked @endif> Show on Footer
             </label><br>
-
             <label>
-              <input type="checkbox" name="showonfooter" value="yes" id="showonfooter" @if (isset($category) && $category->showonfooter == 'yes') checked @endif>
-              Show on Footer
+              <input type="checkbox" name="show_in_menu" value="yes" id="show_in_menu" @if (isset($category) && $category->show_in_menu == 'yes') checked @endif> Show News in Menu Dropdown
             </label><br>
-
             <label>
-              <input type="checkbox" name="show_in_menu" value="yes" id="show_in_menu" @if (isset($category) && $category->show_in_menu == 'yes') checked @endif>
-              Show Posts in Menu
+              <input type="checkbox" name="hassubcategory" value="yes" id="hassubcategory" @if (isset($category) && $category->hassubcategory == 'yes') checked @endif> HasSubCategory
             </label>
           </div>
 

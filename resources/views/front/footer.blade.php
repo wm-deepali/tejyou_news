@@ -1,95 +1,95 @@
 <!-- Footer Area Start Here -->
 @php
-	$mostViewedPosts = App\Post::where('status', 'published')
-		->orderBy('views', 'desc')
-		->take(5) // adjust how many posts you want to show
-		->get();
+    $mostViewedPosts = App\Post::where('status', 'published')
+        ->orderBy('views', 'desc')
+        ->take(5) // adjust how many posts you want to show
+        ->get();
 
-	$footerCategories = App\Category::where('status', 'active')
-		->where('showonfooter', 'yes')
-		->orderBy('sequence', 'asc')
-		->get();
+    $footerCategories = App\Category::where('status', 'active')
+        ->where('showonfooter', 'yes')
+        ->orderBy('sequence', 'asc')
+        ->get();
 
-	// Fetch latest 9 posts with images
-	$galleryPosts = App\Post::where('status', 'published')
-		->whereNotNull('image')
-		->orderBy('created_at', 'desc')
-		->take(9)
-		->get();
+    // Fetch latest 9 posts with images
+    $galleryPosts = App\Post::where('status', 'published')
+        ->whereNotNull('image')
+        ->orderBy('created_at', 'desc')
+        ->take(9)
+        ->get();
+
+    $footer = App\Footersetting::first();
 
 @endphp
- @php
-            $headerCategoriesWithSub = App\Category::where('status', 'active')
-                ->where('showonheader', 'yes')
-                ->where('hassubcategory', 'yes')
-                ->with([
-                    'subcategories' => function ($q) {
-                        $q->where('showonheader', 'yes');
-                    }
-                ])
-                ->get();
+@php
+    $headerCategoriesWithSub = App\Category::where('status', 'active')
+        ->where('showonheader', 'yes')
+        ->where('hassubcategory', 'yes')
+        ->with([
+            'subcategories' => function ($q) {
+                $q->where('showonheader', 'yes');
+            }
+        ])
+        ->get();
 
-            $headercategorieswithoutsub = App\Category::where('status', 'active')
-                ->where('showonheader', 'yes')
-                ->where('hassubcategory', 'no')
-                ->orderBy('sequence', 'asc')
-                ->get();
+    $headercategorieswithoutsub = App\Category::where('status', 'active')
+        ->where('showonheader', 'yes')
+        ->where('hassubcategory', 'no')
+        ->orderBy('sequence', 'asc')
+        ->get();
 
-            $postMenuCategory = App\Category::where('status', 'active')
-                ->where('show_in_menu', 'yes')
-                ->with([
-                    'posts' => function ($q) {
-                        $q->orderBy('created_at', 'desc')
-                            ->take(4);
-                    }
-                ])
-                ->orderBy('sequence', 'asc')
-                ->get();
+    $postMenuCategory = App\Category::where('status', 'active')
+        ->where('show_in_menu', 'yes')
+        ->with([
+            'posts' => function ($q) {
+                $q->orderBy('created_at', 'desc')
+                    ->take(4);
+            }
+        ])
+        ->orderBy('sequence', 'asc')
+        ->get();
 
-            $breakingNewsPosts = App\Post::where('status', 'published')
-                ->where('breaking_news', 'yes')
-                ->orderBy('created_at', 'desc')
-                ->take(10)
-                ->get();
-        @endphp
+    $breakingNewsPosts = App\Post::where('status', 'published')
+        ->where('breaking_news', 'yes')
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
+@endphp
 <style>
     /* LEFT OFFCANVAS */
-.left-sidebar{
-    position: fixed;
-    top: 0;
-    left: -320px;
-    width: 320px;
-    height: 100vh;
-    background: #0b1c2d;
-    transition: 0.3s;
-    z-index: 10001;
-}
+    .left-sidebar {
+        position: fixed;
+        top: 0;
+        left: -320px;
+        width: 320px;
+        height: 100vh;
+        background: #0b1c2d;
+        transition: 0.3s;
+        z-index: 10001;
+    }
 
-.left-sidebar.active{
-    left: 0;
-}
+    .left-sidebar.active {
+        left: 0;
+    }
 
-.left-overlay{
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.3s;
-    z-index: 10000;
-}
+    .left-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 10000;
+    }
 
-.left-overlay.active{
-    opacity: 1;
-    visibility: visible;
-}
-
-
+    .left-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
 </style>
 <footer class="tj-footer">
 
     <!-- SECTION 1 : 4-Column Information -->
-        <div class="container">
+    <div class="container">
 
         <!-- MOST VIEWED SECTION -->
         <div class="row mb-4 pb-3">
@@ -98,122 +98,117 @@
             </div>
 
             @foreach($mostViewedPosts as $post)
-            <div class="col-md-4 mb-3">
-                <a href="{{ route('post.show', $post->slug) }}" class="footer-card d-flex">
-                    <div class="footer-thumb">
-                        <img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"
-												alt="{{ $post->title }}" class="img-fluid" width="70px">
-                    </div>
-                    <div class="footer-info ps-3 p-2" >
-                        <div class="footer-title" style="color:#fff;">
-                            {{ \Illuminate\Support\Str::limit($post->title, 60) }}
+                <div class="col-md-4 mb-3">
+                    <a href="{{ route('post.show', $post->slug) }}" class="footer-card d-flex">
+                        <div class="footer-thumb">
+                            <img src="{{ $post->image ? asset('storage/' . $post->image) : 'https://tejyug.com/public/front/images/Tej-Yug-News-logo.png' }}"
+                                alt="{{ $post->title }}" class="img-fluid" width="70px">
                         </div>
-                        <span class="footer-date" style="color:#fff;">
-                            {{ $post->created_at->format('d M Y') }}
-                        </span>
-                    </div>
-                </a>
-            </div>
+                        <div class="footer-info ps-3 p-2">
+                            <div class="footer-title" style="color:#fff;">
+                                {{ \Illuminate\Support\Str::limit($post->title, 60) }}
+                            </div>
+                            <span class="footer-date" style="color:#fff;">
+                                {{ $post->created_at->format('d M Y') }}
+                            </span>
+                        </div>
+                    </a>
+                </div>
             @endforeach
         </div>
 
-
         <!-- CATEGORIES -->
         <div class=" mb-4 tj-bottom-social pb-3">
-            
-
             @foreach($footerCategories as $category)
-            <div class="  mb-2" style="margin-right:24px;">
-                <a href="{{ route('category.posts', $category->slug) }}"
-                   class="btn btn-outline-secondary w-100 rounded-pill" style="font-size: 22px;
-    padding: 5px 15px;
-    margin-bottom: 15px;">
-                   {{ $category->name }}
-                </a>
-            </div>
+                <div class="  mb-2" style="margin-right:24px;">
+                    <a href="{{ route('category.posts', $category->slug) }}"
+                        class="btn btn-outline-secondary w-100 rounded-pill" style="font-size: 22px;
+                                                padding: 5px 15px;
+                                                margin-bottom: 15px;">
+                        {{ $category->name }}
+                    </a>
+                </div>
             @endforeach
         </div>
 
         <!-- COMPANY INFO & QUICK LINKS -->
-      
+        @foreach($postMenuCategory as $category)
+            <div class="tj-tags-row">
+                <strong>{{ $category->name }}:</strong>
+                <div class="tj-tags-list">
+                    @forelse($category->posts as $post)
+                        <a href="{{ route('post.show', $post->slug) }}">
+                            <span>{{ \Illuminate\Support\Str::limit($post->title, 40) }}</span>
+                        </a>
+                    @empty
+                        <div class="mega-card">
+                            <h4>No posts available</h4>
+                        </div>
+                    @endforelse
 
+                </div>
+            </div>
+        @endforeach
 
-                                    
-                                    @foreach($postMenuCategory as $category)
-    <div class="tj-tags-row">
-        <strong>{{ $category->name }}:</strong>
-        <div class="tj-tags-list">
-             @forelse($category->posts as $post)
-             <a href="{{ route('post.show', $post->slug) }}">
-            <span>{{ \Illuminate\Support\Str::limit($post->title, 40) }}</span>
-            </a>
-             @empty
-                                                        <div class="mega-card">
-                                                            <h4>No posts available</h4>
-                                                        </div>
-                                                    @endforelse
-            
+        @foreach($headerCategoriesWithSub as $category)
+            <div class="tj-tags-row">
+                <strong>{{ $category->name }}:</strong>
+                <div class="tj-tags-list">
+                    @foreach($category->subcategories as $sub)
+                        <a href="{{ route('post.show', $post->slug) }}">
+                            <span>{{ $sub->name }}</span>
+                        </a>
+                    @endforeach
+
+                </div>
+            </div>
+        @endforeach
+
+        <!-- SECTION 3: Latest -->
+
+        <!-- SECTION 5: App + Social -->
+        <div class="tj-bottom-social">
+            <div class="left">
+
+                <div class="tj-nav-row">
+                    <a href="{{ route('homecategory') }}">Home</a>
+                    <a href="{{ route('about-us') }}">About Us</a>
+                    <a href="{{ route('contact-us') }}">Contact Us</a>
+                    <a href="{{ url('/advertisement') }}">Adverties With Us</a>
+                    <a href="{{ route('terms-of-use') }}">Terms Of Use</a>
+                    <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
+                    <a href="{{ route('cookie-policy') }}">Cookies</a>
+                </div>
+            </div>
+
+            <div class="right">
+                FOLLOW US:
+                <a href="{{ $footer->whatsapp ?? "#"}}" title="whatsapp" style="color:#fff">
+                    <i class="fa fa-whatsapp"></i>
+                </a>
+                <a href="{{ $footer->facebook ?? "#"}}" title="facebook" style="color:#fff">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a href="{{ $footer->twitter ?? "#"}}" title="twitter" style="color:#fff">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a href="{{ $footer->rss ?? "#" }}" title="rss" style="color:#fff">
+                    <i class="fa fa-rss"></i>
+                </a>
+                <a href="{{ $footer->youtube ?? "#" }}" title="youtube" style="color:#fff">
+                    <i class="fa fa-youtube"></i>
+                </a>
+            </div>
         </div>
-    </div>
-    @endforeach
-    
-     @foreach($headerCategoriesWithSub as $category)
-    <div class="tj-tags-row">
-        <strong>{{ $category->name }}:</strong>
-        <div class="tj-tags-list">
-              @foreach($category->subcategories as $sub)
-             <a href="{{ route('post.show', $post->slug) }}">
-            <span>{{ $sub->name }}</span>
-            </a>
-              @endforeach
-            
-        </div>
-    </div>
-    @endforeach
 
-    <!-- SECTION 3: Latest -->
-   
-
-
-   
-
-
-    <!-- SECTION 5: App + Social -->
-    <div class="tj-bottom-social">
-        <div class="left">
-           
-         <div class="tj-nav-row">
-        <a href="#">Home</a>
-        
-        <a href="#">About Us</a>
-        
-       
-        <a href="#">Contact Us</a>
-        <a href="#">Adverties With Us</a>
-        <a href="#">Terms Of Use</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Cookies</a>
-    </div>
-        </div>
-
-        <div class="right">
-            FOLLOW US:
-            <i class="fa fa-whatsapp"></i>
-            <i class="fa fa-facebook"></i>
-            <i class="fa fa-twitter"></i>
-            <i class="fa fa-rss"></i>
-            <i class="fa fa-youtube"></i>
-        </div>
-    </div>
-       
     </div>
 
 
 
-   
 
 
-    
+
+
     <div class="tj-copy">
         © Copyright Tej Yug News @ 2025 | Design & Developed By Web Mingo
     </div>
@@ -361,33 +356,33 @@
 <!-- Footer Area End Here -->
 <!-- Modal Start-->
 <div class="modal fade" id="myModal" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<div class="title-login-form">Login</div>
-			</div>
-			<div class="modal-body">
-				<div class="login-form">
-					<form>
-						<label>Username or email address *</label>
-						<input type="text" placeholder="Name or E-mail">
-						<label>Password *</label>
-						<input type="password" placeholder="Password">
-						<div class="checkbox checkbox-primary">
-							<input id="checkbox" type="checkbox" checked="">
-							<label for="checkbox">Remember Me</label>
-						</div>
-						<button type="submit" value="Login">Login</button>
-						<button class="form-cancel" type="submit" value="">Cancel</button>
-						<label class="lost-password">
-							<a href="#">Lost your password?</a>
-						</label>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="title-login-form">Login</div>
+            </div>
+            <div class="modal-body">
+                <div class="login-form">
+                    <form>
+                        <label>Username or email address *</label>
+                        <input type="text" placeholder="Name or E-mail">
+                        <label>Password *</label>
+                        <input type="password" placeholder="Password">
+                        <div class="checkbox checkbox-primary">
+                            <input id="checkbox" type="checkbox" checked="">
+                            <label for="checkbox">Remember Me</label>
+                        </div>
+                        <button type="submit" value="Login">Login</button>
+                        <button class="form-cancel" type="submit" value="">Cancel</button>
+                        <label class="lost-password">
+                            <a href="#">Lost your password?</a>
+                        </label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Modal End-->
 <!-- Offcanvas Menu Start -->
@@ -401,7 +396,7 @@
 <!-- Wrapper End -->
 
 <!-- start video Modal -->
- <style>
+<style>
     /* Auto-resize container like YouTube embed */
     .youtube-container {
         position: relative;

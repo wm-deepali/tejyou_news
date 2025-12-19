@@ -18,11 +18,11 @@
           </div>
           <div class="col-sm-6">
             <label class="label-control">Settings</label><br>
-            <label><input type="checkbox" name="hassubcategory" value="yes" id="hassubcategory"> Has Sub
-              Category</label><br>
+            <label><input type="checkbox" name="showontopheader" value="yes" id="showontopheader"> Show on Top Header</label><br>
             <label><input type="checkbox" name="showonheader" value="yes" id="showonheader"> Show on Header</label><br>
             <label><input type="checkbox" name="showonfooter" value="yes" id="showonfooter"> Show on Footer</label><br>
-            <label><input type="checkbox" name="show_in_menu" value="yes" id="show_in_menu"> Show Posts in Menu</label>
+            <label><input type="checkbox" name="show_in_menu" value="yes" id="show_in_menu"> Show News in Menu Dropdown</label>
+            <label><input type="checkbox" name="hassubcategory" value="yes" id="hassubcategory"> Has SubCategory</label><br>
           </div>
         </div>
         <div class="form-group row">

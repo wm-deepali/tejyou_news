@@ -2,20 +2,22 @@
 
 <style>
     .add-top-margin {
-        margin-top:160px !important;
-       
+        margin-top: 160px !important;
+
     }
 
     .breaking-section {
         background: #b40000;
         border-bottom: 3px solid #8a0000;
     }
+
     .breaking-horizontal {
         display: flex;
         align-items: center;
         height: 50px;
         overflow: hidden;
     }
+
     .breaking-label {
         background: #ffeb3b;
         color: #000;
@@ -28,63 +30,75 @@
         border-right: 2px solid #8a0000;
         white-space: nowrap;
     }
+
     .breaking-label i {
         font-size: 18px;
     }
+
     .breaking-track {
-        flex: 1;                    /* नया: पूरा space लेगा */
+        flex: 1;
+        /* नया: पूरा space लेगा */
         height: 50px;
-        line-height: 50px;          /* height के बराबर */
+        line-height: 50px;
+        /* height के बराबर */
         overflow: hidden;
         position: relative;
-        padding-left: 20px;         /* थोड़ा space */
+        padding-left: 20px;
+        /* थोड़ा space */
     }
+
     .breaking-list {
         list-style: none;
         margin: 0;
         padding: 0;
         color: #fff !important;
-        font-weight:600;
+        font-weight: 600;
     }
+
     .breaking-list li {
         position: absolute;
         top: 0;
         left: 20px;
-        right: 20px;                /* नया: left-right से space */
+        right: 20px;
+        /* नया: left-right से space */
         opacity: 0;
-        transition: opacity 0.8s ease-in-out;  /* smooth fade */
+        transition: opacity 0.8s ease-in-out;
+        /* smooth fade */
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;    /* long text के अंत में ... */
+        text-overflow: ellipsis;
+        /* long text के अंत में ... */
         color: #fff !important;
-        font-weight:600;
+        font-weight: 600;
     }
+
     .breaking-list li.active {
         opacity: 1;
         color: #fff !important;
     }
+
     .breaking-list li a {
         color: #fff !important;
         text-decoration: none;
     }
+
     .breaking-list li a:hover {
         text-decoration: underline;
     }
-
 </style>
 
- @php
-           
-            $breakingNewsPosts = App\Post::where('status', 'published')
-                ->where('breaking_news', 'yes')
-                ->orderBy('created_at', 'desc')
-                ->take(10)
-                ->get();
-        @endphp
+@php
+
+    $breakingNewsPosts = App\Post::where('status', 'published')
+        ->where('breaking_news', 'yes')
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
+@endphp
 <section class="bg-accent border-bottom add-top-margin  ">
-            
-        </section>
-        <section class="breaking-section">
+
+</section>
+<section class="breaking-section">
     <div class="container">
         <div class="breaking-horizontal">
             <div class="breaking-label">
@@ -95,7 +109,7 @@
                     @forelse($breakingNewsPosts as $post)
                         <li>
                             <a href="{{ route('post.show', $post->slug) }}">
-                                {{ $post->title }}  <!-- Str::limit हटाया, ellipsis CSS से handle होगा -->
+                                {{ $post->title }} <!-- Str::limit हटाया, ellipsis CSS से handle होगा -->
                             </a>
                         </li>
                     @empty
@@ -118,8 +132,8 @@
                 @if($main)
                     <div class="img-overlay-70 img-scale-animate mb-2 img-ban">
                         @if($main->video)
-                            <img class="img-fluid width-100 video-thumb" data-videoid="{{$main->video}}" alt="{{ $main->title }}"
-                                src="https://img.youtube.com/vi/{{$main->video}}/0.jpg" />
+                            <img class="img-fluid width-100 video-thumb" data-videoid="{{$main->video}}"
+                                alt="{{ $main->title }}" src="https://img.youtube.com/vi/{{$main->video}}/0.jpg" />
                         @else
                             <img src="{{ asset('storage/' . $main->image) }}" alt="{{ $main->title }}"
                                 class="img-fluid width-100">
@@ -195,7 +209,8 @@
             <div class="col-lg-9 col-md-12">
                 <div class="mb-20-r ne-isotope">
                     <div class="topic-border color-cinnabar mb-30">
-                        <div class="topic-box-lg " style="color:#b40000;">{{ $rajyaCategory->name }} <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
+                        <div class="topic-box-lg " style="color:#b40000;">{{ $rajyaCategory->name }} <i
+                                class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
                         <div class="isotope-classes-tab isotop-btn">
                             @foreach($rajyaCategory->subcategories as $key => $subcategory)
                                 <a href="#" data-filter=".subcat-{{ $subcategory->id }}"
@@ -205,7 +220,7 @@
                             @endforeach
                         </div>
                         <div class="more-info-link">
-                            <a href="post-style-1.html">और पढ़ें
+                            <a href="{{ route('category.posts', $rajyaCategory->slug) }}">और पढ़ें
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -252,7 +267,7 @@
 
                                 <div class="col-md-8 col-sm-12 subcat-separator">
                                     @foreach($subcategory->posts->skip(1) as $post)
-                                        <div class="media " >
+                                        <div class="media ">
                                             <a class="width38-lg width40-md img-opacity-hover"
                                                 href="{{ route('post.show', $post->slug) }}">
                                                 @if($post->video)
@@ -277,15 +292,15 @@
                                                     <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                                 </h3>
                                                 <p class="m-0" style="color: #585656;font-weight:500;
-    font-size: 15px;
-    line-height: 22px;">
-    {!! Str::words(strip_tags($post->content), 30, '<span class="text-muted">...</span>') !!}
-</p>
+                                                                        font-size: 15px;
+                                                                        line-height: 22px;">
+                                                    {!! Str::words(strip_tags($post->content), 30, '<span class="text-muted">...</span>') !!}
+                                                </p>
                                             </div>
                                         </div>
-                                       
-        <div class="subcategory-divider"></div>
-   
+
+                                        <div class="subcategory-divider"></div>
+
                                     @endforeach
                                 </div>
                             </div>
@@ -328,7 +343,8 @@
                     <div class="row tab-space1 mb-25">
                         <div class="col-12">
                             <div class="topic-border color-cinnabar mb-30 width-100">
-                                <div class="topic-box-lg " style="color:#b40000;">{{ $videshCategory->name }} <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
+                                <div class="topic-box-lg " style="color:#b40000;">{{ $videshCategory->name }} <i
+                                        class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
                                 <!--<div class="topic-box-lg color-apple">{{ $videshCategory->name }} jj</div>-->
                             </div>
                         </div>
@@ -348,9 +364,9 @@
                                             <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                         </h3>
                                     </div>
-                                    @if($post->video) 
+                                    @if($post->video)
                                         <img class="img-fluid width-100 video-thumb" data-videoid="{{$post->video}}"
-                                            src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height:200px;"/>
+                                            src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height:200px;" />
                                     @else
                                         <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
                                             class="img-fluid width-100" style="height:200px;">
@@ -363,7 +379,7 @@
 
             </div>
             <div class="ne-sidebar sidebar-break-md col-lg-3 col-md-12">
-                
+
                 @php
                     $uppersidebar300x600 = collect($ads)->firstWhere('position', 'uppersidebar300x600');
                     $uppersidebar300x250 = collect($ads)->firstWhere('position', 'uppersidebar300x250');
@@ -424,8 +440,9 @@
 
                 <div class="sidebar-box">
                     <div class="topic-border color-cinnabar mb-5">
-                        <div class="topic-box-lg " style="color:#b40000;">Recent News <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
-                       
+                        <div class="topic-box-lg " style="color:#b40000;">Recent News <i
+                                class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
+
                     </div>
                     <div class="row">
                         @foreach($recentNews->take(2) as $news)
@@ -533,190 +550,190 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-9 col-md-12">
-                
-<!--               <div class="mb-20-r ne-isotope">-->
-<!--    <div class="topic-border color-cinnabar mb-30">-->
-<!--        <div class="topic-box-lg" style="color:#b40000;"></div>-->
-<!--        <div class="isotope-classes-tab isotop-btn">-->
-<!--            @if($khelCategory)-->
-<!--                <a href="#" data-filter=".khel-subcats" class="active">-->
-<!--                    {{ $khelCategory->name }}-->
-<!--                </a>-->
-<!--            @endif-->
-<!--            @if($rajneetiCategory)-->
-<!--                <a href="#" data-filter=".rajneeti-subcats" class="">-->
-<!--                    {{ $rajneetiCategory->name }}-->
-<!--                </a>-->
-<!--            @endif-->
-<!--            @if($crimeCategory)-->
-<!--                <a a href="#" data-filter=".crime-subcats" class="">-->
-<!--                    {{ $crimeCategory->name }}-->
-<!--                </a>-->
-<!--            @endif-->
-<!--        </div>-->
-<!--        <div class="more-info-link">-->
-<!--            <a href="post-style-1.html">और पढ़ें-->
-<!--                <i class="fa fa-angle-right" aria-hidden="true"></i>-->
-<!--            </a>-->
-<!--        </div>-->
-<!--    </div>-->
 
-<!--    <div class="featuredContainer">-->
+                <!--               <div class="mb-20-r ne-isotope">-->
+                <!--    <div class="topic-border color-cinnabar mb-30">-->
+                <!--        <div class="topic-box-lg" style="color:#b40000;"></div>-->
+                <!--        <div class="isotope-classes-tab isotop-btn">-->
+                <!--            @if($khelCategory)-->
+                <!--                <a href="#" data-filter=".khel-subcats" class="active">-->
+                <!--                    {{ $khelCategory->name }}-->
+                <!--                </a>-->
+                <!--            @endif-->
+                <!--            @if($rajneetiCategory)-->
+                <!--                <a href="#" data-filter=".rajneeti-subcats" class="">-->
+                <!--                    {{ $rajneetiCategory->name }}-->
+                <!--                </a>-->
+                <!--            @endif-->
+                <!--            @if($crimeCategory)-->
+                <!--                <a a href="#" data-filter=".crime-subcats" class="">-->
+                <!--                    {{ $crimeCategory->name }}-->
+                <!--                </a>-->
+                <!--            @endif-->
+                <!--        </div>-->
+                <!--        <div class="more-info-link">-->
+                <!--            <a href="post-style-1.html">और पढ़ें-->
+                <!--                <i class="fa fa-angle-right" aria-hidden="true"></i>-->
+                <!--            </a>-->
+                <!--        </div>-->
+                <!--    </div>-->
 
-        <!-- खेल -->
-<!--        @if($khelCategory)-->
-<!--            @foreach($khelCategory->subcategories as $subcategory)-->
-<!--                <div class="row khel-subcats">  <!-- सिंपल क्लास -->-->
-<!--                    <div class="col-md-4 col-sm-12">-->
-<!--                        @php $mainPost = $subcategory->posts->first(); @endphp-->
-<!--                        @if($mainPost)-->
-<!--                            <div class="img-overlay-70 img-scale-animate mb-30">-->
-<!--                                <a href="{{ route('post.show', $mainPost->slug) }}">-->
-<!--                                    @if($mainPost->video)-->
-<!--                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{ $mainPost->video }}"-->
-<!--                                            src="https://img.youtube.com/vi/{{ $mainPost->video }}/0.jpg" />-->
-<!--                                    @else-->
-<!--                                        <img src="{{ asset('storage/' . $mainPost->image) }}"-->
-<!--                                            alt="{{ $mainPost->title }}" class="img-fluid width-100">-->
-<!--                                    @endif-->
-<!--                                </a>-->
-<!--                                <div class="mask-content-lg">-->
-<!--                                    <div class="topic-box-sm color-cinnabar mb-20">{{ $subcategory->name }}</div>-->
-<!--                                    <div class="post-date-light">-->
-<!--                                        <ul>-->
-<!--                                            <li><span>by</span> <a href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a></li>-->
-<!--                                            <li><span><i class="fa fa-calendar"></i></span> {{ $mainPost->created_at->format('F d, Y') }}</li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <h2 class="title-medium-light size-lg">-->
-<!--                                        <a href="{{ route('post.show', $mainPost->slug) }}">{{ $mainPost->title }}</a>-->
-<!--                                    </h2>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        @endif-->
-<!--                    </div>-->
-<!--                    <div class="col-md-8 col-sm-12 subcat-separator">-->
-<!--                        @foreach($subcategory->posts->skip(1) as $post)-->
-<!--                            <div class="media">-->
-<!--                                <a class="width38-lg width40-md img-opacity-hover" href="{{ route('post.show', $post->slug) }}">-->
-<!--                                    @if($post->video)-->
-<!--                                        <img class="img-fluid video-thumb" style="width: 132px; height: 95px;"-->
-<!--                                            data-videoid="{{ $post->video }}"-->
-<!--                                            src="https://img.youtube.com/vi/{{ $post->video }}/0.jpg" />-->
-<!--                                    @else-->
-<!--                                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"-->
-<!--                                            class="img-fluid" style="width: 132px; height: 95px;">-->
-<!--                                    @endif-->
-<!--                                </a>-->
-<!--                                <div class="media-body">-->
-<!--                                    <div class="post-date-dark">-->
-<!--                                        <ul>-->
-<!--                                            <li><span><i class="fa fa-calendar"></i></span> {{ $post->created_at->format('F d, Y') }}</li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <h3 class="title-medium-dark size-md mb-none">-->
-<!--                                        <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>-->
-<!--                                    </h3>-->
-<!--                                    <p class="m-0" style="color: #666; font-size: 14px; line-height: 22px;">-->
-<!--                                        {!! Str::words(strip_tags($post->content), 30, '<span class="text-muted">...</span>') !!}-->
-<!--                                    </p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            @if(!$loop->last)-->
-<!--                                <div class="subcategory-divider"></div>-->
-<!--                            @endif-->
-<!--                        @endforeach-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            @endforeach-->
-<!--        @endif-->
+                <!--    <div class="featuredContainer">-->
 
-        <!-- राजनीति -->
-<!--        @if($rajneetiCategory)-->
-<!--            @foreach($rajneetiCategory->subcategories as $subcategory)-->
-<!--                <div class="row rajneeti-subcats">-->
-                    <!-- वही कोड, सिर्फ color-pomegranate रहेगा -->
-<!--                    <div class="col-md-4 col-sm-12">-->
-<!--                        @php $mainPost = $subcategory->posts->first(); @endphp-->
-<!--                        @if($mainPost)-->
-<!--                            <div class="img-overlay-70 img-scale-animate mb-30">-->
-<!--                                <a href="{{ route('post.show', $mainPost->slug) }}">-->
-<!--                                    @if($mainPost->video)-->
-<!--                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{ $mainPost->video }}"-->
-<!--                                            src="https://img.youtube.com/vi/{{ $mainPost->video }}/0.jpg" />-->
-<!--                                    @else-->
-<!--                                        <img src="{{ asset('storage/' . $mainPost->image) }}"-->
-<!--                                            alt="{{ $mainPost->title }}" class="img-fluid width-100">-->
-<!--                                    @endif-->
-<!--                                </a>-->
-<!--                                <div class="mask-content-lg">-->
-<!--                                    <div class="topic-box-sm color-pomegranate mb-20">{{ $subcategory->name }}</div>-->
-<!--                                    <div class="post-date-light">-->
-<!--                                        <ul>-->
-<!--                                            <li><span>by</span> <a href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a></li>-->
-<!--                                            <li><span><i class="fa fa-calendar"></i></span> {{ $mainPost->created_at->format('F d, Y') }}</li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <h2 class="title-medium-light size-lg">-->
-<!--                                        <a href="{{ route('post.show', $mainPost->slug) }}">{{ $mainPost->title }}</a>-->
-<!--                                    </h2>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        @endif-->
-<!--                    </div>-->
-<!--                    <div class="col-md-8 col-sm-12 subcat-separator">-->
-                        <!-- बाकी लिस्ट वाला कोड वही -->
-<!--                        @foreach($subcategory->posts->skip(1) as $post)-->
-                            <!-- ... same as above ... -->
-<!--                        @endforeach-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            @endforeach-->
-<!--        @endif-->
+                <!-- खेल -->
+                <!--        @if($khelCategory)-->
+                <!--            @foreach($khelCategory->subcategories as $subcategory)-->
+                <!--                <div class="row khel-subcats">  <!-- सिंपल क्लास -->-->
+                <!--                    <div class="col-md-4 col-sm-12">-->
+                <!--                        @php $mainPost = $subcategory->posts->first(); @endphp-->
+                <!--                        @if($mainPost)-->
+                <!--                            <div class="img-overlay-70 img-scale-animate mb-30">-->
+                <!--                                <a href="{{ route('post.show', $mainPost->slug) }}">-->
+                <!--                                    @if($mainPost->video)-->
+                <!--                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{ $mainPost->video }}"-->
+                <!--                                            src="https://img.youtube.com/vi/{{ $mainPost->video }}/0.jpg" />-->
+                <!--                                    @else-->
+                <!--                                        <img src="{{ asset('storage/' . $mainPost->image) }}"-->
+                <!--                                            alt="{{ $mainPost->title }}" class="img-fluid width-100">-->
+                <!--                                    @endif-->
+                <!--                                </a>-->
+                <!--                                <div class="mask-content-lg">-->
+                <!--                                    <div class="topic-box-sm color-cinnabar mb-20">{{ $subcategory->name }}</div>-->
+                <!--                                    <div class="post-date-light">-->
+                <!--                                        <ul>-->
+                <!--                                            <li><span>by</span> <a href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a></li>-->
+                <!--                                            <li><span><i class="fa fa-calendar"></i></span> {{ $mainPost->created_at->format('F d, Y') }}</li>-->
+                <!--                                        </ul>-->
+                <!--                                    </div>-->
+                <!--                                    <h2 class="title-medium-light size-lg">-->
+                <!--                                        <a href="{{ route('post.show', $mainPost->slug) }}">{{ $mainPost->title }}</a>-->
+                <!--                                    </h2>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        @endif-->
+                <!--                    </div>-->
+                <!--                    <div class="col-md-8 col-sm-12 subcat-separator">-->
+                <!--                        @foreach($subcategory->posts->skip(1) as $post)-->
+                <!--                            <div class="media">-->
+                <!--                                <a class="width38-lg width40-md img-opacity-hover" href="{{ route('post.show', $post->slug) }}">-->
+                <!--                                    @if($post->video)-->
+                <!--                                        <img class="img-fluid video-thumb" style="width: 132px; height: 95px;"-->
+                <!--                                            data-videoid="{{ $post->video }}"-->
+                <!--                                            src="https://img.youtube.com/vi/{{ $post->video }}/0.jpg" />-->
+                <!--                                    @else-->
+                <!--                                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"-->
+                <!--                                            class="img-fluid" style="width: 132px; height: 95px;">-->
+                <!--                                    @endif-->
+                <!--                                </a>-->
+                <!--                                <div class="media-body">-->
+                <!--                                    <div class="post-date-dark">-->
+                <!--                                        <ul>-->
+                <!--                                            <li><span><i class="fa fa-calendar"></i></span> {{ $post->created_at->format('F d, Y') }}</li>-->
+                <!--                                        </ul>-->
+                <!--                                    </div>-->
+                <!--                                    <h3 class="title-medium-dark size-md mb-none">-->
+                <!--                                        <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>-->
+                <!--                                    </h3>-->
+                <!--                                    <p class="m-0" style="color: #666; font-size: 14px; line-height: 22px;">-->
+                <!--                                        {!! Str::words(strip_tags($post->content), 30, '<span class="text-muted">...</span>') !!}-->
+                <!--                                    </p>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                            @if(!$loop->last)-->
+                <!--                                <div class="subcategory-divider"></div>-->
+                <!--                            @endif-->
+                <!--                        @endforeach-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--            @endforeach-->
+                <!--        @endif-->
 
-        <!-- क्राइम -->
-<!--        @if($crimeCategory)-->
-<!--            @foreach($crimeCategory->subcategories as $subcategory)-->
-<!--                <div class="row crime-subcats">-->
-                    <!-- वही कोड, color-web-orange रहेगा -->
-                    <!-- ... same structure ... -->
-<!--                </div>-->
-<!--            @endforeach-->
-<!--        @endif-->
+                <!-- राजनीति -->
+                <!--        @if($rajneetiCategory)-->
+                <!--            @foreach($rajneetiCategory->subcategories as $subcategory)-->
+                <!--                <div class="row rajneeti-subcats">-->
+                <!-- वही कोड, सिर्फ color-pomegranate रहेगा -->
+                <!--                    <div class="col-md-4 col-sm-12">-->
+                <!--                        @php $mainPost = $subcategory->posts->first(); @endphp-->
+                <!--                        @if($mainPost)-->
+                <!--                            <div class="img-overlay-70 img-scale-animate mb-30">-->
+                <!--                                <a href="{{ route('post.show', $mainPost->slug) }}">-->
+                <!--                                    @if($mainPost->video)-->
+                <!--                                        <img class="img-fluid width-100 video-thumb" data-videoid="{{ $mainPost->video }}"-->
+                <!--                                            src="https://img.youtube.com/vi/{{ $mainPost->video }}/0.jpg" />-->
+                <!--                                    @else-->
+                <!--                                        <img src="{{ asset('storage/' . $mainPost->image) }}"-->
+                <!--                                            alt="{{ $mainPost->title }}" class="img-fluid width-100">-->
+                <!--                                    @endif-->
+                <!--                                </a>-->
+                <!--                                <div class="mask-content-lg">-->
+                <!--                                    <div class="topic-box-sm color-pomegranate mb-20">{{ $subcategory->name }}</div>-->
+                <!--                                    <div class="post-date-light">-->
+                <!--                                        <ul>-->
+                <!--                                            <li><span>by</span> <a href="{{ route('reporter.posts', $mainPost->user->id) }}">{{ $mainPost->user->name ?? 'Admin' }}</a></li>-->
+                <!--                                            <li><span><i class="fa fa-calendar"></i></span> {{ $mainPost->created_at->format('F d, Y') }}</li>-->
+                <!--                                        </ul>-->
+                <!--                                    </div>-->
+                <!--                                    <h2 class="title-medium-light size-lg">-->
+                <!--                                        <a href="{{ route('post.show', $mainPost->slug) }}">{{ $mainPost->title }}</a>-->
+                <!--                                    </h2>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        @endif-->
+                <!--                    </div>-->
+                <!--                    <div class="col-md-8 col-sm-12 subcat-separator">-->
+                <!-- बाकी लिस्ट वाला कोड वही -->
+                <!--                        @foreach($subcategory->posts->skip(1) as $post)-->
+                <!-- ... same as above ... -->
+                <!--                        @endforeach-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--            @endforeach-->
+                <!--        @endif-->
 
-<!--    </div>-->
-<!--</div>-->
+                <!-- क्राइम -->
+                <!--        @if($crimeCategory)-->
+                <!--            @foreach($crimeCategory->subcategories as $subcategory)-->
+                <!--                <div class="row crime-subcats">-->
+                <!-- वही कोड, color-web-orange रहेगा -->
+                <!-- ... same structure ... -->
+                <!--                </div>-->
+                <!--            @endforeach-->
+                <!--        @endif-->
 
-<!-- Isotope JS -->
-<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
-<script>
-    jQuery(document).ready(function($) {
-        var $grid = $('.featuredContainer').isotope({
-            itemSelector: '.row',
-            layoutMode: 'fitRows'
-        });
+                <!--    </div>-->
+                <!--</div>-->
 
-        // पेज लोड पर active टैब का फ़िल्टर अप्लाई करो
-        var activeFilter = $('.isotop-btn a.active').data('filter') || '*';
-        $grid.isotope({ filter: activeFilter });
+                <!-- Isotope JS -->
+                <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+                <script>
+                    jQuery(document).ready(function ($) {
+                        var $grid = $('.featuredContainer').isotope({
+                            itemSelector: '.row',
+                            layoutMode: 'fitRows'
+                        });
 
-        // क्लिक पर
-        $('.isotop-btn a').on('click', function(e) {
-            e.preventDefault();
-            $('.isotop-btn a').removeClass('active');
-            $(this).addClass('active');
-            var filterValue = $(this).attr('data-filter');
-            $grid.isotope({ filter: filterValue });
-        });
-    });
-</script>
+                        // पेज लोड पर active टैब का फ़िल्टर अप्लाई करो
+                        var activeFilter = $('.isotop-btn a.active').data('filter') || '*';
+                        $grid.isotope({ filter: activeFilter });
+
+                        // क्लिक पर
+                        $('.isotop-btn a').on('click', function (e) {
+                            e.preventDefault();
+                            $('.isotop-btn a').removeClass('active');
+                            $(this).addClass('active');
+                            var filterValue = $(this).attr('data-filter');
+                            $grid.isotope({ filter: filterValue });
+                        });
+                    });
+                </script>
 
                 <div class="row tab-space2">
 
                     @if($khelCategory)
                         <div class="col-lg-4 col-md-12">
                             <div class="topic-border color-cinnabar mb-30 width-100">
-                                                        <div class="topic-box-lg " style="color:#b40000;">{{ $khelCategory->name }}</div>
+                                <div class="topic-box-lg " style="color:#b40000;">{{ $khelCategory->name }}</div>
 
                             </div>
 
@@ -729,7 +746,7 @@
                                     <div class="mask-content-sm">
                                         <!--<div class="post-date-light">-->
                                         <!--    <ul>-->
-                                                
+
                                         <!--        <li>-->
                                         <!--            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>-->
                                         <!--            {{ $firstPost->created_at->format('F d, Y') }}-->
@@ -739,11 +756,11 @@
                                         <h3 class="title-medium-light">
                                             <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
                                         </h3>
-                                         
+
                                     </div>
                                     @if($firstPost->video)
                                         <img class="img-fluid width-100 video-thumb" data-videoid="{{$firstPost->video}}"
-                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg"  />
+                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" />
                                     @else
                                         <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
                                             class="img-fluid width-100" style="height:150px;">
@@ -752,14 +769,17 @@
                             @endif
 
                             @foreach($khelCategory->posts->slice(1) as $post)
-                                <div class="media  new-card-news" >
-                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}" style="width:100%">
+                                <div class="media  new-card-news">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}"
+                                        style="width:100%">
                                         @if($post->video)
                                             <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
-                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg"  style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;"/>
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg"
+                                                style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;" />
                                         @else
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                                class="img-fluid" style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;">
+                                                class="img-fluid"
+                                                style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;">
                                         @endif
                                     </a>
                                     <div class="media-body">
@@ -775,10 +795,10 @@
                                             <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                         </h3>
                                         <p class="m-0" style="color: #666;
-    font-size: 14px;
-    line-height: 22px;">
-    {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
-</p>
+                                                                font-size: 14px;
+                                                                line-height: 22px;">
+                                            {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
+                                        </p>
                                     </div>
                                 </div>
                             @endforeach
@@ -789,10 +809,10 @@
                     @if($rajneetiCategory)
                         <div class="col-lg-4 col-md-12">
                             <div class="topic-border color-cinnabar mb-30 width-100">
-                                                        <div class="topic-box-lg " style="color:#b40000;">{{ $rajneetiCategory->name }}</div>
+                                <div class="topic-box-lg " style="color:#b40000;">{{ $rajneetiCategory->name }}</div>
 
                             </div>
-                           
+
 
                             @php
                                 $firstPost = $rajneetiCategory->posts->first();
@@ -803,7 +823,7 @@
                                     <div class="mask-content-sm">
                                         <!--<div class="post-date-light">-->
                                         <!--    <ul>-->
-                                                
+
                                         <!--        <li>-->
                                         <!--            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>-->
                                         <!--            {{ $firstPost->created_at->format('F d, Y') }}-->
@@ -813,11 +833,11 @@
                                         <h3 class="title-medium-light">
                                             <a href="{{ route('post.show', $firstPost->slug) }}">{{ $firstPost->title }}</a>
                                         </h3>
-                                     
+
                                     </div>
                                     @if($firstPost->video)
                                         <img class="img-fluid width-100 video-thumb" data-videoid="{{$firstPost->video}}"
-                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" style="height:150px;"/>
+                                            src="https://img.youtube.com/vi/{{$firstPost->video}}/0.jpg" style="height:150px;" />
                                     @else
                                         <img src="{{ asset('storage/' . $firstPost->image) }}" alt="{{ $firstPost->title }}"
                                             class="img-fluid width-100" style="height:150px;">
@@ -826,14 +846,17 @@
                             @endif
 
                             @foreach($rajneetiCategory->posts->slice(1) as $post)
-                                <div class="media  new-card-news" >
-                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}" style="width:100%">
+                                <div class="media  new-card-news">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}"
+                                        style="width:100%">
                                         @if($post->video)
                                             <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
-                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;"/>
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg"
+                                                style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;" />
                                         @else
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                                class="img-fluid" style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;">
+                                                class="img-fluid"
+                                                style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;">
                                         @endif
                                     </a>
                                     <div class="media-body">
@@ -849,10 +872,10 @@
                                             <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                         </h3>
                                         <p class="m-0" style="color: #666;
-    font-size: 14px;
-    line-height: 22px;">
-    {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
-</p>
+                                                                font-size: 14px;
+                                                                line-height: 22px;">
+                                            {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
+                                        </p>
                                     </div>
                                 </div>
                             @endforeach
@@ -862,10 +885,10 @@
                     @if($crimeCategory)
                         <div class="col-lg-4 col-md-12">
                             <div class="topic-border color-cinnabar mb-30 width-100">
-                                                        <div class="topic-box-lg " style="color:#b40000;">{{ $crimeCategory->name }}</div>
+                                <div class="topic-box-lg " style="color:#b40000;">{{ $crimeCategory->name }}</div>
 
                             </div>
-                            
+
 
                             @php
                                 $firstPost = $crimeCategory->posts->first();
@@ -876,7 +899,7 @@
                                     <div class="mask-content-sm">
                                         <!--<div class="post-date-light">-->
                                         <!--    <ul>-->
-                                                
+
                                         <!--        <li>-->
                                         <!--            <span><i class="fa fa-calendar" aria-hidden="true"></i></span>-->
                                         <!--            {{ $firstPost->created_at->format('F d, Y') }}-->
@@ -898,14 +921,17 @@
                             @endif
 
                             @foreach($crimeCategory->posts->slice(1) as $post)
-                                <div class="media  new-card-news" >
-                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}" style="width:100%">
+                                <div class="media  new-card-news">
+                                    <a class="img-opacity-hover" href="{{ route('post.show', $post->slug) }}"
+                                        style="width:100%">
                                         @if($post->video)
                                             <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
-                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;"/>
+                                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg"
+                                                style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;" />
                                         @else
                                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
-                                                class="img-fluid" style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;">
+                                                class="img-fluid"
+                                                style="height: 150px; object-fit: cover; transition: transform 0.3s ease;width:100%;">
                                         @endif
                                     </a>
                                     <div class="media-body">
@@ -921,10 +947,10 @@
                                             <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                         </h3>
                                         <p class="m-0" style="color: #666;
-    font-size: 14px;
-    line-height: 22px;">
-    {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
-</p>
+                                                                font-size: 14px;
+                                                                line-height: 22px;">
+                                            {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
+                                        </p>
                                     </div>
                                 </div>
                             @endforeach
@@ -999,20 +1025,26 @@
             <div class="row">
                 <div class="col-12">
                     <div class="topic-border color-cinnabar mb-30 mt-50">
-                        <div class="topic-box-lg " style="color:#b40000;">अन्य खबरें <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
+                        <div class="topic-box-lg " style="color:#b40000;">अन्य खबरें <i
+                                class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
                         <!--<div class="topic-box-lg color-azure-radiance">Categories</div>-->
                         <div class="isotope-classes-tab isotop-btn">
                             @foreach($otherCategories as $slug => $category)
-                                <a href="#" data-filter=".{{ $slug }}" class="{{ $loop->first ? 'current' : '' }}">
-                                    {{ $category->name }} 
+                                <a href="#" data-filter=".{{ $slug }}"
+                                    data-url="{{ route('category.posts', $category->slug) }}"
+                                    class="{{ $loop->first ? 'current' : '' }}">
+                                    {{ $category->name }}
                                 </a>
                             @endforeach
                         </div>
+
                         <div class="more-info-link">
-                            <a href="post-style-1.html">और पढ़ें
+                            <a id="readMoreLink" href="{{ route('category.posts', $otherCategories->first()->slug) }}">
+                                और पढ़ें
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -1054,7 +1086,7 @@
                                         <h2 class="title-medium-light size-lg">
                                             <a href="{{ url('post/' . $firstPost->slug) }}">{{ $firstPost->title }}</a>
                                         </h2>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -1067,7 +1099,8 @@
                                         <div class="mb-25 new-card-news">
                                             <a class="img-opacity-hover" href="{{ url('post/' . $post->slug) }}">
                                                 @if($post->video)
-                                                    <img class="img-fluid width-100 mb-15 video-thumb" data-videoid="{{$post->video}}"
+                                                    <img class="img-fluid width-100 mb-15 video-thumb"
+                                                        data-videoid="{{$post->video}}"
                                                         src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" />
                                                 @else
                                                     <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
@@ -1089,11 +1122,11 @@
                                                 <a href="{{ url('post/' . $post->slug) }}">{{ $post->title }}</a>
                                             </h3>
                                             <p class="m-0" style="color: #666;
-    font-size: 14px;
-    line-height: 22px;">
-    {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
-</p>
-                                            
+                                                                    font-size: 14px;
+                                                                    line-height: 22px;">
+                                                {!! Str::words(strip_tags($post->content), 20, '<span class="text-muted">...</span>') !!}
+                                            </p>
+
                                         </div>
                                     </div>
                                 @endforeach
@@ -1145,22 +1178,26 @@
             <div class="col-lg-9 col-md-12">
                 <div class="ne-isotope">
                     <div class="topic-border color-cinnabar mb-30">
-                        <div class="topic-box-lg " style="color:#b40000;">मुख्य खबरे <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
-                    
+                        <div class="topic-box-lg " style="color:#b40000;">मुख्य खबरे <i
+                                class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
+
                         <div class="isotope-classes-tab isotop-btn">
                             @foreach($moreCategories as $category)
                                 <a href="#" data-filter=".{{ $category->slug }}"
+                                    data-url="{{ route('category.posts', $category->slug) }}"
                                     class="{{ $loop->first ? 'current' : '' }}">
                                     {{ $category->name }}
                                 </a>
                             @endforeach
                         </div>
+
                         <div class="more-info-link">
-                            <a href="#">और पढ़ें
-        
+                            <a id="moreReadLink" href="{{ route('category.posts', $moreCategories->first()->slug) }}">
+                                और पढ़ें
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </a>
                         </div>
+
                     </div>
 
                     <div class="featuredContainer">
@@ -1173,7 +1210,8 @@
                                                 <a href="{{ route('post.show', $post->slug) }}" class="img-opacity-hover">
                                                     @if($post->video)
                                                         <img class="img-fluid video-thumb" data-videoid="{{$post->video}}"
-                                                            src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height:200px;width:100%;"/>
+                                                            src="https://img.youtube.com/vi/{{$post->video}}/0.jpg"
+                                                            style="height:200px;width:100%;" />
                                                     @else
                                                         <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
                                                             class="img-fluid" style="height:200px;width:100%;">
@@ -1198,17 +1236,19 @@
                                                     </ul>
                                                 </div>
                                                 <h3 class="title-semibold-dark size-lg " style="font-size: 16px;
-    line-height: 26px;
-    font-weight: 700;
-    padding: 3px 0 5px;">
+                                                                    line-height: 26px;
+                                                                    font-weight: 700;
+                                                                    padding: 3px 0 5px;">
                                                     <a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a>
                                                 </h3>
                                                 <p style="color: #666;
-    font-size: 14px;
-    line-height: 22px;">{{ Str::limit(strip_tags($post->content), 350, '...') }}</p>
+                                                                    font-size: 14px;
+                                                                    line-height: 22px;">
+                                                    {{ Str::limit(strip_tags($post->content), 350, '...') }}
+                                                </p>
                                             </div>
                                         </div>
-                                                <div class="subcategory-divider"></div>
+                                        <div class="subcategory-divider"></div>
                                     </div>
                                 @endforeach
                             </div>
@@ -1216,50 +1256,55 @@
                     </div>
                 </div>
                 <section class="jt-news-block">
-                     <div class="topic-border color-cinnabar mb-30 mt-50">
-                        <div class="topic-box-lg " style="color:#b40000;">भारत <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div>
-  
-  </div>
 
-  <div class="jt-news-grid">
+                    <div class="topic-border color-cinnabar mb-30 mt-50">
+                        <div class="topic-box-lg" style="color:#b40000;">
+                            {{ $technologyCategory->name }}
+                            <i class="fa-regular fa-hand-pointer fa-rotate-90"></i>
+                        </div>
+                    </div>
 
-    <!-- BIG LEFT CARD -->
-    <div class="jt-news-main">
-      <img src="https://dynamic.tejyug.com/public/storage/posts/l8w0mwd7M6m7dXXST4qwi4eZmGj06kP6MxxN7Aed.jpg" alt="">
-      <h3 class="title-medium-dark size-md m-0 p-3">
-                                                <a href="#">  Parliament LIVE: दिल्ली में वायु प्रदूषण पर चर्चा करेंगी प्रियंका गांधी, कनिमोझी-बांझुरी भी होंगी शामिल
-</a>
-                                            </h3>
-     
-    </div>
+                    @php
+                        $mainPost = $technologyCategory->posts->first();
+                        $sidePosts = $technologyCategory->posts->slice(1, 4);
+                    @endphp
 
-    <!-- RIGHT SIDE SMALL LIST -->
-    <div class="jt-news-list">
+                    <div class="jt-news-grid">
 
-      <div class="jt-news-item">
-        <img src="https://dynamic.tejyug.com/public/storage/posts/l8w0mwd7M6m7dXXST4qwi4eZmGj06kP6MxxN7Aed.jpg" alt="">
-        <p>दिल्ली-NCR में स्मॉग पर कोहरे का ब्रेक, फ्लाइट-ट्रेन सब लेट</p>
-      </div>
+                        {{-- BIG LEFT CARD --}}
+                        @if($mainPost)
+                            <div class="jt-news-main">
+                                <img src="{{ asset('storage/' . $mainPost->image) }}" alt="{{ $mainPost->title }}">
 
-      <div class="jt-news-item">
-        <img src="https://dynamic.tejyug.com/public/storage/posts/l8w0mwd7M6m7dXXST4qwi4eZmGj06kP6MxxN7Aed.jpg" alt="">
-        <p>नेहरू पनपे विवाद: केंद्र ने कहा- दस्तावेज ‘लापता’ नहीं</p>
-      </div>
+                                <h3 class="title-medium-dark size-md m-0 p-3">
+                                    <a href="{{ route('post.show', $mainPost->slug) }}">
+                                        {{ $mainPost->title }}
+                                    </a>
+                                </h3>
+                            </div>
+                        @endif
 
-      <div class="jt-news-item">
-        <img src="https://dynamic.tejyug.com/public/storage/posts/l8w0mwd7M6m7dXXST4qwi4eZmGj06kP6MxxN7Aed.jpg" alt="">
-        <p>शरी थरूर ने IND VS SA T20 मैच रद्द होने पर तीखी चुटकी</p>
-      </div>
+                        {{-- RIGHT SIDE SMALL LIST --}}
+                        <div class="jt-news-list">
 
-      <div class="jt-news-item">
-        <img src="https://dynamic.tejyug.com/public/storage/posts/l8w0mwd7M6m7dXXST4qwi4eZmGj06kP6MxxN7Aed.jpg" alt="">
-        <p>भारत करने जा रहा बड़ा मिसाइल टेस्ट? बंगाल की खाड़ी में NOTAM जारी</p>
-      </div>
+                            @foreach($sidePosts as $post)
+                                <div class="jt-news-item">
+                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}">
 
-    </div>
+                                    <p>
+                                        <a href="{{ route('post.show', $post->slug) }}" style="color:#444">
+                                            {{ $post->title }}
+                                        </a>
+                                    </p>
+                                </div>
+                            @endforeach
 
-  </div>
-</section>
+                        </div>
+
+                    </div>
+
+                </section>
+
 
             </div>
 
@@ -1324,43 +1369,42 @@
 
                 <div class="sidebar-box">
                     <div class="topic-border color-cinnabar mb-30">
-                        <div class="topic-box-lg " style="color:#b40000;">Newsletter <i class="fa-regular fa-hand-pointer fa-rotate-90"></i></div
-                        
-                    </div>
-                    <div class="newsletter-area bg-primary">
-                        <h2 class="title-medium-light size-xl" style="    font-size: 20px;
+                        <div class="topic-box-lg " style="color:#b40000;">Newsletter <i
+                                class="fa-regular fa-hand-pointer fa-rotate-90"></i></div </div>
+                        <div class="newsletter-area bg-primary">
+                            <h2 class="title-medium-light size-xl" style="    font-size: 20px;
     line-height: 30px;
     font-weight: 600;
     color: #ffeb3b;">
-                            Subscribe to our mailing list to get the new updates!
-                        </h2>
-                        <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
-                            class="img-fluid mb-40">
-                        <p>Subscribe to our newsletter to stay updated every moment</p>
+                                Subscribe to our mailing list to get the new updates!
+                            </h2>
+                            <img src="{{ asset('website/img/banner/newsletter.png') }}" alt="newsletter"
+                                class="img-fluid mb-40">
+                            <p>Subscribe to our newsletter to stay updated every moment</p>
 
-                        @if(session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
+                            @if(session('success'))
+                                <div class="alert alert-success">{{ session('success') }}</div>
+                            @endif
 
-                        <form action="{{ route('add-subscriber') }}" method="POST"
-                            class="input-group stylish-input-group">
-                            @csrf
-                            <input type="email" name="email" placeholder="Enter your email" class="form-control"
-                                required>
-                            <span class="input-group-addon">
-                                <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
-                            </span>
-                        </form>
+                            <form action="{{ route('add-subscriber') }}" method="POST"
+                                class="input-group stylish-input-group">
+                                @csrf
+                                <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                    required>
+                                <span class="input-group-addon">
+                                    <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                                </span>
+                            </form>
 
-                        @error('email')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
 </section>
 
 <!-- Category Area Start Here -->
@@ -1371,8 +1415,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                     <div class="category-box-layout1 overlay-dark-level-2 img-scale-animate text-center mb-2">
                         @if($post->video)
-                            <img class="img-fluid width-100 video-thumb" alt="{{ $post->title }}" data-videoid="{{$post->video}}"
-                                src="https://img.youtube.com/vi/{{$post->video}}/0.jpg" style="height: 200px;" />
+                            <img class="img-fluid width-100 video-thumb" alt="{{ $post->title }}"
+                                data-videoid="{{$post->video}}" src="https://img.youtube.com/vi/{{$post->video}}/0.jpg"
+                                style="height: 200px;" />
                         @else
                             <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
                                 class="img-fluid width-100" style="height: 200px;">
@@ -1451,19 +1496,50 @@
 <!--</script>-->
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const items = document.querySelectorAll(".breaking-list li");
-    if (items.length === 0) return;
+    document.addEventListener("DOMContentLoaded", function () {
+        const items = document.querySelectorAll(".breaking-list li");
+        if (items.length === 0) return;
 
-    let current = 0;
-    items[current].classList.add("active");
-
-    setInterval(() => {
-        items[current].classList.remove("active");
-        current = (current + 1) % items.length;
+        let current = 0;
         items[current].classList.add("active");
-    }, 4000);  // हर 4 सेकंड में change (आप change कर सकते हो)
-});
+
+        setInterval(() => {
+            items[current].classList.remove("active");
+            current = (current + 1) % items.length;
+            items[current].classList.add("active");
+        }, 4000);  // हर 4 सेकंड में change (आप change कर सकते हो)
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.querySelectorAll(".isotope-classes-tab").forEach(section => {
+
+            const tabs = section.querySelectorAll("a[data-url]");
+            const readMoreLink = section.parentElement.querySelector(".more-info-link a");
+
+            if (!readMoreLink) return;
+
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    // Active class toggle
+                    tabs.forEach(t => t.classList.remove("current"));
+                    this.classList.add("current");
+
+                    // Update "और पढ़ें"
+                    const url = this.dataset.url;
+                    if (url) {
+                        readMoreLink.href = url;
+                    }
+                });
+            });
+
+        });
+
+    });
 </script>
 
 @include('front.footer')
